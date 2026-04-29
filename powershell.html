@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/PowerShell.png" type="image/png">
+  <title>PowerShell Lessons / PowerShell Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { color: var(--text); border-color: var(--text); outline: none; }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-count { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge { display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">PowerShell Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>PowerShell Lessons</h1>
+    <p>Український довідник по PowerShell з командами, скриптами та автоматизацією.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке PowerShell</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#commands">Основні команди</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: Get-Process, pipeline, foreach, Set-Content" aria-label="Пошук по командах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке PowerShell Windows автоматизація адміністрування CMD">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке PowerShell</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">PowerShell — це командна оболонка і скриптова мова для автоматизації задач, особливо у Windows та адмініструванні систем.</p>
+          <div class="grid">
+            <article class="info-card search-item"><h3>Де використовується</h3><p>PowerShell використовують для роботи з файлами, процесами, службами, реєстром, серверами, Azure, Windows-адмініструванням і автоматизацією повторюваних задач.</p></article>
+            <article class="info-card search-item"><h3>CMD і PowerShell</h3><p>CMD переважно працює з текстом і старими командами. PowerShell працює з об’єктами, має pipeline, функції, модулі і зручні cmdlets у стилі Verb-Noun.</p></article>
+          </div>
+          <h3>Перший приклад</h3>
+          <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Write-Output "Привіт, світ!"</code></pre></div>
+          <ul>
+            <li><code>Write-Output</code> виводить значення у pipeline.</li>
+            <li><code>"Привіт, світ!"</code> — рядок тексту.</li>
+            <li>Команду можна запускати у PowerShell-консолі або в <code>.ps1</code> скрипті.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис PowerShell cmdlets Verb-Noun коментарі pipeline">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Синтаксис</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Команди cmdlets</h3><p>Cmdlet — це стандартна команда PowerShell. Багато команд повертають об’єкти, а не просто текст.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Get-Process
+Get-Service</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Verb-Noun стиль</h3><p>Назви команд часто мають формат дієслово-іменник: <code>Get-Process</code>, <code>Set-Location</code>, <code>New-Item</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Get-Command -Verb Get</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Коментарі</h3><p><code>#</code> створює коментар до кінця рядка. Багаторядковий коментар пишеться через <code>&lt;# #&gt;</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code># Однорядковий коментар
+&lt;#
+Багаторядковий коментар
+#&gt;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Pipeline</h3><p>Символ <code>|</code> передає результат однієї команди в іншу.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Get-Process | Sort-Object CPU -Descending</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="commands">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Основні команди</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Help</span></h3><dl><div><dt>Опис</dt><dd>Показує довідку по команді.</dd></div><div><dt>Приклад</dt><dd><code>Get-Help Get-Process</code></dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Command</span></h3><dl><div><dt>Опис</dt><dd>Шукає доступні команди.</dd></div><div><dt>Приклад</dt><dd><code>Get-Command *Service*</code></dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Process</span></h3><dl><div><dt>Опис</dt><dd>Показує запущені процеси.</dd></div><div><dt>Приклад</dt><dd><code>Get-Process</code></dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Service</span></h3><dl><div><dt>Опис</dt><dd>Показує служби Windows.</dd></div><div><dt>Приклад</dt><dd><code>Get-Service</code></dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-ChildItem</span></h3><dl><div><dt>Опис</dt><dd>Показує файли і папки. Схоже на ls або dir.</dd></div><div><dt>Приклад</dt><dd><code>Get-ChildItem</code></dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Set-Location</span></h3><dl><div><dt>Опис</dt><dd>Переходить в іншу папку. Схоже на cd.</dd></div><div><dt>Приклад</dt><dd><code>Set-Location C:\Projects</code></dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми PowerShell</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Змінні і типи</h3><p>Змінні починаються зі знака <code>$</code>. PowerShell може визначати тип автоматично, але тип можна вказати явно.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$name = "Іван"
+$age = 25
+[int]$count = 10</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Оператори</h3><p>PowerShell має арифметичні, логічні та оператори порівняння.</p><ul><li>Арифметичні: <code>+ - * / %</code></li><li>Порівняння: <code>-eq -ne -gt -lt -ge -le</code></li><li>Логічні: <code>-and -or -not</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$age -ge 18
+$isAdmin -and $isActive</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Умови</h3><p><code>if</code> і <code>else</code> виконують різний код залежно від умови.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if ($age -ge 18) {
+    "Доступ дозволено"
+} else {
+    "Доступ заборонено"
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Цикли</h3><p><code>for</code>, <code>foreach</code> і <code>while</code> повторюють команди.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>foreach ($file in Get-ChildItem) {
+    $file.Name
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Функції</h3><p><code>function</code> створює власну команду. Параметри можна описувати через <code>param</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function Get-Greeting {
+    param($Name)
+    return "Привіт, $Name"
+}
+
+Get-Greeting -Name "Оля"</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Масиви і об’єкти</h3><p><code>@()</code> створює масив, а <code>[PSCustomObject]</code> створює простий об’єкт з властивостями.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$items = @("one", "two")
+
+$user = [PSCustomObject]@{
+    Name = "Іван"
+    Age = 25
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Робота з файлами</h3><p><code>Get-Content</code> читає файл, <code>Set-Content</code> записує новий вміст, <code>Add-Content</code> додає текст у кінець.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Set-Content -Path "log.txt" -Value "Start"
+Add-Content -Path "log.txt" -Value "Done"
+Get-Content -Path "log.txt"</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Pipeline</h3><p>Pipeline передає об’єкти між командами. Це дозволяє фільтрувати, сортувати і форматувати дані.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Get-Process |
+    Where-Object CPU -gt 10 |
+    Sort-Object CPU -Descending</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Скрипти .ps1</h3><p>PowerShell-скрипти зберігаються у файлах <code>.ps1</code>. Запускати локальний скрипт можна через <code>.\script.ps1</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>.\backup.ps1</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Обробка помилок</h3><p><code>try</code> містить ризиковану дію, а <code>catch</code> реагує на помилку.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>try {
+    Get-Content "missing.txt" -ErrorAction Stop
+} catch {
+    "Файл не знайдено"
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card search-item"><h3>Список процесів</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Get-Process |
+    Select-Object Name, Id, CPU |
+    Sort-Object CPU -Descending</code></pre></div></article>
+            <article class="example-card search-item"><h3>Робота з файлами</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>New-Item -Path "notes.txt" -ItemType File
+Set-Content -Path "notes.txt" -Value "Перша нотатка"
+Add-Content -Path "notes.txt" -Value "Друга нотатка"
+Get-Content -Path "notes.txt"</code></pre></div></article>
+            <article class="example-card search-item"><h3>Автоматизація задачі</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$source = "C:\Logs"
+$target = "C:\Archive"
+
+Get-ChildItem $source -Filter "*.log" |
+    Copy-Item -Destination $target</code></pre></div></article>
+            <article class="example-card search-item"><h3>Скрипт</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>param(
+    [string]$Name = "Гість"
+)
+
+Write-Output "Привіт, $Name"</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Help</span></h3><dl><div><dt>Опис</dt><dd>Показує довідку по команді.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-Help CommandName</code></dd></div><div><dt>Приклад</dt><dd><code>Get-Help Get-Service</code></dd></div><div><dt>Примітка</dt><dd>Додавайте <code>-Examples</code> для прикладів.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Command</span></h3><dl><div><dt>Опис</dt><dd>Шукає команди, функції та aliases.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-Command pattern</code></dd></div><div><dt>Приклад</dt><dd><code>Get-Command Get-*</code></dd></div><div><dt>Примітка</dt><dd>Корисно, коли не пам’ятаєте назву команди.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Process</span></h3><dl><div><dt>Опис</dt><dd>Повертає процеси.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-Process [-Name name]</code></dd></div><div><dt>Приклад</dt><dd><code>Get-Process powershell</code></dd></div><div><dt>Примітка</dt><dd>Можна передавати в pipeline.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Service</span></h3><dl><div><dt>Опис</dt><dd>Повертає служби.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-Service [-Name name]</code></dd></div><div><dt>Приклад</dt><dd><code>Get-Service Win*</code></dd></div><div><dt>Примітка</dt><dd>Для керування службами є Start-Service і Stop-Service.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-ChildItem</span></h3><dl><div><dt>Опис</dt><dd>Показує вміст папки.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-ChildItem path</code></dd></div><div><dt>Приклад</dt><dd><code>Get-ChildItem -Recurse</code></dd></div><div><dt>Примітка</dt><dd>Alias: <code>ls</code>, <code>dir</code>, <code>gci</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Set-Location</span></h3><dl><div><dt>Опис</dt><dd>Змінює поточну папку.</dd></div><div><dt>Синтаксис</dt><dd><code>Set-Location path</code></dd></div><div><dt>Приклад</dt><dd><code>Set-Location C:\Temp</code></dd></div><div><dt>Примітка</dt><dd>Alias: <code>cd</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Where-Object</span></h3><dl><div><dt>Опис</dt><dd>Фільтрує об’єкти у pipeline.</dd></div><div><dt>Синтаксис</dt><dd><code>Where-Object condition</code></dd></div><div><dt>Приклад</dt><dd><code>Where-Object CPU -gt 10</code></dd></div><div><dt>Примітка</dt><dd>Alias: <code>where</code>, <code>?</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">ForEach-Object</span></h3><dl><div><dt>Опис</dt><dd>Виконує дію для кожного об’єкта в pipeline.</dd></div><div><dt>Синтаксис</dt><dd><code>ForEach-Object { script }</code></dd></div><div><dt>Приклад</dt><dd><code>Get-ChildItem | ForEach-Object { $_.Name }</code></dd></div><div><dt>Примітка</dt><dd><code>$_</code> означає поточний об’єкт.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Get-Content</span></h3><dl><div><dt>Опис</dt><dd>Читає вміст файлу.</dd></div><div><dt>Синтаксис</dt><dd><code>Get-Content path</code></dd></div><div><dt>Приклад</dt><dd><code>Get-Content log.txt</code></dd></div><div><dt>Примітка</dt><dd>Може читати файл построково.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Set-Content</span></h3><dl><div><dt>Опис</dt><dd>Записує новий вміст у файл.</dd></div><div><dt>Синтаксис</dt><dd><code>Set-Content -Path path -Value value</code></dd></div><div><dt>Приклад</dt><dd><code>Set-Content notes.txt "Hello"</code></dd></div><div><dt>Примітка</dt><dd>Перезаписує файл.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">Add-Content</span></h3><dl><div><dt>Опис</dt><dd>Додає текст у кінець файлу.</dd></div><div><dt>Синтаксис</dt><dd><code>Add-Content -Path path -Value value</code></dd></div><div><dt>Приклад</dt><dd><code>Add-Content log.txt "Done"</code></dd></div><div><dt>Примітка</dt><dd>Не стирає попередній вміст.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage">За вашим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>PowerShell Lessons. Сайт працює офлайн і відкривається як звичайний HTML-файл.</p>
+  </footer>
+
+  <script>
+    /* Простий офлайн JavaScript: пошук, копіювання коду і згортання секцій. */
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase() + " " + section.innerText.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: ${visible} блоків.`
+        : "Показано всі теми довідника.";
+
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

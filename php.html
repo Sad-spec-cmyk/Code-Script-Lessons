@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/PHP.png" type="image/png">
+  <title>PHP Lessons / PHP Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { color: var(--text); border-color: var(--text); outline: none; }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-count { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge { display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">PHP Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>PHP Lessons</h1>
+    <p>Український довідник по PHP з прикладами, синтаксисом та роботою з сервером.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке PHP</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Змінні і типи</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: echo, array, PDO, $_POST" aria-label="Пошук по темах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке PHP веб бекенд сервер HTML">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке PHP</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">PHP — це серверна мова програмування, яку часто використовують для створення динамічних веб-сайтів і бекенду.</p>
+          <div class="grid">
+            <article class="info-card search-item"><h3>Де використовується</h3><p>PHP працює на сервері, обробляє запити, форми, сесії, файли, бази даних і генерує HTML для браузера.</p></article>
+            <article class="info-card search-item"><h3>Як працює з HTML</h3><p>PHP-код можна вставляти у HTML-файл. Сервер виконує PHP, а користувач отримує готовий HTML.</p></article>
+          </div>
+          <h3>Перший приклад</h3>
+          <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>&lt;?php
+echo "Привіт, світ!";
+?&gt;</code></pre></div>
+          <ul>
+            <li><code>&lt;?php</code> відкриває PHP-код.</li>
+            <li><code>echo</code> виводить текст.</li>
+            <li><code>?&gt;</code> закриває PHP-блок, якщо після нього йде HTML.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис PHP теги коментарі крапка з комою echo print">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Синтаксис</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>PHP-теги</h3><p>PHP-код пишеться всередині <code>&lt;?php ?&gt;</code>. Якщо файл містить тільки PHP, закривальний тег часто не пишуть.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>&lt;?php
+echo "Hello";
+</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Коментарі</h3><p>PHP підтримує <code>//</code>, <code>#</code> і <code>/* */</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Коментар
+# Ще один коментар
+/* Багаторядковий коментар */</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Крапка з комою</h3><p>Більшість інструкцій завершується символом <code>;</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$name = "Іван";
+echo $name;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>echo і print</h3><p><code>echo</code> і <code>print</code> виводять текст. <code>echo</code> частіше використовується для простого виводу.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>echo "Привіт";
+print "Світ";</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="types">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Змінні і типи даних</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Змінні у PHP починаються зі знака <code>$</code>. Тип часто визначається автоматично за значенням.</p>
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">string</span></h3><dl><div><dt>Опис</dt><dd>Рядок тексту.</dd></div><div><dt>Приклад</dt><dd><code>$name = "Оля";</code></dd></div><div><dt>Коли використовувати</dt><dd>Для імен, повідомлень, HTML і текстових значень.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">int</span></h3><dl><div><dt>Опис</dt><dd>Ціле число.</dd></div><div><dt>Приклад</dt><dd><code>$age = 25;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для кількості, id, віку і лічильників.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">float</span></h3><dl><div><dt>Опис</dt><dd>Дробове число.</dd></div><div><dt>Приклад</dt><dd><code>$price = 19.99;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для цін, вимірювань і дробових розрахунків.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">bool</span></h3><dl><div><dt>Опис</dt><dd>Логічне значення true або false.</dd></div><div><dt>Приклад</dt><dd><code>$isAdmin = false;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для умов, станів і прапорців.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">array</span></h3><dl><div><dt>Опис</dt><dd>Масив значень.</dd></div><div><dt>Приклад</dt><dd><code>$items = ["a", "b"];</code></dd></div><div><dt>Коли використовувати</dt><dd>Для списків, наборів даних і асоціативних структур.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">object</span></h3><dl><div><dt>Опис</dt><dd>Екземпляр класу.</dd></div><div><dt>Приклад</dt><dd><code>$user = new User();</code></dd></div><div><dt>Коли використовувати</dt><dd>Для ООП, моделей, сервісів і складної логіки.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">null</span></h3><dl><div><dt>Опис</dt><dd>Відсутність значення.</dd></div><div><dt>Приклад</dt><dd><code>$user = null;</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли значення ще немає або воно спеціально очищене.</dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми PHP</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Оператори</h3><p>PHP має арифметичні, порівняння, логічні та оператори присвоєння.</p><ul><li>Арифметичні: <code>+ - * / %</code></li><li>Порівняння: <code>== === != !== &gt; &lt;</code></li><li>Логічні: <code>&amp;&amp; || !</code></li><li>Присвоєння: <code>= += -= *= /=</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$total = 10 + 5;
+$isAdult = $age &gt;= 18;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Умови</h3><p><code>if</code>, <code>else</code>, <code>elseif</code> і <code>switch</code> дозволяють виконувати різний код.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if ($age &gt;= 18) {
+    echo "Доступ дозволено";
+} elseif ($age &gt;= 16) {
+    echo "Майже";
+} else {
+    echo "Доступ заборонено";
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Цикли</h3><p>Цикли повторюють код. <code>foreach</code> особливо зручний для масивів.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$names = ["Анна", "Іван"];
+
+foreach ($names as $name) {
+    echo $name;
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Функції</h3><p>Функція — це іменований блок коду з параметрами і результатом.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function add($a, $b) {
+    return $a + $b;
+}
+
+echo add(2, 3);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Масиви</h3><p>Indexed array має числові індекси, associative array має ключі-рядки.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$colors = ["red", "green"];
+$user = [
+    "name" =&gt; "Іван",
+    "age" =&gt; 25
+];</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Робота з формами</h3><p><code>$_GET</code> читає дані з URL, а <code>$_POST</code> — дані, відправлені формою методом POST.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$name = $_POST["name"] ?? "";
+echo htmlspecialchars($name);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Суперглобальні змінні</h3><p>Суперглобальні доступні майже всюди в PHP-скрипті.</p><ul><li><code>$_SERVER</code> містить інформацію про сервер і запит.</li><li><code>$_SESSION</code> зберігає дані користувача між запитами.</li><li><code>$_COOKIE</code> читає cookie браузера.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>session_start();
+$_SESSION["user_id"] = 10;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Робота з файлами</h3><p>PHP може відкривати, читати, записувати і закривати файли.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$file = fopen("data.txt", "w");
+fwrite($file, "Hello");
+fclose($file);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>База даних через PDO</h3><p>PDO — універсальний спосіб працювати з базами даних. Для MySQL потрібні DSN, логін і пароль.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$pdo = new PDO(
+    "mysql:host=localhost;dbname=test;charset=utf8",
+    "root",
+    ""
+);
+
+$stmt = $pdo-&gt;query("SELECT * FROM users");</code></pre></div></article>
+            <article class="doc-card search-item"><h3>SELECT і INSERT</h3><p><code>SELECT</code> читає дані, <code>INSERT</code> додає новий запис. Для даних користувача краще використовувати prepared statements.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$stmt = $pdo-&gt;prepare("INSERT INTO users (name) VALUES (?)");
+$stmt-&gt;execute([$name]);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Обробка помилок</h3><p><code>try</code> містить ризикований код, а <code>catch</code> обробляє помилку.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>try {
+    $pdo = new PDO($dsn, $user, $pass);
+} catch (PDOException $error) {
+    echo "Помилка підключення";
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card search-item"><h3>Вивід тексту</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>&lt;?php
+echo "Привіт з PHP";
+?&gt;</code></pre></div></article>
+            <article class="example-card search-item"><h3>Обробка форми</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>&lt;form method="post"&gt;
+    &lt;input name="email"&gt;
+    &lt;button&gt;OK&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+$email = $_POST["email"] ?? "";
+echo htmlspecialchars($email);
+?&gt;</code></pre></div></article>
+            <article class="example-card search-item"><h3>Робота з масивом</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$products = ["Phone", "Laptop", "Tablet"];
+
+foreach ($products as $product) {
+    echo $product;
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Підключення до БД</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>$pdo = new PDO(
+    "mysql:host=localhost;dbname=shop;charset=utf8",
+    "root",
+    ""
+);</code></pre></div></article>
+            <article class="example-card search-item"><h3>Простий login</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>session_start();
+
+if ($_POST["login"] === "admin" &amp;&amp; $_POST["password"] === "1234") {
+    $_SESSION["user"] = "admin";
+    echo "Вхід виконано";
+} else {
+    echo "Невірні дані";
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">echo</span></h3><dl><div><dt>Опис</dt><dd>Виводить текст або значення.</dd></div><div><dt>Синтаксис</dt><dd><code>echo value;</code></dd></div><div><dt>Приклад</dt><dd><code>echo "Hello";</code></dd></div><div><dt>Примітка</dt><dd>Може виводити кілька значень через кому.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">print</span></h3><dl><div><dt>Опис</dt><dd>Виводить одне значення.</dd></div><div><dt>Синтаксис</dt><dd><code>print value;</code></dd></div><div><dt>Приклад</dt><dd><code>print "Hello";</code></dd></div><div><dt>Примітка</dt><dd>Повертає 1, але для простого виводу частіше використовують echo.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">function</span></h3><dl><div><dt>Опис</dt><dd>Оголошує функцію.</dd></div><div><dt>Синтаксис</dt><dd><code>function name($param) { }</code></dd></div><div><dt>Приклад</dt><dd><code>function hi() { echo "Hi"; }</code></dd></div><div><dt>Примітка</dt><dd>Функція може повертати значення через return.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">foreach</span></h3><dl><div><dt>Опис</dt><dd>Перебирає масив.</dd></div><div><dt>Синтаксис</dt><dd><code>foreach ($items as $item) { }</code></dd></div><div><dt>Приклад</dt><dd><code>foreach ($users as $user) echo $user;</code></dd></div><div><dt>Примітка</dt><dd>Можна отримувати ключ і значення.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">$_GET</span></h3><dl><div><dt>Опис</dt><dd>Масив параметрів з URL.</dd></div><div><dt>Синтаксис</dt><dd><code>$_GET["name"]</code></dd></div><div><dt>Приклад</dt><dd><code>$page = $_GET["page"] ?? 1;</code></dd></div><div><dt>Примітка</dt><dd>Не довіряйте даним користувача без перевірки.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">$_POST</span></h3><dl><div><dt>Опис</dt><dd>Масив даних POST-форми.</dd></div><div><dt>Синтаксис</dt><dd><code>$_POST["field"]</code></dd></div><div><dt>Приклад</dt><dd><code>$email = $_POST["email"] ?? "";</code></dd></div><div><dt>Примітка</dt><dd>Вивід треба екранувати через htmlspecialchars.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">fopen</span></h3><dl><div><dt>Опис</dt><dd>Відкриває файл.</dd></div><div><dt>Синтаксис</dt><dd><code>fopen(path, mode)</code></dd></div><div><dt>Приклад</dt><dd><code>fopen("data.txt", "r")</code></dd></div><div><dt>Примітка</dt><dd>Може повернути false.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">fwrite</span></h3><dl><div><dt>Опис</dt><dd>Записує дані у файл.</dd></div><div><dt>Синтаксис</dt><dd><code>fwrite($file, $text)</code></dd></div><div><dt>Приклад</dt><dd><code>fwrite($file, "Hello");</code></dd></div><div><dt>Примітка</dt><dd>Файл має бути відкритий у режимі запису.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">PDO</span></h3><dl><div><dt>Опис</dt><dd>Клас для роботи з базами даних.</dd></div><div><dt>Синтаксис</dt><dd><code>new PDO($dsn, $user, $pass)</code></dd></div><div><dt>Приклад</dt><dd><code>$pdo = new PDO($dsn, "root", "");</code></dd></div><div><dt>Примітка</dt><dd>Використовуйте prepared statements для даних користувача.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">try / catch</span></h3><dl><div><dt>Опис</dt><dd>Обробляє винятки.</dd></div><div><dt>Синтаксис</dt><dd><code>try { } catch (Exception $e) { }</code></dd></div><div><dt>Приклад</dt><dd><code>catch (PDOException $e) { echo "Error"; }</code></dd></div><div><dt>Примітка</dt><dd>Корисно для БД, файлів і ризикованих операцій.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage">За вашим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>PHP Lessons. Сайт працює офлайн і відкривається як звичайний HTML-файл.</p>
+  </footer>
+
+  <script>
+    /* Простий офлайн JavaScript: пошук, копіювання коду і згортання секцій. */
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase() + " " + section.innerText.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: ${visible} блоків.`
+        : "Показано всі теми довідника.";
+
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/SQL.png" type="image/png">
+  <title>SQL Lessons / SQL Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { color: var(--text); border-color: var(--text); outline: none; }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-count { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge { display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">SQL Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>SQL Lessons</h1>
+    <p>Український довідник по SQL з прикладами запитів, синтаксисом та роботою з базами даних.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке SQL</a>
+      <a href="#databases">Типи баз даних</a>
+      <a href="#basics">Основи SQL</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: SELECT, JOIN, WHERE, COUNT" aria-label="Пошук по командах SQL">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке SQL база даних таблиця запити">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке SQL</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">SQL — це мова для роботи з реляційними базами даних: читання, додавання, зміни, видалення і аналізу даних.</p>
+          <div class="grid">
+            <article class="info-card search-item"><h3>Для чого використовується</h3><p>SQL потрібен для сайтів, CRM, магазинів, аналітики, звітів, бекенду і будь-яких систем, де дані зберігаються у таблицях.</p></article>
+            <article class="info-card search-item"><h3>База даних</h3><p>База даних — це організоване сховище даних. У реляційних базах дані зазвичай зберігаються у таблицях.</p></article>
+            <article class="info-card search-item"><h3>Таблиця</h3><p>Таблиця схожа на електронну таблицю: має колонки, рядки і значення. Наприклад, таблиця <code>users</code> може мати <code>id</code>, <code>name</code>, <code>age</code>.</p></article>
+            <article class="info-card search-item"><h3>Запит</h3><p>Запит — це команда SQL, яку база даних виконує: знайти користувачів, додати товар, оновити статус або порахувати статистику.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="databases" data-title="MySQL PostgreSQL SQLite SQL Server типи баз даних">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Типи баз даних</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>MySQL</h3><p>Популярна база даних для веб-сайтів і серверних застосунків. Часто використовується разом з PHP, Node.js та іншими технологіями.</p></article>
+            <article class="doc-card search-item"><h3>PostgreSQL</h3><p>Потужна реляційна база даних з багатьма можливостями для складних систем, аналітики і надійного бекенду.</p></article>
+            <article class="doc-card search-item"><h3>SQLite</h3><p>Легка база даних в одному файлі. Добре підходить для навчання, мобільних додатків і маленьких локальних програм.</p></article>
+            <article class="doc-card search-item"><h3>SQL Server</h3><p>Система керування базами даних від Microsoft, часто використовується у корпоративних Windows/.NET середовищах.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="basics" data-title="Основи SQL SELECT FROM WHERE">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Основи SQL</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Базовий запит SQL читає дані з таблиці і може фільтрувати рядки за умовою.</p>
+          <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT name FROM users WHERE age &gt; 18;</code></pre></div>
+          <ul>
+            <li><code>SELECT name</code> вибирає колонку <code>name</code>.</li>
+            <li><code>FROM users</code> каже, з якої таблиці брати дані.</li>
+            <li><code>WHERE age &gt; 18</code> залишає тільки користувачів старше 18 років.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми SQL</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Вставка даних: INSERT INTO</h3><p><code>INSERT INTO</code> додає новий рядок у таблицю.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>INSERT INTO users (name, age)
+VALUES ('Іван', 25);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Оновлення даних: UPDATE</h3><p><code>UPDATE</code> змінює існуючі рядки. Майже завжди потрібен <code>WHERE</code>, щоб не змінити всю таблицю.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>UPDATE users
+SET age = 26
+WHERE name = 'Іван';</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Видалення даних: DELETE</h3><p><code>DELETE</code> видаляє рядки. Без <code>WHERE</code> може видалити всі дані з таблиці.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>DELETE FROM users
+WHERE age &lt; 18;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Створення таблиць: CREATE TABLE</h3><p><code>CREATE TABLE</code> створює нову таблицю з колонками і типами даних.</p><ul><li><code>PRIMARY KEY</code> унікально визначає рядок.</li><li><code>AUTO_INCREMENT</code> автоматично збільшує id у MySQL.</li><li><code>NOT NULL</code> забороняє порожнє значення.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    age INT
+);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Типи даних SQL</h3><p>Тип визначає, які значення можна зберігати у колонці.</p><ul><li><code>INT</code> — ціле число.</li><li><code>VARCHAR</code> — короткий текст змінної довжини.</li><li><code>TEXT</code> — довгий текст.</li><li><code>DATE</code> — дата.</li><li><code>BOOLEAN</code> — true/false.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>CREATE TABLE tasks (
+    title VARCHAR(150),
+    description TEXT,
+    done BOOLEAN,
+    created_at DATE
+);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Фільтрація</h3><p>Фільтрація залишає тільки потрібні рядки.</p><ul><li><code>WHERE</code> задає умову.</li><li><code>AND</code>, <code>OR</code>, <code>NOT</code> поєднують умови.</li><li><code>LIKE</code> шукає за шаблоном.</li><li><code>BETWEEN</code> перевіряє діапазон.</li><li><code>IN</code> перевіряє список значень.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT * FROM products
+WHERE price BETWEEN 100 AND 500
+AND category IN ('phone', 'tablet');</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Сортування: ORDER BY</h3><p><code>ORDER BY</code> сортує результат. <code>ASC</code> означає за зростанням, <code>DESC</code> — за спаданням.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT * FROM users
+ORDER BY age DESC;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Обмеження: LIMIT</h3><p><code>LIMIT</code> обмежує кількість рядків у результаті.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT * FROM posts
+ORDER BY created_at DESC
+LIMIT 10;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Агрегатні функції</h3><p>Агрегатні функції рахують значення по групі рядків.</p><ul><li><code>COUNT</code> рахує кількість.</li><li><code>SUM</code> рахує суму.</li><li><code>AVG</code> рахує середнє.</li><li><code>MIN</code> знаходить мінімум.</li><li><code>MAX</code> знаходить максимум.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT COUNT(*) AS users_count,
+       AVG(age) AS average_age
+FROM users;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>GROUP BY</h3><p><code>GROUP BY</code> групує рядки і часто використовується з агрегатними функціями.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT category, COUNT(*) AS total
+FROM products
+GROUP BY category;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>JOIN</h3><p><code>JOIN</code> поєднує дані з кількох таблиць.</p><ul><li><code>INNER JOIN</code> повертає тільки збіги в обох таблицях.</li><li><code>LEFT JOIN</code> повертає всі рядки з лівої таблиці.</li><li><code>RIGHT JOIN</code> повертає всі рядки з правої таблиці.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT users.name, orders.total
+FROM users
+INNER JOIN orders ON users.id = orders.user_id;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Індекси</h3><p>Індекс прискорює пошук і фільтрацію, але може уповільнювати вставку та оновлення.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>CREATE INDEX idx_users_email
+ON users (email);</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card search-item"><h3>Вибір користувачів</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT id, name, email
+FROM users;</code></pre></div></article>
+            <article class="example-card search-item"><h3>Фільтрація</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT *
+FROM users
+WHERE age &gt;= 18 AND city = 'Kyiv';</code></pre></div></article>
+            <article class="example-card search-item"><h3>Сортування</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT name, age
+FROM users
+ORDER BY age ASC;</code></pre></div></article>
+            <article class="example-card search-item"><h3>JOIN приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT users.name, orders.created_at, orders.total
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id;</code></pre></div></article>
+            <article class="example-card search-item"><h3>Статистика</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>SELECT status, COUNT(*) AS total_orders, SUM(total) AS revenue
+FROM orders
+GROUP BY status;</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">SELECT</span></h3><dl><div><dt>Опис</dt><dd>Вибирає дані з таблиці.</dd></div><div><dt>Синтаксис</dt><dd><code>SELECT columns FROM table;</code></dd></div><div><dt>Приклад</dt><dd><code>SELECT name FROM users;</code></dd></div><div><dt>Примітка</dt><dd><code>*</code> означає всі колонки.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">WHERE</span></h3><dl><div><dt>Опис</dt><dd>Фільтрує рядки за умовою.</dd></div><div><dt>Синтаксис</dt><dd><code>WHERE condition</code></dd></div><div><dt>Приклад</dt><dd><code>WHERE age &gt; 18</code></dd></div><div><dt>Примітка</dt><dd>Використовується з SELECT, UPDATE, DELETE.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">INSERT INTO</span></h3><dl><div><dt>Опис</dt><dd>Додає новий рядок.</dd></div><div><dt>Синтаксис</dt><dd><code>INSERT INTO table (columns) VALUES (values);</code></dd></div><div><dt>Приклад</dt><dd><code>INSERT INTO users (name) VALUES ('Іван');</code></dd></div><div><dt>Примітка</dt><dd>Кількість колонок має відповідати кількості значень.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">UPDATE</span></h3><dl><div><dt>Опис</dt><dd>Оновлює існуючі рядки.</dd></div><div><dt>Синтаксис</dt><dd><code>UPDATE table SET column = value WHERE condition;</code></dd></div><div><dt>Приклад</dt><dd><code>UPDATE users SET age = 30 WHERE id = 1;</code></dd></div><div><dt>Примітка</dt><dd>Без WHERE можна змінити всі рядки.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">DELETE</span></h3><dl><div><dt>Опис</dt><dd>Видаляє рядки.</dd></div><div><dt>Синтаксис</dt><dd><code>DELETE FROM table WHERE condition;</code></dd></div><div><dt>Приклад</dt><dd><code>DELETE FROM users WHERE id = 1;</code></dd></div><div><dt>Примітка</dt><dd>Без WHERE можна видалити всі рядки.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">CREATE TABLE</span></h3><dl><div><dt>Опис</dt><dd>Створює таблицю.</dd></div><div><dt>Синтаксис</dt><dd><code>CREATE TABLE name (...);</code></dd></div><div><dt>Приклад</dt><dd><code>CREATE TABLE users (id INT, name VARCHAR(100));</code></dd></div><div><dt>Примітка</dt><dd>Типи даних можуть трохи відрізнятися між базами.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">ORDER BY</span></h3><dl><div><dt>Опис</dt><dd>Сортує результат.</dd></div><div><dt>Синтаксис</dt><dd><code>ORDER BY column ASC|DESC</code></dd></div><div><dt>Приклад</dt><dd><code>ORDER BY created_at DESC</code></dd></div><div><dt>Примітка</dt><dd>ASC часто є значенням за замовчуванням.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">GROUP BY</span></h3><dl><div><dt>Опис</dt><dd>Групує рядки для агрегатних обчислень.</dd></div><div><dt>Синтаксис</dt><dd><code>GROUP BY column</code></dd></div><div><dt>Приклад</dt><dd><code>GROUP BY category</code></dd></div><div><dt>Примітка</dt><dd>Часто використовується з COUNT, SUM, AVG.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">JOIN</span></h3><dl><div><dt>Опис</dt><dd>Поєднує таблиці.</dd></div><div><dt>Синтаксис</dt><dd><code>table1 JOIN table2 ON condition</code></dd></div><div><dt>Приклад</dt><dd><code>users JOIN orders ON users.id = orders.user_id</code></dd></div><div><dt>Примітка</dt><dd>Вибір типу JOIN залежить від потрібних рядків.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">CREATE INDEX</span></h3><dl><div><dt>Опис</dt><dd>Створює індекс для швидшого пошуку.</dd></div><div><dt>Синтаксис</dt><dd><code>CREATE INDEX name ON table (column);</code></dd></div><div><dt>Приклад</dt><dd><code>CREATE INDEX idx_email ON users (email);</code></dd></div><div><dt>Примітка</dt><dd>Індекси варто додавати до колонок, за якими часто шукають.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage">За вашим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>SQL Lessons. Сайт працює офлайн і відкривається як звичайний HTML-файл.</p>
+  </footer>
+
+  <script>
+    /* Простий офлайн JavaScript: пошук, копіювання коду і згортання секцій. */
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase() + " " + section.innerText.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: ${visible} блоків.`
+        : "Показано всі теми довідника.";
+
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

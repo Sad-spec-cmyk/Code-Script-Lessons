@@ -181,7 +181,12 @@
       "C++ Lessons / C++ Довідник": "C++ Lessons / C++ Guide",
       "Java Lessons / Java Довідник": "Java Lessons / Java Guide",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Guide",
-      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide"
+      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide",
+      "C Lessons / C Довідник": "C Lessons / C Guide",
+      "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Guide",
+      "TypeScript Lessons / TypeScript Довідник": "TypeScript Lessons / TypeScript Guide",
+      "PHP Lessons / PHP Довідник": "PHP Lessons / PHP Guide",
+      "PowerShell Lessons / PowerShell Довідник": "PowerShell Lessons / PowerShell Guide"
     },
     ru: {
       "Programming Lessons / Вибір мови": "Programming Lessons / Выбор языка",
@@ -193,7 +198,12 @@
       "C++ Lessons / C++ Довідник": "C++ Lessons / C++ Справочник",
       "Java Lessons / Java Довідник": "Java Lessons / Java Справочник",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Справочник",
-      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник"
+      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник",
+      "C Lessons / C Довідник": "C Lessons / C Справочник",
+      "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Справочник",
+      "TypeScript Lessons / TypeScript Довідник": "TypeScript Lessons / TypeScript Справочник",
+      "PHP Lessons / PHP Довідник": "PHP Lessons / PHP Справочник",
+      "PowerShell Lessons / PowerShell Довідник": "PowerShell Lessons / PowerShell Справочник"
     }
   };
 
@@ -212,13 +222,15 @@
             .replace("атрибутів", "attributes")
             .replace("селекторів", "selectors")
             .replace("властивостей", "properties")
+            .replace("блоків", "blocks")
         : trimmed.replace("Знайдено:", "Найдено:")
             .replace("тем", "тем")
             .replace("записів довідника", "записей справочника")
             .replace("тегів", "тегов")
             .replace("атрибутів", "атрибутов")
             .replace("селекторів", "селекторов")
-            .replace("властивостей", "свойств");
+            .replace("властивостей", "свойств")
+            .replace("блоків", "блоков");
     }
 
     const translated = map[trimmed];

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/C.png" type="image/png">
+  <title>C Lessons / C Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .copy-btn:hover, .copy-btn:focus-visible {
+      color: var(--text);
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .search-count {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">C Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>C Lessons</h1>
+    <p>Український довідник по мові C з прикладами, синтаксисом, пам’яттю, вказівниками та базовими концепціями.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке C</a>
+      <a href="#syntax">Синтаксис C</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: pointer, malloc, struct, printf" aria-label="Пошук по темах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке C системне програмування embedded драйвери ОС ігрові рушії">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке C</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">C — це компільована мова програмування, яка дає багато контролю над пам’яттю і роботою програми.</p>
+          <div class="grid">
+            <article class="info-card search-item"><h3>Де використовується</h3><p>C використовують у системному програмуванні, embedded, драйверах, операційних системах, інструментах командного рядка та ігрових рушіях.</p></article>
+            <article class="info-card search-item"><h3>Чому C важлива</h3><p>C допомагає зрозуміти, як працює пам’ять, адреси, масиви, вказівники, компіляція і низькорівневі частини комп’ютера.</p></article>
+            <article class="info-card search-item"><h3>Переваги</h3><p>C швидка, компактна, близька до заліза, має простий синтаксис і величезну кількість існуючого коду.</p></article>
+            <article class="info-card search-item"><h3>Складність</h3><p>У C потрібно уважно працювати з пам’яттю, вказівниками, рядками і межами масивів. Мова дає свободу, але вимагає дисципліни.</p></article>
+          </div>
+          <h3>Перша програма</h3>
+          <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{
+    printf("Привіт, світ!\n");
+    return 0;
+}</code></pre></div>
+          <ul>
+            <li><code>#include &lt;stdio.h&gt;</code> підключає стандартну бібліотеку вводу і виводу.</li>
+            <li><code>int main()</code> оголошує головну функцію програми.</li>
+            <li><code>{ }</code> містять тіло функції.</li>
+            <li><code>printf</code> виводить текст у консоль.</li>
+            <li><code>\n</code> додає перехід на новий рядок.</li>
+            <li><code>return 0</code> повідомляє, що програма завершилась успішно.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис C коментарі крапка з комою фігурні дужки include main return">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Синтаксис C</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Коментарі</h3><p><code>//</code> створює коментар до кінця рядка, а <code>/* */</code> — багаторядковий коментар.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Однорядковий коментар
+/* Багаторядковий
+   коментар */</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Крапка з комою</h3><p>Більшість інструкцій у C завершується символом <code>;</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int age = 18;
+printf("%d", age);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Фігурні дужки</h3><p><code>{ }</code> об’єднують інструкції в блок: функцію, умову або цикл.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if (age &gt;= 18) {
+    printf("OK");
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>#include, main, return</h3><p><code>#include</code> підключає заголовковий файл, <code>main()</code> є точкою входу, <code>return</code> повертає результат.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    return 0;
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="types">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Типи даних</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">int</span></h3><dl><div><dt>Опис</dt><dd>Ціле число.</dd></div><div><dt>Приклад</dt><dd><code>int age = 18;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для лічильників, кількості, індексів і цілих значень.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">float</span></h3><dl><div><dt>Опис</dt><dd>Дробове число одинарної точності.</dd></div><div><dt>Приклад</dt><dd><code>float speed = 3.5f;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для приблизних дробових значень, коли точність не критична.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">double</span></h3><dl><div><dt>Опис</dt><dd>Дробове число подвійної точності.</dd></div><div><dt>Приклад</dt><dd><code>double price = 19.99;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для більшості дробових обчислень.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">char</span></h3><dl><div><dt>Опис</dt><dd>Один символ або маленьке ціле число.</dd></div><div><dt>Приклад</dt><dd><code>char grade = 'A';</code></dd></div><div><dt>Коли використовувати</dt><dd>Для символів, байтів і рядків як масивів char.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">void</span></h3><dl><div><dt>Опис</dt><dd>Означає відсутність значення або типу результату.</dd></div><div><dt>Приклад</dt><dd><code>void printMessage()</code></dd></div><div><dt>Коли використовувати</dt><dd>Для функцій без повернення значення або універсальних вказівників.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">short</span></h3><dl><div><dt>Опис</dt><dd>Коротке ціле число.</dd></div><div><dt>Приклад</dt><dd><code>short level = 2;</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли потрібно економити пам’ять і діапазон значень невеликий.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">long</span></h3><dl><div><dt>Опис</dt><dd>Ціле число більшого діапазону.</dd></div><div><dt>Приклад</dt><dd><code>long population = 1000000L;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для великих цілих значень.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">unsigned</span></h3><dl><div><dt>Опис</dt><dd>Модифікатор для чисел без від’ємних значень.</dd></div><div><dt>Приклад</dt><dd><code>unsigned int count = 10;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для розмірів, кількостей і бітових масок.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">signed</span></h3><dl><div><dt>Опис</dt><dd>Модифікатор для чисел зі знаком.</dd></div><div><dt>Приклад</dt><dd><code>signed int temperature = -5;</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли значення може бути від’ємним.</dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми C</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Змінні</h3><p>Змінна має тип, назву і може мати початкове значення.</p><ul><li>Оголошення: <code>int x;</code></li><li>Ініціалізація: <code>int x = 10;</code></li><li><code>const</code> забороняє зміну значення.</li><li><code>sizeof</code> повертає розмір типу або змінної в байтах.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>const int max = 100;
+printf("%zu", sizeof(max));</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Оператори</h3><p>Оператори виконують обчислення, порівняння, логіку і присвоєння.</p><ul><li>Арифметичні: <code>+ - * / %</code></li><li>Порівняння: <code>== != &gt; &lt; &gt;= &lt;=</code></li><li>Логічні: <code>&amp;&amp; || !</code></li><li>Присвоєння: <code>= += -= *= /=</code></li><li>Інкремент і декремент: <code>++ --</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int x = 5;
+x += 2;
+x++;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Умови</h3><p><code>if</code>, <code>else if</code>, <code>else</code> і <code>switch</code> дозволяють вибирати різний код.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if (score &gt;= 90) {
+    printf("Відмінно");
+} else if (score &gt;= 60) {
+    printf("Зараховано");
+} else {
+    printf("Спробуй ще");
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Цикли</h3><p>Цикли повторюють блок коду.</p><ul><li><code>for</code> зручний для лічильника.</li><li><code>while</code> працює, поки умова істинна.</li><li><code>do while</code> виконується мінімум один раз.</li><li><code>break</code> зупиняє цикл, <code>continue</code> переходить до наступної ітерації.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>for (int i = 0; i &lt; 5; i++) {
+    printf("%d\n", i);
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Функції</h3><p>Функція — це іменований блок коду з параметрами і результатом.</p><ul><li>Прототип оголошує функцію до використання.</li><li><code>return</code> повертає значення.</li><li><code>void</code> означає, що результату немає.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int add(int a, int b);
+
+int add(int a, int b) {
+    return a + b;
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Масиви</h3><p>Масив зберігає кілька елементів одного типу під однією назвою.</p><ul><li>Індекс починається з 0.</li><li>Одновимірний масив схожий на список.</li><li>Багатовимірний масив схожий на таблицю.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int numbers[3] = {1, 2, 3};
+int matrix[2][2] = {{1, 2}, {3, 4}};</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Рядки</h3><p>Рядок у C — це масив <code>char</code>, який завершується символом <code>'\0'</code>.</p><ul><li><code>printf</code> виводить рядки.</li><li><code>scanf</code> читає введення, але потребує обережності.</li><li><code>strlen</code> рахує довжину.</li><li><code>strcpy</code> копіює рядок.</li><li><code>strcmp</code> порівнює рядки.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#include &lt;string.h&gt;
+
+char name[20] = "Ivan";
+printf("%zu", strlen(name));</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Вказівники</h3><p>Pointer зберігає адресу іншої змінної. Оператор <code>&amp;</code> бере адресу, а <code>*</code> дістає значення за адресою.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int number = 10;
+int *ptr = &amp;number;
+
+printf("%d", *ptr);</code></pre></div><p>Масив і вказівник пов’язані: назва масиву часто поводиться як адреса першого елемента.</p></article>
+            <article class="doc-card search-item"><h3>Структури</h3><p><code>struct</code> дозволяє створити власний тип з полями.</p><ul><li><code>.</code> відкриває поле звичайної структури.</li><li><code>-&gt;</code> відкриває поле через вказівник.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>struct Player {
+    char name[20];
+    int health;
+};
+
+struct Player player = {"Alex", 100};
+printf("%d", player.health);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Динамічна пам’ять</h3><p>Динамічна пам’ять виділяється під час роботи програми.</p><ul><li><code>malloc</code> виділяє пам’ять.</li><li><code>calloc</code> виділяє і заповнює нулями.</li><li><code>realloc</code> змінює розмір.</li><li><code>free</code> звільняє пам’ять.</li><li>Завжди звільняй пам’ять через <code>free()</code>.</li><li>Не використовуй пам’ять після <code>free()</code>.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int *items = malloc(5 * sizeof(int));
+if (items != NULL) {
+    items[0] = 10;
+    free(items);
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Файли</h3><p>C працює з файлами через тип <code>FILE</code>.</p><ul><li><code>fopen</code> відкриває файл.</li><li><code>fclose</code> закриває файл.</li><li><code>fprintf</code> записує форматований текст.</li><li><code>fscanf</code> читає форматовані дані.</li><li><code>fgets</code> читає рядок.</li><li><code>fputs</code> записує рядок.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>FILE *file = fopen("data.txt", "w");
+if (file != NULL) {
+    fprintf(file, "Hello");
+    fclose(file);
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Препроцесор</h3><p>Препроцесор обробляє директиви перед компіляцією.</p><ul><li><code>#include</code> підключає файли.</li><li><code>#define</code> створює макрос або константу.</li><li><code>#ifdef</code> перевіряє, чи визначено ім’я.</li><li><code>#ifndef</code> перевіряє, чи ім’я не визначено.</li><li><code>#endif</code> завершує умовний блок.</li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#ifndef CONFIG_H
+#define CONFIG_H
+
+#define MAX_SIZE 100
+
+#endif</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card search-item"><h3>Hello World</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Привіт, світ!\n");
+    return 0;
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Калькулятор</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int a = 10;
+int b = 5;
+
+printf("%d\n", a + b);
+printf("%d\n", a - b);
+printf("%d\n", a * b);
+printf("%d\n", a / b);</code></pre></div></article>
+            <article class="example-card search-item"><h3>Перевірка парного числа</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int number = 8;
+
+if (number % 2 == 0) {
+    printf("Парне");
+} else {
+    printf("Непарне");
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Масив чисел</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int numbers[5] = {1, 2, 3, 4, 5};
+
+for (int i = 0; i &lt; 5; i++) {
+    printf("%d\n", numbers[i]);
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Функція додавання</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int add(int a, int b) {
+    return a + b;
+}
+
+printf("%d", add(2, 3));</code></pre></div></article>
+            <article class="example-card search-item"><h3>Робота з рядками</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>#include &lt;string.h&gt;
+
+char text[20] = "Hello";
+strcpy(text, "C language");
+printf("%s", text);</code></pre></div></article>
+            <article class="example-card search-item"><h3>Вказівник</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int number = 10;
+int *ptr = &amp;number;
+
+printf("%d", *ptr);</code></pre></div></article>
+            <article class="example-card search-item"><h3>Структура Player</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>struct Player {
+    char name[20];
+    int health;
+};
+
+struct Player player = {"Alex", 100};</code></pre></div></article>
+            <article class="example-card search-item"><h3>Запис у файл</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>FILE *file = fopen("data.txt", "w");
+if (file != NULL) {
+    fputs("Привіт з C", file);
+    fclose(file);
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Читання з файлу</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>char line[100];
+FILE *file = fopen("data.txt", "r");
+if (file != NULL) {
+    fgets(line, 100, file);
+    printf("%s", line);
+    fclose(file);
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">printf</span></h3><dl><div><dt>Категорія</dt><dd>Ввід і вивід</dd></div><div><dt>Опис</dt><dd>Виводить форматований текст.</dd></div><div><dt>Синтаксис</dt><dd><code>printf(format, values);</code></dd></div><div><dt>Приклад</dt><dd><code>printf("%d", age);</code></dd></div><div><dt>Примітка</dt><dd>Потрібен <code>#include &lt;stdio.h&gt;</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">scanf</span></h3><dl><div><dt>Категорія</dt><dd>Ввід і вивід</dd></div><div><dt>Опис</dt><dd>Читає форматовані дані з консолі.</dd></div><div><dt>Синтаксис</dt><dd><code>scanf(format, &amp;value);</code></dd></div><div><dt>Приклад</dt><dd><code>scanf("%d", &amp;age);</code></dd></div><div><dt>Примітка</dt><dd>Для змінної зазвичай передають адресу через <code>&amp;</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">strlen</span></h3><dl><div><dt>Категорія</dt><dd>Рядки</dd></div><div><dt>Опис</dt><dd>Повертає довжину рядка без символу <code>'\0'</code>.</dd></div><div><dt>Синтаксис</dt><dd><code>strlen(text)</code></dd></div><div><dt>Приклад</dt><dd><code>strlen("Hello")</code></dd></div><div><dt>Примітка</dt><dd>Потрібен <code>#include &lt;string.h&gt;</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">strcpy</span></h3><dl><div><dt>Категорія</dt><dd>Рядки</dd></div><div><dt>Опис</dt><dd>Копіює один рядок в інший.</dd></div><div><dt>Синтаксис</dt><dd><code>strcpy(destination, source);</code></dd></div><div><dt>Приклад</dt><dd><code>strcpy(name, "Ivan");</code></dd></div><div><dt>Примітка</dt><dd>Буфер призначення має бути достатньо великим.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">strcmp</span></h3><dl><div><dt>Категорія</dt><dd>Рядки</dd></div><div><dt>Опис</dt><dd>Порівнює два рядки.</dd></div><div><dt>Синтаксис</dt><dd><code>strcmp(a, b)</code></dd></div><div><dt>Приклад</dt><dd><code>strcmp(pass, "1234") == 0</code></dd></div><div><dt>Примітка</dt><dd>0 означає, що рядки однакові.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">malloc</span></h3><dl><div><dt>Категорія</dt><dd>Пам’ять</dd></div><div><dt>Опис</dt><dd>Виділяє блок пам’яті.</dd></div><div><dt>Синтаксис</dt><dd><code>malloc(size)</code></dd></div><div><dt>Приклад</dt><dd><code>malloc(10 * sizeof(int))</code></dd></div><div><dt>Примітка</dt><dd>Перевіряйте результат на <code>NULL</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">calloc</span></h3><dl><div><dt>Категорія</dt><dd>Пам’ять</dd></div><div><dt>Опис</dt><dd>Виділяє пам’ять і заповнює її нулями.</dd></div><div><dt>Синтаксис</dt><dd><code>calloc(count, size)</code></dd></div><div><dt>Приклад</dt><dd><code>calloc(5, sizeof(int))</code></dd></div><div><dt>Примітка</dt><dd>Після використання потрібен <code>free</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">realloc</span></h3><dl><div><dt>Категорія</dt><dd>Пам’ять</dd></div><div><dt>Опис</dt><dd>Змінює розмір раніше виділеного блоку.</dd></div><div><dt>Синтаксис</dt><dd><code>realloc(pointer, new_size)</code></dd></div><div><dt>Приклад</dt><dd><code>realloc(items, 10 * sizeof(int))</code></dd></div><div><dt>Примітка</dt><dd>Обережно обробляйте помилки виділення.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">free</span></h3><dl><div><dt>Категорія</dt><dd>Пам’ять</dd></div><div><dt>Опис</dt><dd>Звільняє динамічно виділену пам’ять.</dd></div><div><dt>Синтаксис</dt><dd><code>free(pointer);</code></dd></div><div><dt>Приклад</dt><dd><code>free(items);</code></dd></div><div><dt>Примітка</dt><dd>Не використовуйте вказівник після <code>free</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">fopen</span></h3><dl><div><dt>Категорія</dt><dd>Файли</dd></div><div><dt>Опис</dt><dd>Відкриває файл.</dd></div><div><dt>Синтаксис</dt><dd><code>fopen(path, mode)</code></dd></div><div><dt>Приклад</dt><dd><code>fopen("data.txt", "r")</code></dd></div><div><dt>Примітка</dt><dd>Може повернути <code>NULL</code>.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">fclose</span></h3><dl><div><dt>Категорія</dt><dd>Файли</dd></div><div><dt>Опис</dt><dd>Закриває файл.</dd></div><div><dt>Синтаксис</dt><dd><code>fclose(file);</code></dd></div><div><dt>Приклад</dt><dd><code>fclose(file);</code></dd></div><div><dt>Примітка</dt><dd>Закривайте файл після роботи.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">sizeof</span></h3><dl><div><dt>Категорія</dt><dd>Типи і пам’ять</dd></div><div><dt>Опис</dt><dd>Повертає розмір типу або значення в байтах.</dd></div><div><dt>Синтаксис</dt><dd><code>sizeof(type)</code></dd></div><div><dt>Приклад</dt><dd><code>sizeof(int)</code></dd></div><div><dt>Примітка</dt><dd>Результат має тип <code>size_t</code>.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage">За вашим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>C Lessons. Сайт працює офлайн і відкривається як звичайний HTML-файл.</p>
+  </footer>
+
+  <script>
+    /* Простий офлайн JavaScript: пошук, копіювання коду і згортання секцій. */
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase() + " " + section.innerText.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: ${visible} блоків.`
+        : "Показано всі теми довідника.";
+
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

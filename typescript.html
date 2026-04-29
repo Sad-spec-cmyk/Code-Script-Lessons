@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/TypeScript.png" type="image/png">
+  <title>TypeScript Lessons / TypeScript Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { color: var(--text); border-color: var(--text); outline: none; }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-count { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge { display: inline; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">TypeScript Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>TypeScript Lessons</h1>
+    <p>Український довідник по TypeScript з прикладами, типами та сучасним JavaScript.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке TypeScript</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: interface, generic, enum, union" aria-label="Пошук по темах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке TypeScript JavaScript типізація фронтенд великі проекти">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке TypeScript</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">TypeScript — це мова на основі JavaScript, яка додає типізацію і допомагає знаходити помилки ще до запуску коду.</p>
+          <div class="grid">
+            <article class="info-card search-item"><h3>Чим відрізняється від JavaScript</h3><p>JavaScript виконується у браузері напряму, а TypeScript спочатку компілюється у JavaScript. Головна різниця — явні типи для змінних, функцій і об’єктів.</p></article>
+            <article class="info-card search-item"><h3>Де використовується</h3><p>TypeScript часто використовують у фронтенді, веб-додатках, бекенді на Node.js, великих проектах і командах, де важлива стабільність коду.</p></article>
+          </div>
+          <h3>Перший приклад</h3>
+          <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let message: string = "Привіт, світ!";
+console.log(message);</code></pre></div>
+          <ul>
+            <li><code>let message</code> створює змінну.</li>
+            <li><code>: string</code> вказує, що змінна має бути рядком.</li>
+            <li><code>console.log(message)</code> виводить значення у консоль.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис TypeScript коментарі типізація let const компіляція TS JS">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Синтаксис</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Коментарі</h3><p>Коментарі такі самі, як у JavaScript: <code>//</code> для одного рядка і <code>/* */</code> для кількох рядків.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Однорядковий коментар
+/* Багаторядковий
+   коментар */</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Типізація</h3><p>Тип пишеться після назви через двокрапку. Це допомагає редактору і компілятору перевіряти код.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let age: number = 18;
+let name: string = "Іван";</code></pre></div></article>
+            <article class="doc-card search-item"><h3>let і const</h3><p><code>let</code> використовують для змінних, які можуть змінюватися. <code>const</code> — для значень, які не переприсвоюються.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let score: number = 0;
+score = 10;
+
+const appName: string = "Shop";</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Компіляція TS у JS</h3><p>Браузер виконує JavaScript, тому TypeScript код перетворюють у JavaScript за допомогою компілятора.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>tsc app.ts
+node app.js</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="types">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Типи даних</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">string</span></h3><dl><div><dt>Опис</dt><dd>Рядок тексту.</dd></div><div><dt>Приклад</dt><dd><code>let title: string = "TypeScript";</code></dd></div><div><dt>Коли використовувати</dt><dd>Для імен, повідомлень, описів і будь-якого тексту.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">number</span></h3><dl><div><dt>Опис</dt><dd>Числовий тип для цілих і дробових чисел.</dd></div><div><dt>Приклад</dt><dd><code>let price: number = 19.99;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для віку, цін, кількості, розрахунків і координат.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">boolean</span></h3><dl><div><dt>Опис</dt><dd>Логічне значення true або false.</dd></div><div><dt>Приклад</dt><dd><code>let isOpen: boolean = true;</code></dd></div><div><dt>Коли використовувати</dt><dd>Для умов, перемикачів і станів.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">any</span></h3><dl><div><dt>Опис</dt><dd>Вимикає перевірку типу для значення.</dd></div><div><dt>Приклад</dt><dd><code>let data: any = 10;</code></dd></div><div><dt>Коли використовувати</dt><dd>Тільки тимчасово або для старого коду, бо any прибирає користь TypeScript.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">unknown</span></h3><dl><div><dt>Опис</dt><dd>Невідомий тип, який треба перевірити перед використанням.</dd></div><div><dt>Приклад</dt><dd><code>let value: unknown = "text";</code></dd></div><div><dt>Коли використовувати</dt><dd>Для даних ззовні, коли тип ще не відомий.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">void</span></h3><dl><div><dt>Опис</dt><dd>Функція нічого не повертає.</dd></div><div><dt>Приклад</dt><dd><code>function log(): void {}</code></dd></div><div><dt>Коли використовувати</dt><dd>Для функцій, які виконують дію без результату.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">null / undefined</span></h3><dl><div><dt>Опис</dt><dd>Позначають відсутність значення або ще не задане значення.</dd></div><div><dt>Приклад</dt><dd><code>let user: string | null = null;</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли значення може бути відсутнім і це треба явно показати в типі.</dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми TypeScript</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Змінні і union типи</h3><p>Змінна може мати один тип або кілька дозволених типів через union.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let id: number | string = 10;
+id = "user-10";</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Функції</h3><p>У функціях можна типізувати параметри, результат, optional параметри та arrow functions.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function greet(name: string, age?: number): string {
+    return `Привіт, ${name}`;
+}
+
+const add = (a: number, b: number): number =&gt; a + b;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Інтерфейси</h3><p><code>interface</code> описує структуру об’єкта: які поля і методи він має мати.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>interface User {
+    id: number;
+    name: string;
+    isAdmin?: boolean;
+}
+
+const user: User = { id: 1, name: "Оля" };</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Типи type</h3><p><code>type</code> створює псевдонім типу. Він зручний для union, intersection і складних типів.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>type Status = "new" | "done";
+type Named = { name: string };
+type Worker = Named &amp; { role: string };</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Масиви</h3><p>Масиви типізують через <code>Type[]</code> або <code>Array&lt;T&gt;</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let numbers: number[] = [1, 2, 3];
+let names: Array&lt;string&gt; = ["Анна", "Іван"];</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Об’єкти і readonly</h3><p>Об’єкти можна описувати прямо в типі. <code>readonly</code> забороняє зміну поля після створення.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>const product: { readonly id: number; title: string } = {
+    id: 1,
+    title: "Phone"
+};</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Класи</h3><p>TypeScript додає модифікатори доступу: <code>public</code>, <code>private</code>, <code>protected</code> і <code>readonly</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Player {
+    constructor(
+        public name: string,
+        private health: number,
+        readonly id: number
+    ) {}
+}</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Generics</h3><p>Generics дозволяють створювати універсальні функції та типи, які працюють з різними типами без втрати перевірки.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function first&lt;T&gt;(items: T[]): T {
+    return items[0];
+}
+
+const value = first&lt;number&gt;([10, 20]);</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Enum</h3><p><code>enum</code> створює набір іменованих значень. Значення можуть бути числовими або строковими.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>enum Role {
+    User = "USER",
+    Admin = "ADMIN"
+}
+
+const role: Role = Role.Admin;</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Modules</h3><p><code>export</code> відкриває значення з файлу, а <code>import</code> підключає його в іншому файлі.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>export function sum(a: number, b: number): number {
+    return a + b;
+}
+
+import { sum } from "./math";</code></pre></div></article>
+            <article class="doc-card search-item"><h3>Робота з JavaScript</h3><p>TypeScript сумісний з JavaScript: JS-код можна поступово переводити на TS, додаючи типи там, де це корисно.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// JavaScript
+function add(a, b) {
+    return a + b;
+}
+
+// TypeScript
+function addTyped(a: number, b: number): number {
+    return a + b;
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card search-item"><h3>Типізована функція</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function multiply(a: number, b: number): number {
+    return a * b;
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Об’єкт користувача</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>type User = {
+    id: number;
+    name: string;
+    email?: string;
+};
+
+const user: User = { id: 1, name: "Іван" };</code></pre></div></article>
+            <article class="example-card search-item"><h3>Інтерфейс і клас</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>interface Movable {
+    move(): void;
+}
+
+class Car implements Movable {
+    move(): void {
+        console.log("Car moves");
+    }
+}</code></pre></div></article>
+            <article class="example-card search-item"><h3>Generic функція</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>function wrap&lt;T&gt;(value: T): { value: T } {
+    return { value };
+}
+
+const result = wrap&lt;string&gt;("hello");</code></pre></div></article>
+            <article class="example-card search-item"><h3>Enum приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>enum OrderStatus {
+    New = "NEW",
+    Paid = "PAID",
+    Sent = "SENT"
+}
+
+const status: OrderStatus = OrderStatus.Paid;</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">interface</span></h3><dl><div><dt>Опис</dt><dd>Описує форму об’єкта або класу.</dd></div><div><dt>Синтаксис</dt><dd><code>interface Name { field: Type }</code></dd></div><div><dt>Приклад</dt><dd><code>interface User { name: string }</code></dd></div><div><dt>Примітка</dt><dd>Інтерфейси можна розширювати через extends.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">type</span></h3><dl><div><dt>Опис</dt><dd>Створює псевдонім типу.</dd></div><div><dt>Синтаксис</dt><dd><code>type Name = Type;</code></dd></div><div><dt>Приклад</dt><dd><code>type Id = number | string;</code></dd></div><div><dt>Примітка</dt><dd>Зручний для union і intersection.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">union</span></h3><dl><div><dt>Опис</dt><dd>Дозволяє кілька можливих типів.</dd></div><div><dt>Синтаксис</dt><dd><code>A | B</code></dd></div><div><dt>Приклад</dt><dd><code>let id: number | string;</code></dd></div><div><dt>Примітка</dt><dd>Перед використанням часто треба перевірити тип.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">intersection</span></h3><dl><div><dt>Опис</dt><dd>Об’єднує кілька типів в один.</dd></div><div><dt>Синтаксис</dt><dd><code>A &amp; B</code></dd></div><div><dt>Приклад</dt><dd><code>type Admin = User &amp; Role;</code></dd></div><div><dt>Примітка</dt><dd>Корисно для комбінування властивостей.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">readonly</span></h3><dl><div><dt>Опис</dt><dd>Забороняє змінювати поле після створення.</dd></div><div><dt>Синтаксис</dt><dd><code>readonly field: Type</code></dd></div><div><dt>Приклад</dt><dd><code>readonly id: number</code></dd></div><div><dt>Примітка</dt><dd>Це перевірка TypeScript на етапі компіляції.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">generic</span></h3><dl><div><dt>Опис</dt><dd>Параметр типу для універсального коду.</dd></div><div><dt>Синтаксис</dt><dd><code>function name&lt;T&gt;(value: T): T</code></dd></div><div><dt>Приклад</dt><dd><code>function id&lt;T&gt;(x: T): T { return x; }</code></dd></div><div><dt>Примітка</dt><dd>Дає гнучкість без втрати типізації.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">enum</span></h3><dl><div><dt>Опис</dt><dd>Набір іменованих значень.</dd></div><div><dt>Синтаксис</dt><dd><code>enum Name { A, B }</code></dd></div><div><dt>Приклад</dt><dd><code>enum Role { User, Admin }</code></dd></div><div><dt>Примітка</dt><dd>У сучасному TS іноді замінюють union рядків.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">public / private / protected</span></h3><dl><div><dt>Опис</dt><dd>Модифікатори доступу для класів.</dd></div><div><dt>Синтаксис</dt><dd><code>private field: Type</code></dd></div><div><dt>Приклад</dt><dd><code>private health: number</code></dd></div><div><dt>Примітка</dt><dd>Допомагають приховувати внутрішні деталі класу.</dd></div></dl></article>
+            <article class="doc-card search-item"><h3>Назва: <span class="badge">export / import</span></h3><dl><div><dt>Опис</dt><dd>Працюють з модулями між файлами.</dd></div><div><dt>Синтаксис</dt><dd><code>export ...</code> і <code>import ... from</code></dd></div><div><dt>Приклад</dt><dd><code>import { sum } from "./math";</code></dd></div><div><dt>Примітка</dt><dd>Синтаксис такий самий, як у сучасному JavaScript.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage">За вашим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>TypeScript Lessons. Сайт працює офлайн і відкривається як звичайний HTML-файл.</p>
+  </footer>
+
+  <script>
+    /* Простий офлайн JavaScript: пошук, копіювання коду і згортання секцій. */
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase() + " " + section.innerText.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: ${visible} блоків.`
+        : "Показано всі теми довідника.";
+
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
