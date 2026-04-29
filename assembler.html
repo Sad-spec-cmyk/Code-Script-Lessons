@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assembler Lessons / Assembly Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .category-title {
+      margin: 20px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap { position: relative; margin: 12px 0; min-width: 0; }
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .copy-btn:hover, .copy-btn:focus-visible {
+      color: var(--text);
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .search-count {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Assembler Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Assembler Lessons</h1>
+    <p>Український довідник по Assembly з базовими поняттями, синтаксисом, регістрами та прикладами.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Assembly</a>
+      <a href="#architecture">Архітектури</a>
+      <a href="#program">Базова програма</a>
+      <a href="#registers">Регістри</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: rax, mov, syscall, stack" aria-label="Пошук по темах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке Assembly Assembler системне програмування драйвери embedded reverse engineering оптимізація">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке Assembly</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Assembly — це низькорівнева мова, у якій команди дуже близькі до реальних інструкцій процесора.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Assembly і Assembler</h3>
+              <p>Assembly — це мова інструкцій. Assembler — це програма, яка перетворює Assembly-код у машинний код для процесора.</p>
+            </article>
+            <article class="info-card">
+              <h3>Відмінність від мов високого рівня</h3>
+              <p>У Python, Java або C# ви описуєте логіку більш людською мовою. В Assembly треба прямо думати про регістри, пам’ять, адреси та інструкції.</p>
+            </article>
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>Assembly потрібен у системному програмуванні, драйверах, embedded-пристроях, reverse engineering, оптимізації та навчанні архітектури комп’ютера.</p>
+            </article>
+            <article class="info-card">
+              <h3>Чому це складно, але корисно</h3>
+              <p>Assembly складніший, бо мало абстракцій. Зате він допомагає зрозуміти, як процесор виконує команди і як програма працює всередині.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="architecture" data-title="Архітектури x86 x86-64 ARM RISC-V NASM Linux">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Важливе уточнення: архітектури</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Assembly залежить від архітектури процесора. Інструкції, регістри та правила можуть відрізнятися.</p>
+          <div class="doc-grid">
+            <article class="doc-card"><h3>x86</h3><p>32-бітна архітектура Intel/AMD. Має регістри eax, ebx, ecx, edx та історично дуже поширена.</p></article>
+            <article class="doc-card"><h3>x86-64</h3><p>64-бітне продовження x86. Має регістри rax, rbx, r8-r15. Основний фокус цього сайту — NASM x86-64 для Linux.</p></article>
+            <article class="doc-card"><h3>ARM</h3><p>Архітектура, популярна у телефонах, планшетах, embedded і сучасних енергоефективних комп’ютерах.</p></article>
+            <article class="doc-card"><h3>RISC-V</h3><p>Відкрита архітектура команд. Часто використовується в освіті, дослідженнях і нових embedded-проєктах.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="program" data-title="Базова структура програми NASM x86-64 Linux section data text global start syscall">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Базова структура програми</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Нижче простий NASM x86-64 приклад для Linux: програма виводить текст і завершується.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>section .data
+message db "Привіт, світ!", 10
+length equ $ - message
+
+section .text
+global _start
+
+_start:
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, message
+    mov rdx, length
+    syscall
+
+    mov rax, 60
+    xor rdi, rdi
+    syscall</code></pre>
+          </div>
+          <ul>
+            <li><code>section .data</code> містить готові дані програми.</li>
+            <li><code>message db</code> створює байти рядка, а <code>10</code> додає перехід на новий рядок.</li>
+            <li><code>length equ $ - message</code> рахує довжину повідомлення.</li>
+            <li><code>section .text</code> містить виконуваний код.</li>
+            <li><code>global _start</code> робить мітку <code>_start</code> точкою входу.</li>
+            <li><code>mov rax, 1</code> вибирає системний виклик <code>write</code>.</li>
+            <li><code>rdi</code>, <code>rsi</code>, <code>rdx</code> передають аргументи: куди, що і скільки байтів писати.</li>
+            <li><code>syscall</code> передає керування ядру Linux.</li>
+            <li><code>mov rax, 60</code> вибирає системний виклик <code>exit</code>.</li>
+            <li><code>xor rdi, rdi</code> швидко ставить код виходу 0.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="registers">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Регістри x86-64</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Регістр — це дуже швидка маленька комірка всередині процесора. У x86-64 регістри мають 64 біти.</p>
+          <div class="doc-grid" id="registersContainer"></div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми Assembly</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div id="topicsContainer"></div>
+          <p class="empty" id="topicsEmpty">За вашим запитом тем не знайдено.</p>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid" id="examplesContainer"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div id="referenceContainer"></div>
+          <p class="empty" id="referenceEmpty">У довіднику немає збігів.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Assembler Lessons. Сайт працює офлайн і фокусується на NASM x86-64 для Linux.</p>
+  </footer>
+
+  <script>
+    /* Усі дані довідника зберігаються в цьому файлі, щоб сайт працював офлайн. */
+    const registers = [
+      { name: "rax", description: "Акумуляторний регістр.", usage: "Часто зберігає результат операцій або номер syscall у Linux.", example: "mov rax, 60" },
+      { name: "rbx", description: "Загальний регістр.", usage: "Може зберігати проміжні значення. У багатьох угодах виклику його треба зберігати.", example: "mov rbx, 10" },
+      { name: "rcx", description: "Регістр-лічильник.", usage: "Часто використовується для лічильників і циклів.", example: "mov rcx, 5" },
+      { name: "rdx", description: "Загальний регістр і додатковий регістр для арифметики.", usage: "У syscall write містить довжину буфера.", example: "mov rdx, length" },
+      { name: "rsi", description: "Source index.", usage: "Часто вказує на джерело даних. У syscall write містить адресу буфера.", example: "mov rsi, message" },
+      { name: "rdi", description: "Destination index.", usage: "Часто містить перший аргумент функції або syscall.", example: "mov rdi, 1" },
+      { name: "rbp", description: "Base pointer.", usage: "Може бути базою стекового кадру функції.", example: "mov rbp, rsp" },
+      { name: "rsp", description: "Stack pointer.", usage: "Вказує на вершину стеку.", example: "push rax" },
+      { name: "rip", description: "Instruction pointer.", usage: "Містить адресу наступної інструкції. Зазвичай напряму не змінюється через mov.", example: "jmp label" },
+      { name: "r8-r15", description: "Додаткові 64-бітні регістри.", usage: "Використовуються як додаткове місце для даних і аргументів.", example: "mov r8, 100" }
+    ];
+
+    const topics = [
+      { category: "Основні поняття", title: "Інструкція", description: "Інструкція — це команда для процесора.", points: ["Наприклад mov копіює значення.", "add додає числа.", "syscall звертається до ядра Linux."], code: "mov rax, 1" },
+      { category: "Основні поняття", title: "Операнд", description: "Операнд — це дані, з якими працює інструкція.", points: ["Операндом може бути регістр.", "Операндом може бути число.", "Операндом може бути адреса пам’яті."], code: "mov rax, 10 ; rax і 10 — операнди" },
+      { category: "Основні поняття", title: "Пам’ять і адреса", description: "Пам’ять зберігає дані, а адреса показує, де саме вони лежать.", points: ["Мітка може позначати адресу.", "У квадратних дужках часто читають значення за адресою.", "Адреси важливі для рядків, масивів і стеку."], code: "mov rsi, message\nmov al, [message]" },
+      { category: "Основні поняття", title: "Стек", description: "Стек — область пам’яті для тимчасових значень, адрес повернення і даних функцій.", points: ["rsp показує вершину стеку.", "push кладе значення у стек.", "pop дістає значення зі стеку."], code: "push rax\npop rbx" },
+      { category: "Основні поняття", title: "Сегмент, мітка і коментар", description: "Сегменти розділяють дані й код, мітки називають адреси, коментарі пояснюють код.", points: ["section .data містить дані.", "section .text містить код.", "Коментар у NASM починається з ;"], code: "section .text\n_start:\n    mov rax, 60 ; exit" },
+      { category: "Типи даних і директиви", title: "db, dw, dd, dq", description: "Директиви створюють дані різного розміру.", points: ["db створює байт.", "dw створює word, 2 байти.", "dd створює double word, 4 байти.", "dq створює quad word, 8 байтів."], code: "letter db 'A'\nsmall dw 100\nnumber dd 1000\nbig dq 100000" },
+      { category: "Типи даних і директиви", title: "equ і res*", description: "equ задає константу, resb/resw/resd/resq резервують пам’ять у .bss.", points: ["equ не створює змінну, а задає ім’я для значення.", "resb резервує байти.", "resq резервує 8-байтні комірки."], code: "length equ $ - message\nbuffer resb 64\nnumbers resq 4" },
+      { category: "Секції програми", title: "section .data", description: "Секція для готових даних.", points: ["Тут зберігають рядки.", "Тут можуть бути числа з початковими значеннями."], code: "section .data\nmessage db \"Hello\", 10" },
+      { category: "Секції програми", title: "section .bss", description: "Секція для пам’яті без початкових значень.", points: ["Добре підходить для буферів.", "Дані резервуються, але не записуються прямо у файл програми."], code: "section .bss\nbuffer resb 128" },
+      { category: "Секції програми", title: "section .text", description: "Секція з виконуваним кодом.", points: ["Тут пишуть інструкції.", "Точка входу часто має мітку _start."], code: "section .text\nglobal _start\n_start:" },
+      { category: "Умови", title: "cmp і jump", description: "cmp порівнює значення, а jump-інструкції переходять за результатом порівняння.", points: ["je переходить, якщо рівно.", "jne переходить, якщо не рівно.", "jg переходить, якщо більше.", "jl переходить, якщо менше."], code: "mov rax, 10\ncmp rax, 5\njg greater\n\n greater:\n    ; rax більше 5" },
+      { category: "Цикли", title: "Цикл через cmp, jmp, inc", description: "У Assembly цикл зазвичай складається з мітки, зміни лічильника і переходу.", points: ["Мітка позначає початок циклу.", "inc збільшує лічильник.", "cmp перевіряє межу.", "jl повертає виконання назад."], code: "mov rcx, 0\nloop_start:\n    inc rcx\n    cmp rcx, 5\n    jl loop_start" },
+      { category: "Стек", title: "push, pop, call, ret", description: "Стек допомагає зберігати тимчасові дані і повертатися з функцій.", points: ["push зменшує rsp і записує значення.", "pop читає значення і збільшує rsp.", "call кладе адресу повернення у стек.", "ret дістає адресу повернення."], code: "push rax\ncall my_func\npop rax\n\nmy_func:\n    ret" },
+      { category: "Функції", title: "Мітки як функції", description: "У простому Assembly функція може бути міткою, до якої переходять через call.", points: ["Аргументи часто передають через регістри.", "Результат часто повертають через rax.", "ret повертає виконання назад."], code: "mov rdi, 5\ncall double\n\n double:\n    mov rax, rdi\n    add rax, rdi\n    ret" },
+      { category: "Системні виклики Linux", title: "syscall, write, exit", description: "syscall викликає функцію ядра Linux. Номер виклику кладуть у rax.", points: ["rax = 1 означає write.", "rax = 60 означає exit.", "rdi, rsi, rdx містять перші аргументи."], code: "mov rax, 1\nmov rdi, 1\nmov rsi, message\nmov rdx, length\nsyscall\n\nmov rax, 60\nxor rdi, rdi\nsyscall" }
+    ];
+
+    const instructions = [
+      { name: "mov", category: "Дані", description: "Копіює значення з джерела в приймач.", syntax: "mov destination, source", example: "mov rax, 10", note: "Не копіює пам’ять у пам’ять напряму." },
+      { name: "add", category: "Арифметика", description: "Додає значення.", syntax: "add destination, source", example: "add rax, 5", note: "Результат записується у перший операнд." },
+      { name: "sub", category: "Арифметика", description: "Віднімає значення.", syntax: "sub destination, source", example: "sub rax, 2", note: "Змінює прапорці процесора." },
+      { name: "inc", category: "Арифметика", description: "Збільшує значення на 1.", syntax: "inc operand", example: "inc rcx", note: "Зручно для лічильників." },
+      { name: "dec", category: "Арифметика", description: "Зменшує значення на 1.", syntax: "dec operand", example: "dec rcx", note: "Зручно для зворотних лічильників." },
+      { name: "mul", category: "Арифметика", description: "Множення без знаку.", syntax: "mul operand", example: "mov rax, 3\nmov rbx, 4\nmul rbx", note: "Використовує rax і може записувати частину результату в rdx." },
+      { name: "div", category: "Арифметика", description: "Ділення без знаку.", syntax: "div operand", example: "xor rdx, rdx\nmov rax, 10\nmov rbx, 2\ndiv rbx", note: "Перед div часто очищають rdx." },
+      { name: "xor", category: "Логіка", description: "Побітове виключне АБО.", syntax: "xor destination, source", example: "xor rdi, rdi", note: "xor регістра із самим собою швидко ставить 0." },
+      { name: "and", category: "Логіка", description: "Побітове І.", syntax: "and destination, source", example: "and rax, 1", note: "Корисно для масок." },
+      { name: "or", category: "Логіка", description: "Побітове АБО.", syntax: "or destination, source", example: "or rax, 1", note: "Вмикає потрібні біти." },
+      { name: "not", category: "Логіка", description: "Інвертує біти.", syntax: "not operand", example: "not rax", note: "Змінює всі біти на протилежні." },
+      { name: "cmp", category: "Порівняння", description: "Порівнює два значення через внутрішнє віднімання.", syntax: "cmp left, right", example: "cmp rax, 10", note: "Результат не зберігається, але змінюються прапорці." },
+      { name: "jmp", category: "Переходи", description: "Безумовний перехід до мітки.", syntax: "jmp label", example: "jmp end", note: "Виконується завжди." },
+      { name: "je", category: "Переходи", description: "Перехід, якщо значення рівні.", syntax: "je label", example: "cmp rax, 5\nje equal", note: "Працює після cmp або іншої інструкції, що змінює прапорці." },
+      { name: "jne", category: "Переходи", description: "Перехід, якщо значення не рівні.", syntax: "jne label", example: "cmp rax, 5\njne not_equal", note: "Протилежність je." },
+      { name: "jl", category: "Переходи", description: "Перехід, якщо менше.", syntax: "jl label", example: "cmp rax, 5\njl less", note: "Для signed-порівняння." },
+      { name: "jg", category: "Переходи", description: "Перехід, якщо більше.", syntax: "jg label", example: "cmp rax, 5\njg greater", note: "Для signed-порівняння." },
+      { name: "call", category: "Функції", description: "Викликає підпрограму і зберігає адресу повернення у стеку.", syntax: "call label", example: "call print_text", note: "Зазвичай пара до ret." },
+      { name: "ret", category: "Функції", description: "Повертає виконання після call.", syntax: "ret", example: "my_func:\n    ret", note: "Бере адресу повернення зі стеку." },
+      { name: "push", category: "Стек", description: "Кладе значення у стек.", syntax: "push operand", example: "push rax", note: "Змінює rsp." },
+      { name: "pop", category: "Стек", description: "Дістає значення зі стеку.", syntax: "pop operand", example: "pop rax", note: "Змінює rsp." },
+      { name: "syscall", category: "Linux", description: "Виконує системний виклик Linux.", syntax: "syscall", example: "mov rax, 60\nxor rdi, rdi\nsyscall", note: "Номер syscall кладуть у rax." }
+    ];
+
+    const examples = [
+      { title: "Hello World", code: "section .data\nmessage db \"Привіт, світ!\", 10\nlength equ $ - message\n\nsection .text\nglobal _start\n\n_start:\n    mov rax, 1\n    mov rdi, 1\n    mov rsi, message\n    mov rdx, length\n    syscall\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Виведення тексту", code: "section .data\ntext db \"Assembly працює\", 10\ntext_len equ $ - text\n\nsection .text\nglobal _start\n_start:\n    mov rax, 1\n    mov rdi, 1\n    mov rsi, text\n    mov rdx, text_len\n    syscall\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Додавання двох чисел", code: "section .text\nglobal _start\n_start:\n    mov rax, 7\n    mov rbx, 5\n    add rax, rbx\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Умова", code: "section .text\nglobal _start\n_start:\n    mov rax, 10\n    cmp rax, 5\n    jg greater\n    jmp end\n\ngreater:\n    ; число більше 5\n\nend:\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Цикл", code: "section .text\nglobal _start\n_start:\n    mov rcx, 0\n\nloop_start:\n    inc rcx\n    cmp rcx, 5\n    jl loop_start\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Використання стеку", code: "section .text\nglobal _start\n_start:\n    mov rax, 10\n    push rax\n\n    mov rax, 20\n    pop rbx\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall" },
+      { title: "Проста функція", code: "section .text\nglobal _start\n_start:\n    mov rdi, 21\n    call double\n\n    mov rax, 60\n    xor rdi, rdi\n    syscall\n\ndouble:\n    mov rax, rdi\n    add rax, rdi\n    ret" }
+    ];
+
+    const reference = [
+      ...instructions,
+      { name: "db", category: "Директиви", description: "Оголошує байти.", syntax: "name db value", example: "letter db 'A'", note: "Для рядків і байтових даних." },
+      { name: "dw", category: "Директиви", description: "Оголошує 2-байтне слово.", syntax: "name dw value", example: "x dw 100", note: "Word дорівнює 2 байтам." },
+      { name: "dd", category: "Директиви", description: "Оголошує 4-байтне значення.", syntax: "name dd value", example: "x dd 1000", note: "Double word дорівнює 4 байтам." },
+      { name: "dq", category: "Директиви", description: "Оголошує 8-байтне значення.", syntax: "name dq value", example: "x dq 100000", note: "Quad word дорівнює 8 байтам." },
+      { name: "equ", category: "Директиви", description: "Створює константу.", syntax: "name equ expression", example: "length equ $ - message", note: "Часто використовується для довжини рядка." },
+      { name: "resb / resw / resd / resq", category: "Директиви", description: "Резервують пам’ять у .bss.", syntax: "name resb count", example: "buffer resb 64", note: "Пам’ять без початкового значення." },
+      { name: "section .data", category: "Секції", description: "Секція готових даних.", syntax: "section .data", example: "section .data\nmsg db \"Hi\"", note: "Дані мають початкові значення." },
+      { name: "section .bss", category: "Секції", description: "Секція зарезервованої пам’яті.", syntax: "section .bss", example: "section .bss\nbuf resb 32", note: "Підходить для буферів." },
+      { name: "section .text", category: "Секції", description: "Секція виконуваного коду.", syntax: "section .text", example: "section .text\nglobal _start", note: "Тут розміщують інструкції." }
+    ];
+
+    const registersContainer = document.querySelector("#registersContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderRegisters(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = registers.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.usage} ${item.example}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+      registersContainer.innerHTML = "";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Для чого використовується</dt><dd>${escapeHtml(item.usage)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+          </dl>
+        `;
+        registersContainer.appendChild(article);
+      });
+      return filtered.length;
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topics.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+      categories.forEach((category) => {
+        const items = topics.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+        if (!items.length) return;
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+        topicsContainer.appendChild(group);
+      });
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = examples.filter((item) => `${item.title} ${item.code}`.toLowerCase().includes(normalizedQuery));
+      examplesContainer.innerHTML = "";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `<h3>${escapeHtml(item.title)}</h3>${makeCodeBlock(item.code)}`;
+        examplesContainer.appendChild(article);
+      });
+      return filtered.length;
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = reference.filter((item) => {
+        const haystack = `${item.name} ${item.category} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Категорія</dt><dd>${escapeHtml(item.category)}</dd></div>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Синтаксис</dt><dd>${makeCodeBlock(item.syntax)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Примітка</dt><dd>${escapeHtml(item.note)}</dd></div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const registerCount = renderRegisters(query);
+      const topicCount = renderTopics(query);
+      const exampleCount = renderExamples(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: регістрів ${registerCount}, тем ${topicCount}, прикладів ${exampleCount}, записів довідника ${referenceCount}.`
+        : "Показано всі теми довідника.";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+      setTimeout(() => { button.textContent = "Копіювати"; }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderRegisters();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

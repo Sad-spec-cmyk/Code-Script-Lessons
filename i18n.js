@@ -180,7 +180,8 @@
       "Python Lessons / Python Довідник": "Python Lessons / Python Guide",
       "C++ Lessons / C++ Довідник": "C++ Lessons / C++ Guide",
       "Java Lessons / Java Довідник": "Java Lessons / Java Guide",
-      "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Guide"
+      "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Guide",
+      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide"
     },
     ru: {
       "Programming Lessons / Вибір мови": "Programming Lessons / Выбор языка",
@@ -191,7 +192,8 @@
       "Python Lessons / Python Довідник": "Python Lessons / Python Справочник",
       "C++ Lessons / C++ Довідник": "C++ Lessons / C++ Справочник",
       "Java Lessons / Java Довідник": "Java Lessons / Java Справочник",
-      "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Справочник"
+      "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Справочник",
+      "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник"
     }
   };
 
