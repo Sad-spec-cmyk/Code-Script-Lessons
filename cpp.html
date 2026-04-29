@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Lessons / C++ Довідник</title>
+  <style>
+    /* Мінімалістичний офлайн-дизайн без фреймворків */
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .muted { color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel { display: grid; gap: 10px; margin-bottom: 16px; }
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+    .search-input:focus { border-color: var(--text); outline: none; }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-card, .doc-card dl {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+    .doc-card dl { margin: 0; }
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .doc-card dd {
+      margin: 2px 0 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { border-color: var(--text); outline: none; }
+    .examples-list { display: grid; gap: 14px; }
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">C++ Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>C++ Lessons</h1>
+    <p>Український довідник по C++ з прикладами, синтаксисом та базовими концепціями.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке C++</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section searchable" id="intro" data-title="Що таке C++ ігри системне програмування движки high-performance">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке C++</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">C++ — потужна компільована мова для high-performance задач, системного програмування, ігор, рушіїв, графіки та програм, де важливий контроль над пам’яттю і швидкість.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Що це за мова</h3>
+              <p>C++ поєднує процедурне програмування, ООП, шаблони і низькорівневий контроль. Вона швидка, але вимагає уважності до пам’яті й типів.</p>
+            </article>
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>Ігри, ігрові рушії, системні утиліти, драйвери, фінансові системи, embedded, графічні програми, high-performance сервери.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">#include &lt;iostream&gt;</span></h3>
+              <p>Підключає бібліотеку для введення і виведення, зокрема <code>cout</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">using namespace std;</span></h3>
+              <p>Дозволяє писати <code>cout</code> замість <code>std::cout</code>. У великих проєктах часто краще писати <code>std::</code> явно.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">int main()</span></h3>
+              <p>Головна функція програми. З неї починається виконання.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">return 0;</span></h3>
+              <p>Повертає код успішного завершення програми операційній системі.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main()
+{
+    cout &lt;&lt; "Привіт, світ!" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис коментарі регістр крапка з комою include using namespace">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="grid">
+            <article class="info-card"><h3>Коментарі</h3><p><code>//</code> створює однорядковий коментар, <code>/* ... */</code> — багаторядковий.</p></article>
+            <article class="info-card"><h3>Регістр</h3><p>C++ чутливий до регістру: <code>value</code> і <code>Value</code> — різні імена.</p></article>
+            <article class="info-card"><h3>Крапка з комою</h3><p>Більшість інструкцій завершується символом <code>;</code>.</p></article>
+            <article class="info-card"><h3>include</h3><p><code>#include</code> підключає заголовкові файли стандартної бібліотеки або вашого проєкту.</p></article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>// Однорядковий коментар
+/*
+   Багаторядковий коментар
+*/
+
+#include &lt;iostream&gt;
+using namespace std;
+
+int main()
+{
+    cout &lt;&lt; "C++" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="types" data-title="Типи даних int float double char bool string">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Типи даних</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">C++ є строго типізованою мовою: тип змінної треба вказати явно або вивести через <code>auto</code>.</p>
+          <div id="typesContainer" class="doc-grid"></div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по темах</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть тему, тип або ключове слово</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: pointer, vector, class, file">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі теми довідника.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми C++</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Короткі уроки по основних частинах C++: змінні, оператори, умови, цикли, функції, масиви, вказівники, посилання, ООП, STL, файли та помилки.</p>
+          <div id="topicsContainer"></div>
+          <div class="empty-state" id="topicsEmpty">Теми за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові фрагменти коду для навчання і копіювання.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Коротка документація популярних конструкцій, типів і елементів C++.</p>
+          <div id="referenceContainer"></div>
+          <div class="empty-state" id="referenceEmpty">Записи довідника за цим запитом не знайдено.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>C++ Lessons / C++ Довідник. Один офлайн-файл без бібліотек і фреймворків.</p>
+  </footer>
+
+  <script>
+    // Дані сайту: з них будується документація, приклади і пошук.
+    const typeDocs = [
+      { name: "int", description: "Ціле число.", example: "int age = 18;", usage: "Для лічильників, індексів, кількості, віку." },
+      { name: "float", description: "Дробове число одинарної точності.", example: "float speed = 12.5f;", usage: "Для приблизних дробових значень, часто в графіці та іграх." },
+      { name: "double", description: "Дробове число подвійної точності.", example: "double distance = 123.45;", usage: "Для більшості дробових обчислень." },
+      { name: "char", description: "Один символ у одинарних лапках.", example: "char grade = 'A';", usage: "Для окремих символів і коротких маркерів." },
+      { name: "bool", description: "Логічне значення true або false.", example: "bool isReady = true;", usage: "Для умов, станів і прапорців." },
+      { name: "string", description: "Рядок тексту зі стандартної бібліотеки.", example: "string name = \"Олена\";", usage: "Для імен, повідомлень і текстових даних. Потрібен #include <string>." }
+    ];
+
+    const topicDocs = [
+      {
+        title: "Змінні",
+        category: "Основи",
+        description: "Змінна зберігає значення певного типу. У C++ тип зазвичай вказують перед назвою.",
+        points: ["Оголошення: тип + назва.", "Ініціалізація: присвоєння початкового значення.", "const робить значення незмінним після створення."],
+        code: "int count;\ncount = 10;\n\ndouble price = 99.5;\nconst int MaxUsers = 100;"
+      },
+      {
+        title: "Оператори",
+        category: "Основи",
+        description: "Оператори виконують обчислення, порівняння, логічні перевірки і присвоєння.",
+        points: ["Арифметичні: +, -, *, /, %.", "Порівняння: ==, !=, >, <, >=, <=.", "Логічні: &&, ||, !.", "Присвоєння: =, +=, -=, *=, /=."],
+        code: "int a = 10;\nint b = 3;\n\nint sum = a + b;\nbool isBig = sum > 10;\nbool ok = isBig && b > 0;\n\na += 5;"
+      },
+      {
+        title: "Умови",
+        category: "Керування потоком",
+        description: "Умови дозволяють виконувати різний код залежно від перевірки.",
+        points: ["if виконується, якщо умова true.", "else виконується, якщо if не спрацював.", "else if додає додаткову перевірку.", "switch зручний для вибору з багатьох варіантів."],
+        code: "int score = 75;\n\nif (score >= 90)\n{\n    cout << \"Відмінно\" << endl;\n}\nelse if (score >= 60)\n{\n    cout << \"Зараховано\" << endl;\n}\nelse\n{\n    cout << \"Спробуй ще\" << endl;\n}\n\nint day = 1;\nswitch (day)\n{\n    case 1:\n        cout << \"Понеділок\" << endl;\n        break;\n    default:\n        cout << \"Інший день\" << endl;\n        break;\n}"
+      },
+      {
+        title: "Цикли",
+        category: "Керування потоком",
+        description: "Цикли повторюють блок коду.",
+        points: ["for зручний для лічильника.", "while працює, поки умова true.", "do while виконується мінімум один раз."],
+        code: "for (int i = 0; i < 5; i++)\n{\n    cout << i << endl;\n}\n\nint count = 0;\nwhile (count < 3)\n{\n    count++;\n}\n\ndo\n{\n    cout << \"Раз\" << endl;\n} while (false);"
+      },
+      {
+        title: "Функції",
+        category: "Функції",
+        description: "Функція — це блок коду з назвою, параметрами і типом повернення.",
+        points: ["Оголошення містить тип повернення, назву і параметри.", "Параметри передають дані в функцію.", "return повертає результат."],
+        code: "int sum(int a, int b)\n{\n    return a + b;\n}\n\nvoid printMessage(string message)\n{\n    cout << message << endl;\n}\n\nint result = sum(2, 3);"
+      },
+      {
+        title: "Масиви",
+        category: "Дані",
+        description: "Масив зберігає кілька елементів одного типу у фіксованому розмірі.",
+        points: ["Створення: тип, назва і розмір або список значень.", "Доступ через індекс, починаючи з 0."],
+        code: "int numbers[3] = {1, 2, 3};\n\ncout << numbers[0] << endl;\nnumbers[1] = 10;\n\nfor (int i = 0; i < 3; i++)\n{\n    cout << numbers[i] << endl;\n}"
+      },
+      {
+        title: "Вказівники Pointers",
+        category: "Пам’ять",
+        description: "Вказівник зберігає адресу іншої змінної в пам’яті.",
+        points: ["& отримує адресу змінної.", "* у типі означає pointer.", "* перед змінною pointer розіменовує адресу і дає доступ до значення.", "Вказівники потужні, але потребують уважності."],
+        code: "int value = 10;\nint* ptr = &value;\n\ncout << ptr << endl;   // адреса\ncout << *ptr << endl;  // значення за адресою\n\n*ptr = 20;\ncout << value << endl;"
+      },
+      {
+        title: "Посилання References",
+        category: "Пам’ять",
+        description: "Reference — це інше ім’я для вже існуючої змінної.",
+        points: ["& у типі створює reference.", "Reference має бути ініціалізований одразу.", "На відміну від pointer, reference зазвичай не може бути null і не перепризначається."],
+        code: "int value = 10;\nint& ref = value;\n\nref = 25;\ncout << value << endl;\n\nvoid addOne(int& number)\n{\n    number++;\n}"
+      },
+      {
+        title: "ООП у C++",
+        category: "ООП",
+        description: "Клас описує шаблон об’єкта: дані та методи.",
+        points: ["class створює тип.", "object — екземпляр класу.", "Конструктор викликається при створенні об’єкта.", "Методи описують поведінку."],
+        code: "class Player\n{\nprivate:\n    int health;\n\npublic:\n    Player()\n    {\n        health = 100;\n    }\n\n    void takeDamage(int damage)\n    {\n        health -= damage;\n    }\n};\n\nPlayer player;\nplayer.takeDamage(10);"
+      },
+      {
+        title: "Принципи ООП",
+        category: "ООП",
+        description: "ООП допомагає організовувати програму через об’єкти.",
+        points: ["Інкапсуляція приховує внутрішні дані через private/protected.", "Наслідування дозволяє створювати клас на основі іншого.", "Поліморфізм дозволяє викликати перевизначені методи через базовий тип."],
+        code: "class Enemy\n{\npublic:\n    virtual void attack()\n    {\n        cout << \"Enemy attacks\" << endl;\n    }\n};\n\nclass Boss : public Enemy\n{\npublic:\n    void attack() override\n    {\n        cout << \"Boss attacks\" << endl;\n    }\n};"
+      },
+      {
+        title: "Стандартна бібліотека STL",
+        category: "STL",
+        description: "STL містить готові контейнери й алгоритми.",
+        points: ["vector — динамічний масив.", "string — зручний рядок.", "map — колекція ключ-значення."],
+        code: "#include &lt;vector&gt;\n#include &lt;map&gt;\n#include &lt;string&gt;\n\nvector&lt;int&gt; numbers = {1, 2, 3};\nnumbers.push_back(4);\n\nstring name = \"Олена\";\nmap&lt;string, int&gt; scores;\nscores[\"Alex\"] = 10;"
+      },
+      {
+        title: "Робота з файлами",
+        category: "Файли",
+        description: "Для файлів у C++ використовують бібліотеку fstream.",
+        points: ["ofstream записує у файл.", "ifstream читає з файлу.", "Потрібен #include <fstream>."],
+        code: "#include &lt;fstream&gt;\n\nofstream outFile(\"data.txt\");\noutFile << \"Привіт з C++\";\noutFile.close();\n\nifstream inFile(\"data.txt\");\nstring text;\ngetline(inFile, text);\ninFile.close();\n\ncout << text << endl;"
+      },
+      {
+        title: "Обробка помилок",
+        category: "Помилки",
+        description: "try/catch дозволяє перехоплювати винятки.",
+        points: ["try містить код, який може кинути виняток.", "catch обробляє виняток.", "throw створює виняток."],
+        code: "try\n{\n    throw runtime_error(\"Помилка\");\n}\ncatch (const exception& error)\n{\n    cout << error.what() << endl;\n}"
+      }
+    ];
+
+    const examples = [
+      { title: "Калькулятор", code: "#include &lt;iostream&gt;\nusing namespace std;\n\nint main()\n{\n    int a = 10;\n    int b = 5;\n\n    cout << a + b << endl;\n    cout << a - b << endl;\n    cout << a * b << endl;\n    cout << a / b << endl;\n\n    return 0;\n}" },
+      { title: "Перевірка числа", code: "int number = 7;\n\nif (number % 2 == 0)\n{\n    cout << \"Парне\" << endl;\n}\nelse\n{\n    cout << \"Непарне\" << endl;\n}" },
+      { title: "Масив", code: "int numbers[5] = {1, 2, 3, 4, 5};\n\nfor (int i = 0; i < 5; i++)\n{\n    cout << numbers[i] << endl;\n}" },
+      { title: "Простий клас", code: "class Car\n{\npublic:\n    string model;\n    int speed;\n\n    Car(string carModel)\n    {\n        model = carModel;\n        speed = 0;\n    }\n\n    void accelerate()\n    {\n        speed += 10;\n    }\n};\n\nCar car(\"Tesla\");\ncar.accelerate();\ncout << car.speed << endl;" },
+      { title: "Читання файлу", code: "#include &lt;fstream&gt;\n#include &lt;iostream&gt;\n#include &lt;string&gt;\nusing namespace std;\n\nint main()\n{\n    ifstream file(\"data.txt\");\n    string line;\n\n    while (getline(file, line))\n    {\n        cout << line << endl;\n    }\n\n    return 0;\n}" }
+    ];
+
+    const referenceDocs = [
+      { name: "#include", description: "Підключає заголовковий файл.", syntax: "#include <library>", example: "#include &lt;iostream&gt;", note: "Потрібен для доступу до стандартних типів і функцій." },
+      { name: "using namespace std", description: "Дозволяє використовувати імена зі std без префікса std::.", syntax: "using namespace std;", example: "cout << \"Hi\" << endl;", note: "У великих проєктах краще не використовувати глобально." },
+      { name: "int main()", description: "Головна функція програми.", syntax: "int main() { ... }", example: "int main()\n{\n    return 0;\n}", note: "Звідси починається виконання." },
+      { name: "cout", description: "Потік виведення в консоль.", syntax: "cout << value;", example: "cout << \"Привіт\" << endl;", note: "Потрібен #include <iostream>." },
+      { name: "cin", description: "Потік введення з консолі.", syntax: "cin >> variable;", example: "int age;\ncin >> age;", note: "Зчитує дані до пробілу для string." },
+      { name: "endl", description: "Перехід на новий рядок і очищення буфера.", syntax: "cout << endl;", example: "cout << \"Hi\" << endl;", note: "Для простого нового рядка часто вистачає \\n." },
+      { name: "int", description: "Тип для цілих чисел.", syntax: "int name = value;", example: "int count = 10;", note: "Підходить для індексів і лічильників." },
+      { name: "double", description: "Тип для дробових чисел.", syntax: "double name = value;", example: "double price = 19.99;", note: "Точніший за float." },
+      { name: "bool", description: "Тип для true або false.", syntax: "bool name = true;", example: "bool ready = false;", note: "Використовується в умовах." },
+      { name: "string", description: "Рядок тексту.", syntax: "string name = \"text\";", example: "string title = \"C++\";", note: "Потрібен #include <string>." },
+      { name: "const", description: "Незмінне значення.", syntax: "const type Name = value;", example: "const int Max = 100;", note: "Корисно для сталих налаштувань." },
+      { name: "if / else", description: "Умовне виконання коду.", syntax: "if (condition) { ... } else { ... }", example: "if (age >= 18)\n{\n    cout << \"OK\";\n}", note: "Умова має давати bool." },
+      { name: "switch", description: "Вибір між варіантами.", syntax: "switch (value) { case x: ... }", example: "switch (day)\n{\n    case 1: break;\n}", note: "Не забувайте break." },
+      { name: "for", description: "Цикл із лічильником.", syntax: "for (start; condition; step) { ... }", example: "for (int i = 0; i < 5; i++) { }", note: "Часто використовується для масивів." },
+      { name: "while", description: "Цикл, поки умова true.", syntax: "while (condition) { ... }", example: "while (count < 3) { count++; }", note: "Стежте за нескінченними циклами." },
+      { name: "do while", description: "Цикл, який виконується хоча б один раз.", syntax: "do { ... } while (condition);", example: "do { count++; } while (count < 3);", note: "Умова перевіряється після тіла." },
+      { name: "function", description: "Іменований блок коду.", syntax: "returnType name(params) { ... }", example: "int sum(int a, int b)\n{\n    return a + b;\n}", note: "Функції допомагають не повторювати код." },
+      { name: "return", description: "Повертає значення з функції.", syntax: "return value;", example: "return 0;", note: "Тип має відповідати типу повернення." },
+      { name: "array", description: "Фіксований набір елементів одного типу.", syntax: "type name[size];", example: "int nums[3] = {1, 2, 3};", note: "Для динамічного розміру частіше використовують vector." },
+      { name: "pointer *", description: "Змінна, що зберігає адресу.", syntax: "type* ptr = &value;", example: "int* p = &x;", note: "Потребує уважної роботи з пам’яттю." },
+      { name: "address &", description: "Оператор отримання адреси або reference у типі.", syntax: "&variable", example: "int* p = &value;", note: "У контексті типу int& означає reference." },
+      { name: "dereference *", description: "Доступ до значення за адресою pointer.", syntax: "*pointer", example: "cout << *p;", note: "Не розіменовуйте некоректні pointer." },
+      { name: "reference", description: "Інше ім’я для змінної.", syntax: "type& ref = value;", example: "int& r = x;", note: "Має бути ініціалізований одразу." },
+      { name: "class", description: "Описує тип об’єкта.", syntax: "class Name { ... };", example: "class Player { };", note: "Після оголошення класу потрібна крапка з комою." },
+      { name: "constructor", description: "Метод, що викликається при створенні об’єкта.", syntax: "ClassName(params) { ... }", example: "Player() { health = 100; }", note: "Назва збігається з назвою класу." },
+      { name: "vector", description: "Динамічний масив зі STL.", syntax: "vector<T> name;", example: "vector<int> nums = {1, 2};", note: "Потрібен #include <vector>." },
+      { name: "map", description: "Колекція ключ-значення.", syntax: "map<Key, Value> name;", example: "map<string, int> scores;", note: "Потрібен #include <map>." },
+      { name: "ifstream", description: "Потік для читання файлу.", syntax: "ifstream file(path);", example: "ifstream file(\"data.txt\");", note: "Потрібен #include <fstream>." },
+      { name: "ofstream", description: "Потік для запису у файл.", syntax: "ofstream file(path);", example: "ofstream file(\"data.txt\");", note: "Перезаписує файл за замовчуванням." },
+      { name: "try / catch", description: "Обробка винятків.", syntax: "try { ... } catch (...) { ... }", example: "try { throw runtime_error(\"err\"); }\ncatch (const exception& e) { }", note: "Для стандартних винятків потрібні відповідні заголовки." }
+    ];
+
+    const typesContainer = document.querySelector("#typesContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTypes() {
+      typesContainer.innerHTML = "";
+      typeDocs.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Коли використовувати</dt><dd>${escapeHtml(item.usage)}</dd></div>
+          </dl>
+        `;
+        typesContainer.appendChild(article);
+      });
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topicDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = topicDocs.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+        topicsContainer.appendChild(group);
+      });
+
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `<h3>${escapeHtml(item.title)}</h3>${makeCodeBlock(item.code)}`;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = referenceDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Синтаксис</dt><dd>${makeCodeBlock(item.syntax)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Примітка</dt><dd>${escapeHtml(item.note)}</dd></div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const topicCount = renderTopics(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: тем ${topicCount}, записів довідника ${referenceCount}.`
+        : "Показано всі теми довідника.";
+    }
+
+    // Копіювання коду для всіх прикладів.
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    // Розгортання і згортання секцій.
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    // Мобільне меню.
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTypes();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Lessons / CSS Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    code,
+    pre,
+    kbd {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner,
+    .hero,
+    .layout,
+    .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a,
+    .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible,
+    .sidebar a:hover,
+    .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero {
+      padding: 60px 18px 38px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button,
+    button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a {
+      display: block;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .section,
+    .section-content,
+    .info-card,
+    .doc-card,
+    .example-card {
+      min-width: 0;
+    }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .section-content {
+      padding: 18px;
+    }
+
+    .section.is-collapsed .section-content {
+      display: none;
+    }
+
+    .section.is-collapsed .section-header span {
+      transform: rotate(-90deg);
+    }
+
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .grid,
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card,
+    .doc-card,
+    .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+    }
+
+    .info-card h3,
+    .doc-card h3,
+    .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .doc-card dd {
+      margin: 2px 0 0;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover,
+    .copy-btn:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .examples-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .footer {
+      padding: 24px 18px 36px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .grid,
+      .doc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .top-nav {
+        display: none;
+        width: 100%;
+        padding-top: 10px;
+      }
+
+      .top-nav.is-open {
+        display: grid;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header h2 {
+        font-size: 21px;
+      }
+
+      .hero,
+      .layout,
+      .footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .section-content {
+        padding: 12px;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .doc-card h3,
+      .info-card h3,
+      .example-card h3 {
+        overflow-wrap: anywhere;
+      }
+
+      .doc-card,
+      .doc-card dl,
+      .doc-card dt,
+      .doc-card dd,
+      .info-card,
+      .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+
+      .copy-btn {
+        position: static;
+        margin-bottom: 8px;
+      }
+
+      pre {
+        font-size: 13px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">CSS Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="html.html">HTML довідник</a>
+        <a href="javascript.html">JavaScript довідник</a>
+        <a href="#basic">Основи</a>
+        <a href="#selectors">Селектори</a>
+        <a href="#properties">Властивості</a>
+        <a href="#examples">Приклади</a>
+        <a href="#search">Пошук</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>CSS Lessons</h1>
+    <p>Простий довідник по CSS: селектори, властивості, кольори, відступи, flexbox, grid, адаптивність і готові приклади стилів.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#basic">Почати</a>
+      <a class="button" href="#properties">Всі CSS властивості</a>
+      <a class="button" href="#examples">Приклади коду</a>
+      <a class="button" href="html.html">Повернутись до HTML</a>
+      <a class="button" href="javascript.html">Перейти до JavaScript</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="html.html">HTML довідник</a>
+      <a href="javascript.html">JavaScript довідник</a>
+      <a href="#basic">Що таке CSS</a>
+      <a href="#syntax">Синтаксис CSS</a>
+      <a href="#selectors">Селектори</a>
+      <a href="#box-model">Блокова модель</a>
+      <a href="#properties">Властивості CSS</a>
+      <a href="#examples">Готові приклади</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section" id="basic">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке CSS</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">CSS відповідає за зовнішній вигляд HTML-сторінки: кольори, розміри, шрифти, відступи, розташування блоків та адаптивність.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>HTML + CSS</h3>
+              <p>HTML створює структуру, а CSS задає вигляд цієї структури.</p>
+            </article>
+            <article class="info-card">
+              <h3>Три способи підключення</h3>
+              <p>CSS можна писати у файлі, в тегу <code>&lt;style&gt;</code> або в атрибуті <code>style</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3>Каскад</h3>
+              <p>Якщо кілька правил впливають на один елемент, браузер обирає правило за специфічністю і порядком.</p>
+            </article>
+            <article class="info-card">
+              <h3>Адаптивність</h3>
+              <p>CSS дозволяє робити сторінки зручними для ПК, планшетів і телефонів.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>body {
+  font-family: Arial, sans-serif;
+  background: #f6f7f8;
+  color: #222222;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="syntax">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис CSS</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">CSS-правило складається із селектора, фігурних дужок, властивостей і значень.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>селектор {
+  властивість: значення;
+  інша-властивість: інше-значення;
+}</code></pre>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>.card {
+  background: white;
+  border: 1px solid #dddddd;
+  padding: 16px;
+  border-radius: 8px;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по CSS</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть селектор, властивість або слово з опису</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: color, flex, .class, margin">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі селектори та властивості.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="selectors">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>CSS селектори</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Селектори вказують, до яких HTML-елементів застосувати CSS-правила.</p>
+          <div id="selectorsContainer" class="doc-grid"></div>
+          <div class="empty-state" id="selectorsEmpty">Селектори за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="box-model">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Блокова модель</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Кожен елемент можна уявити як прямокутник: вміст, внутрішній відступ, рамка і зовнішній відступ.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3><span class="badge">content</span></h3>
+              <p>Основний вміст елемента: текст, зображення або інші елементи.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">padding</span></h3>
+              <p>Внутрішній відступ між вмістом і рамкою.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">border</span></h3>
+              <p>Рамка навколо padding і content.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">margin</span></h3>
+              <p>Зовнішній відступ між елементом та сусідніми елементами.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>.box {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #cccccc;
+  margin: 16px;
+  box-sizing: border-box;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="properties">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Основні CSS властивості</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Нижче зібрані найважливіші властивості для новачків: текст, кольори, розміри, відступи, позиціювання, flexbox, grid та адаптивність.</p>
+          <div id="propertiesContainer"></div>
+          <div class="empty-state" id="propertiesEmpty">Властивості за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Приклади CSS</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові фрагменти CSS, які можна копіювати в окремий файл або тег <code>&lt;style&gt;</code>.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const selectorDocs = [
+      { name: "*", category: "Базові", description: "Універсальний селектор, вибирає всі елементи.", usage: "Часто використовується для box-sizing або скидання відступів.", example: "* {\n  box-sizing: border-box;\n}" },
+      { name: "tag", category: "Базові", description: "Селектор за назвою HTML-тегу.", usage: "Стилізує всі елементи одного типу.", example: "p {\n  line-height: 1.6;\n}" },
+      { name: ".class", category: "Базові", description: "Селектор за класом.", usage: "Найчастіший спосіб стилізувати групу елементів.", example: ".card {\n  padding: 16px;\n}" },
+      { name: "#id", category: "Базові", description: "Селектор за унікальним id.", usage: "Підходить для одного конкретного елемента.", example: "#main-title {\n  font-size: 36px;\n}" },
+      { name: "A B", category: "Комбінатори", description: "Вибирає B всередині A на будь-якому рівні вкладеності.", usage: "Стилізує елементи в певному контейнері.", example: ".article p {\n  color: #333333;\n}" },
+      { name: "A > B", category: "Комбінатори", description: "Вибирає тільки прямі дочірні B всередині A.", usage: "Дає точніший контроль над вкладеністю.", example: ".menu > a {\n  padding: 8px;\n}" },
+      { name: "A + B", category: "Комбінатори", description: "Вибирає B, який іде одразу після A.", usage: "Підходить для стилізації сусіднього елемента.", example: "h2 + p {\n  margin-top: 0;\n}" },
+      { name: "A ~ B", category: "Комбінатори", description: "Вибирає всі B після A на тому самому рівні.", usage: "Корисно для пов’язаних сусідніх блоків.", example: "h2 ~ p {\n  color: #555555;\n}" },
+      { name: "[attr]", category: "Атрибути", description: "Вибирає елементи, які мають певний атрибут.", usage: "Наприклад, усі обов’язкові поля форми.", example: "input[required] {\n  border-color: #222222;\n}" },
+      { name: "[attr=\"value\"]", category: "Атрибути", description: "Вибирає елементи з точним значенням атрибута.", usage: "Корисно для input різних типів.", example: "input[type=\"email\"] {\n  width: 100%;\n}" },
+      { name: ":hover", category: "Псевдокласи", description: "Стан наведення курсора.", usage: "Додає реакцію кнопкам, посиланням і карткам.", example: "a:hover {\n  text-decoration: underline;\n}" },
+      { name: ":focus", category: "Псевдокласи", description: "Стан фокусу елемента.", usage: "Важливий для доступності при навігації клавіатурою.", example: "input:focus {\n  outline: 2px solid #222222;\n}" },
+      { name: ":first-child", category: "Псевдокласи", description: "Перший дочірній елемент у батьківському контейнері.", usage: "Дозволяє прибрати зайвий відступ у першого елемента.", example: "li:first-child {\n  font-weight: bold;\n}" },
+      { name: ":nth-child()", category: "Псевдокласи", description: "Вибирає елементи за номером або формулою.", usage: "Зручно для чергування рядків таблиці.", example: "tr:nth-child(even) {\n  background: #f4f4f4;\n}" },
+      { name: "::before", category: "Псевдоелементи", description: "Створює віртуальний елемент перед вмістом.", usage: "Додає декоративний або службовий контент через CSS.", example: ".note::before {\n  content: \"Примітка: \";\n  font-weight: bold;\n}" },
+      { name: "::after", category: "Псевдоелементи", description: "Створює віртуальний елемент після вмісту.", usage: "Часто використовується для значків, очищення або підписів.", example: ".link::after {\n  content: \" →\";\n}" }
+    ];
+
+    const propertyDocs = [
+      { name: "color", category: "Текст і колір", description: "Колір тексту.", usage: "Задає основний колір букв.", values: "#222222, black, rgb(), hsl()", example: "p {\n  color: #333333;\n}" },
+      { name: "background", category: "Текст і колір", description: "Фон елемента.", usage: "Може задавати колір, зображення, градієнт та інші параметри фону.", values: "#ffffff, url(), linear-gradient()", example: "body {\n  background: #f6f7f8;\n}" },
+      { name: "background-color", category: "Текст і колір", description: "Колір фону.", usage: "Простий спосіб задати заливку елемента.", values: "white, #f0f0f0, transparent", example: ".card {\n  background-color: white;\n}" },
+      { name: "font-family", category: "Текст і колір", description: "Шрифт тексту.", usage: "Вказує основний і запасні шрифти.", values: "Arial, sans-serif, serif, monospace", example: "body {\n  font-family: Arial, sans-serif;\n}" },
+      { name: "font-size", category: "Текст і колір", description: "Розмір тексту.", usage: "Керує висотою символів.", values: "16px, 1rem, 120%", example: "h1 {\n  font-size: 36px;\n}" },
+      { name: "font-weight", category: "Текст і колір", description: "Товщина шрифту.", usage: "Робить текст звичайним або жирним.", values: "normal, bold, 400, 700", example: "strong {\n  font-weight: 700;\n}" },
+      { name: "font-style", category: "Текст і колір", description: "Стиль шрифту.", usage: "Найчастіше використовується для курсиву.", values: "normal, italic", example: "em {\n  font-style: italic;\n}" },
+      { name: "text-align", category: "Текст і колір", description: "Вирівнювання тексту.", usage: "Вирівнює текст у блоці.", values: "left, center, right, justify", example: ".center {\n  text-align: center;\n}" },
+      { name: "text-decoration", category: "Текст і колір", description: "Декорація тексту.", usage: "Додає або прибирає підкреслення, закреслення.", values: "none, underline, line-through", example: "a {\n  text-decoration: none;\n}" },
+      { name: "line-height", category: "Текст і колір", description: "Висота рядка.", usage: "Покращує читабельність абзаців.", values: "1.5, 24px, normal", example: "p {\n  line-height: 1.6;\n}" },
+      { name: "letter-spacing", category: "Текст і колір", description: "Відстань між літерами.", usage: "Використовується обережно для дрібних підписів або заголовків.", values: "0, 0.04em, 1px", example: ".label {\n  letter-spacing: 0.04em;\n}" },
+
+      { name: "width", category: "Розміри", description: "Ширина елемента.", usage: "Задає ширину блоку або медіа.", values: "300px, 100%, auto, min-content", example: ".box {\n  width: 300px;\n}" },
+      { name: "height", category: "Розміри", description: "Висота елемента.", usage: "Задає висоту блоку або медіа.", values: "200px, 100vh, auto", example: ".hero {\n  height: 80vh;\n}" },
+      { name: "min-width", category: "Розміри", description: "Мінімальна ширина.", usage: "Не дає елементу стати вужчим за вказане значення.", values: "0, 240px, 20rem", example: ".card {\n  min-width: 240px;\n}" },
+      { name: "max-width", category: "Розміри", description: "Максимальна ширина.", usage: "Обмежує ширину контенту на великих екранах.", values: "720px, 100%, none", example: ".container {\n  max-width: 1180px;\n}" },
+      { name: "min-height", category: "Розміри", description: "Мінімальна висота.", usage: "Корисно для секцій, які мають займати достатньо місця.", values: "300px, 100vh", example: "main {\n  min-height: 100vh;\n}" },
+      { name: "max-height", category: "Розміри", description: "Максимальна висота.", usage: "Обмежує висоту, часто разом з overflow.", values: "400px, 80vh, none", example: ".panel {\n  max-height: 400px;\n  overflow: auto;\n}" },
+
+      { name: "margin", category: "Відступи і рамки", description: "Зовнішній відступ.", usage: "Створює простір навколо елемента.", values: "16px, 0 auto, 10px 20px", example: ".container {\n  margin: 0 auto;\n}" },
+      { name: "padding", category: "Відступи і рамки", description: "Внутрішній відступ.", usage: "Створює простір між вмістом і рамкою.", values: "16px, 10px 20px", example: ".card {\n  padding: 16px;\n}" },
+      { name: "border", category: "Відступи і рамки", description: "Рамка елемента.", usage: "Задає товщину, стиль і колір рамки.", values: "1px solid #dddddd, none", example: ".card {\n  border: 1px solid #dddddd;\n}" },
+      { name: "border-radius", category: "Відступи і рамки", description: "Заокруглення кутів.", usage: "Робить кути м’якішими.", values: "4px, 8px, 50%", example: ".avatar {\n  border-radius: 50%;\n}" },
+      { name: "box-sizing", category: "Відступи і рамки", description: "Спосіб рахувати розмір елемента.", usage: "border-box включає padding і border у width/height.", values: "content-box, border-box", example: "* {\n  box-sizing: border-box;\n}" },
+      { name: "box-shadow", category: "Відступи і рамки", description: "Тінь елемента.", usage: "Додає глибину, але в мінімалістичному дизайні використовується обережно.", values: "0 1px 3px rgba(0,0,0,.12), none", example: ".card {\n  box-shadow: 0 1px 3px rgba(0,0,0,.12);\n}" },
+
+      { name: "display", category: "Макет", description: "Тип відображення елемента.", usage: "Керує тим, як елемент займає місце і як поводяться його діти.", values: "block, inline, inline-block, flex, grid, none", example: ".menu {\n  display: flex;\n}" },
+      { name: "position", category: "Макет", description: "Спосіб позиціювання.", usage: "Дозволяє зсувати елементи або фіксувати їх.", values: "static, relative, absolute, fixed, sticky", example: ".header {\n  position: sticky;\n  top: 0;\n}" },
+      { name: "top / right / bottom / left", category: "Макет", description: "Зміщення позиційованого елемента.", usage: "Працює з position, крім static.", values: "0, 16px, 50%", example: ".badge {\n  position: absolute;\n  top: 8px;\n  right: 8px;\n}" },
+      { name: "z-index", category: "Макет", description: "Порядок накладання.", usage: "Визначає, який елемент буде зверху.", values: "1, 10, 100", example: ".modal {\n  z-index: 100;\n}" },
+      { name: "overflow", category: "Макет", description: "Поведінка вмісту, який не поміщається.", usage: "Додає прокрутку або приховує зайве.", values: "visible, hidden, auto, scroll", example: ".code {\n  overflow-x: auto;\n}" },
+      { name: "opacity", category: "Макет", description: "Прозорість елемента.", usage: "Керує видимістю від 0 до 1.", values: "0, 0.5, 1", example: ".disabled {\n  opacity: 0.5;\n}" },
+
+      { name: "flex-direction", category: "Flexbox", description: "Напрямок flex-елементів.", usage: "Визначає рядок або колонку.", values: "row, column, row-reverse, column-reverse", example: ".list {\n  display: flex;\n  flex-direction: column;\n}" },
+      { name: "justify-content", category: "Flexbox", description: "Вирівнювання по головній осі.", usage: "Розподіляє простір між елементами.", values: "flex-start, center, space-between, space-around", example: ".menu {\n  display: flex;\n  justify-content: space-between;\n}" },
+      { name: "align-items", category: "Flexbox", description: "Вирівнювання по поперечній осі.", usage: "Вирівнює flex-елементи по висоті або ширині.", values: "stretch, center, flex-start, flex-end", example: ".row {\n  display: flex;\n  align-items: center;\n}" },
+      { name: "gap", category: "Flexbox", description: "Відстань між елементами.", usage: "Працює у flex і grid без додаткових margin.", values: "8px, 1rem, 24px", example: ".grid {\n  display: grid;\n  gap: 16px;\n}" },
+      { name: "flex-wrap", category: "Flexbox", description: "Перенесення flex-елементів.", usage: "Дозволяє елементам переходити на новий рядок.", values: "nowrap, wrap", example: ".tags {\n  display: flex;\n  flex-wrap: wrap;\n}" },
+      { name: "flex", category: "Flexbox", description: "Скорочена властивість для росту, стискання і базового розміру.", usage: "Допомагає гнучко розподіляти ширину.", values: "1, 0 0 auto, 1 1 200px", example: ".content {\n  flex: 1;\n}" },
+
+      { name: "grid-template-columns", category: "Grid", description: "Колонки CSS Grid.", usage: "Створює сітку з колонок.", values: "1fr 1fr, repeat(3, 1fr), 250px 1fr", example: ".layout {\n  display: grid;\n  grid-template-columns: 250px 1fr;\n}" },
+      { name: "grid-template-rows", category: "Grid", description: "Рядки CSS Grid.", usage: "Створює сітку з рядків.", values: "auto 1fr auto, repeat(2, 200px)", example: ".page {\n  display: grid;\n  grid-template-rows: auto 1fr auto;\n}" },
+      { name: "grid-column", category: "Grid", description: "Позиція елемента по колонках.", usage: "Дозволяє елементу зайняти кілька колонок.", values: "1 / 3, span 2", example: ".wide {\n  grid-column: span 2;\n}" },
+      { name: "grid-row", category: "Grid", description: "Позиція елемента по рядках.", usage: "Дозволяє елементу зайняти кілька рядків.", values: "1 / 3, span 2", example: ".tall {\n  grid-row: span 2;\n}" },
+      { name: "place-items", category: "Grid", description: "Коротке вирівнювання в grid.", usage: "Вирівнює елементи по двох осях.", values: "center, start, stretch", example: ".centered {\n  display: grid;\n  place-items: center;\n}" },
+
+      { name: "@media", category: "Адаптивність", description: "Медіазапит для різних умов екрана.", usage: "Змінює стилі на телефонах, планшетах або великих екранах.", values: "max-width, min-width, orientation", example: "@media (max-width: 700px) {\n  .layout {\n    grid-template-columns: 1fr;\n  }\n}" },
+      { name: "clamp()", category: "Адаптивність", description: "CSS-функція для гнучкого значення з мінімумом і максимумом.", usage: "Часто використовується для адаптивного розміру шрифту.", values: "clamp(28px, 5vw, 56px)", example: "h1 {\n  font-size: clamp(32px, 6vw, 60px);\n}" },
+      { name: "var()", category: "Адаптивність", description: "Використання CSS-змінної.", usage: "Дає змогу повторно використовувати кольори, розміри і відступи.", values: "var(--text), var(--gap)", example: ":root {\n  --text: #222222;\n}\n\nbody {\n  color: var(--text);\n}" },
+      { name: "transition", category: "Стан і взаємодія", description: "Плавна зміна властивостей.", usage: "Додає легку реакцію на hover або focus.", values: "background .2s ease, all .2s ease", example: "button {\n  transition: background 0.2s ease;\n}" },
+      { name: "cursor", category: "Стан і взаємодія", description: "Вигляд курсора.", usage: "Показує, що елемент клікабельний або має іншу поведінку.", values: "pointer, default, text, not-allowed", example: "button {\n  cursor: pointer;\n}" },
+      { name: "outline", category: "Стан і взаємодія", description: "Зовнішня лінія фокусу.", usage: "Важлива для доступності клавіатурної навігації.", values: "none, 2px solid #222222", example: "a:focus-visible {\n  outline: 2px solid #222222;\n}" }
+    ];
+
+    const examples = [
+      { title: "Підключення CSS-файлу", code: '<!DOCTYPE html>\n<html lang="uk">\n<head>\n  <meta charset="UTF-8">\n  <title>Сторінка</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Привіт!</h1>\n</body>\n</html>' },
+      { title: "Базові стилі сторінки", code: 'body {\n  margin: 0;\n  font-family: Arial, sans-serif;\n  background: #f6f7f8;\n  color: #222222;\n  line-height: 1.6;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}' },
+      { title: "Кнопка", code: '.button {\n  display: inline-block;\n  padding: 10px 16px;\n  border: 1px solid #222222;\n  border-radius: 8px;\n  background: #222222;\n  color: white;\n  text-decoration: none;\n  cursor: pointer;\n}\n\n.button:hover {\n  background: white;\n  color: #222222;\n}' },
+      { title: "Картка товару", code: '.product-card {\n  max-width: 320px;\n  padding: 16px;\n  border: 1px solid #dddddd;\n  border-radius: 8px;\n  background: white;\n}\n\n.product-card h2 {\n  margin: 12px 0 8px;\n  font-size: 22px;\n}' },
+      { title: "Меню навігації", code: '.nav {\n  display: flex;\n  gap: 12px;\n  align-items: center;\n}\n\n.nav a {\n  color: #333333;\n  text-decoration: none;\n}\n\n.nav a:hover {\n  text-decoration: underline;\n}' },
+      { title: "Flexbox-ряд", code: '.row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 16px;\n}' },
+      { title: "Grid-сітка карток", code: '.cards {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}\n\n@media (max-width: 800px) {\n  .cards {\n    grid-template-columns: 1fr;\n  }\n}' },
+      { title: "Адаптивна секція", code: '.hero {\n  padding: 60px 20px;\n}\n\n.hero h1 {\n  font-size: clamp(32px, 6vw, 60px);\n}\n\n@media (max-width: 600px) {\n  .hero {\n    padding: 36px 16px;\n  }\n}' },
+      { title: "Форма", code: '.form {\n  display: grid;\n  gap: 12px;\n  max-width: 420px;\n}\n\n.form input,\n.form textarea,\n.form select {\n  width: 100%;\n  padding: 10px;\n  border: 1px solid #bbbbbb;\n  border-radius: 6px;\n  font: inherit;\n}\n\n.form input:focus {\n  outline: 2px solid #222222;\n  border-color: #222222;\n}' }
+    ];
+
+    const selectorsContainer = document.querySelector("#selectorsContainer");
+    const propertiesContainer = document.querySelector("#propertiesContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const selectorsEmpty = document.querySelector("#selectorsEmpty");
+    const propertiesEmpty = document.querySelector("#propertiesEmpty");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderSelectors(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = selectorDocs.filter((item) => {
+        const haystack = `${item.name} ${item.category} ${item.description} ${item.usage}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      selectorsContainer.innerHTML = "";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Селектор: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div>
+              <dt>Категорія</dt>
+              <dd>${escapeHtml(item.category)}</dd>
+            </div>
+            <div>
+              <dt>Опис</dt>
+              <dd>${escapeHtml(item.description)}</dd>
+            </div>
+            <div>
+              <dt>Для чого використовується</dt>
+              <dd>${escapeHtml(item.usage)}</dd>
+            </div>
+            <div>
+              <dt>Приклад</dt>
+              <dd>${makeCodeBlock(item.example)}</dd>
+            </div>
+          </dl>
+        `;
+        selectorsContainer.appendChild(article);
+      });
+
+      selectorsEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function renderProperties(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(propertyDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      propertiesContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = propertyDocs.filter((item) => {
+          const haystack = `${item.name} ${item.category} ${item.description} ${item.usage} ${item.values}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${category}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>Властивість: <span class="badge">${escapeHtml(item.name)}</span></h3>
+            <dl>
+              <div>
+                <dt>Опис</dt>
+                <dd>${escapeHtml(item.description)}</dd>
+              </div>
+              <div>
+                <dt>Для чого використовується</dt>
+                <dd>${escapeHtml(item.usage)}</dd>
+              </div>
+              <div>
+                <dt>Типові значення</dt>
+                <dd>${escapeHtml(item.values)}</dd>
+              </div>
+              <div>
+                <dt>Приклад</dt>
+                <dd>${makeCodeBlock(item.example)}</dd>
+              </div>
+            </dl>
+          `;
+          grid.appendChild(article);
+        });
+
+        propertiesContainer.appendChild(group);
+      });
+
+      propertiesEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `
+          <h3>${escapeHtml(item.title)}</h3>
+          ${makeCodeBlock(item.code)}
+        `;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function updateSearch() {
+      const query = searchInput.value;
+      const selectorCount = renderSelectors(query);
+      const propertyCount = renderProperties(query);
+
+      if (query.trim()) {
+        searchCount.textContent = `Знайдено: селекторів ${selectorCount}, властивостей ${propertyCount}.`;
+      } else {
+        searchCount.textContent = "Показано всі селектори та властивості.";
+      }
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderSelectors();
+    renderProperties();
+    renderExamples();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+

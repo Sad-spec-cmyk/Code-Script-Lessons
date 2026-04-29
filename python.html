@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Lessons / Python Довідник</title>
+  <style>
+    /* Простий офлайн-дизайн без фреймворків */
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .muted { color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+
+    .search-input:focus { border-color: var(--text); outline: none; }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-card, .doc-card dl {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dl { margin: 0; }
+
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .doc-card dd {
+      margin: 2px 0 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover, .copy-btn:focus-visible { border-color: var(--text); outline: none; }
+
+    .examples-list { display: grid; gap: 14px; }
+
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn {
+        position: static;
+        margin-bottom: 8px;
+      }
+      pre {
+        font-size: 13px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Python Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Python Lessons</h1>
+    <p>Український довідник по Python з прикладами, синтаксисом та практичними задачами.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Python</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section searchable" id="intro" data-title="Що таке Python скрипти веб ігри автоматизація переваги print">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке Python</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Python — популярна мова програмування з простим синтаксисом, яку часто обирають для навчання, автоматизації, вебу, аналізу даних і скриптів.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Що це за мова</h3>
+              <p>Python читається майже як звичайний текст. Він динамічно типізований: тип значення визначається під час виконання.</p>
+            </article>
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>Скрипти, веб-застосунки, автоматизація, ігри, тестування, боти, аналіз даних, машинне навчання і системні утиліти.</p>
+            </article>
+            <article class="info-card">
+              <h3>Переваги</h3>
+              <p>Простий синтаксис, велика стандартна бібліотека, багато пакетів, швидкий старт і сильна спільнота.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">print()</span></h3>
+              <p>Функція <code>print()</code> виводить текст або значення в консоль. Рядок пишеться в лапках.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>print("Привіт, світ!")</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис відступи indentation коментарі регістр">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="grid">
+            <article class="info-card">
+              <h3>Відступи</h3>
+              <p>Python використовує відступи для позначення блоків коду. Зазвичай використовують 4 пробіли.</p>
+            </article>
+            <article class="info-card">
+              <h3>Коментарі</h3>
+              <p><code>#</code> створює коментар до кінця рядка. Коментарі не виконуються програмою.</p>
+            </article>
+            <article class="info-card">
+              <h3>Регістр</h3>
+              <p>Python чутливий до регістру: <code>name</code> і <code>Name</code> — різні імена.</p>
+            </article>
+            <article class="info-card">
+              <h3>Блоки коду</h3>
+              <p>Після <code>if</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>class</code> ставиться двокрапка.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code># Це коментар
+name = "Олена"
+
+if name == "Олена":
+    print("Привіт!")</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="types" data-title="Змінні типи даних int float str bool list tuple set dict">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Змінні і типи даних</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">У Python змінну не потрібно оголошувати з типом. Тип визначається за значенням.</p>
+          <div id="typesContainer" class="doc-grid"></div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по темах і ключових словах</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть тему, тип, метод або слово з опису</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: list, dict, class, try, open">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі теми довідника.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми Python</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Короткі уроки по основних частинах Python: оператори, умови, цикли, функції, списки, словники, рядки, файли, помилки, ООП і модулі.</p>
+          <div id="topicsContainer"></div>
+          <div class="empty-state" id="topicsEmpty">Теми за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові приклади коду для навчання і копіювання.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Коротка документація популярних конструкцій, функцій і методів Python.</p>
+          <div id="referenceContainer"></div>
+          <div class="empty-state" id="referenceEmpty">Записи довідника за цим запитом не знайдено.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Python Lessons / Python Довідник. Один офлайн-файл без бібліотек і фреймворків.</p>
+  </footer>
+
+  <script>
+    // Дані сайту: з них будується документація, приклади і пошук.
+    const typeDocs = [
+      { name: "int", description: "Ціле число без дробової частини.", example: "age = 18", usage: "Для віку, кількості, індексів, лічильників." },
+      { name: "float", description: "Дробове число.", example: "price = 99.5", usage: "Для вимірювань, цін, координат, середніх значень." },
+      { name: "str", description: "Рядок тексту.", example: 'name = "Олена"', usage: "Для імен, повідомлень, шляхів, текстових даних." },
+      { name: "bool", description: "Логічне значення True або False.", example: "is_active = True", usage: "Для умов, прапорців і станів." },
+      { name: "list", description: "Змінюваний впорядкований список.", example: 'names = ["Олена", "Іван"]', usage: "Для списків, які треба змінювати: додавати, видаляти, сортувати." },
+      { name: "tuple", description: "Незмінювана впорядкована колекція.", example: "point = (10, 20)", usage: "Для фіксованих наборів значень, які не мають змінюватися." },
+      { name: "set", description: "Колекція унікальних значень без гарантованого порядку.", example: 'tags = {"python", "web"}', usage: "Для унікальних елементів і перевірки належності." },
+      { name: "dict", description: "Колекція ключ-значення.", example: 'user = {"name": "Олена", "age": 20}', usage: "Для структурованих даних: профіль, налаштування, відповідь API." }
+    ];
+
+    const topicDocs = [
+      {
+        title: "Оператори",
+        category: "Основи",
+        description: "Оператори виконують дії зі значеннями: обчислення, порівняння, логічні перевірки і присвоєння.",
+        points: ["Арифметичні: +, -, *, /, //, %, **.", "Порівняння: ==, !=, >, <, >=, <=.", "Логічні: and, or, not.", "Присвоєння: =, +=, -=, *=, /=."],
+        code: "a = 10\nb = 3\n\nprint(a + b)\nprint(a // b)\nprint(a ** b)\n\nis_valid = a > b and b > 0\na += 5"
+      },
+      {
+        title: "Умови",
+        category: "Керування потоком",
+        description: "Умови дозволяють виконувати різний код залежно від перевірки.",
+        points: ["if виконується, якщо умова True.", "elif додає ще одну перевірку.", "else виконується, якщо попередні умови не спрацювали."],
+        code: "score = 75\n\nif score >= 90:\n    print(\"Відмінно\")\nelif score >= 60:\n    print(\"Зараховано\")\nelse:\n    print(\"Спробуй ще\")"
+      },
+      {
+        title: "Цикли",
+        category: "Керування потоком",
+        description: "Цикли повторюють блок коду.",
+        points: ["for перебирає елементи послідовності.", "while працює, поки умова True.", "break зупиняє цикл.", "continue переходить до наступної ітерації."],
+        code: "for number in range(5):\n    if number == 3:\n        continue\n    print(number)\n\ncount = 0\nwhile count < 3:\n    count += 1\n    if count == 2:\n        break"
+      },
+      {
+        title: "Функції",
+        category: "Функції",
+        description: "Функція — це іменований блок коду, який можна викликати багато разів.",
+        points: ["def створює функцію.", "Параметри передають дані всередину.", "return повертає результат.", "lambda створює коротку анонімну функцію."],
+        code: "def add(a, b):\n    return a + b\n\nprint(add(2, 3))\n\nsquare = lambda x: x * x\nprint(square(4))"
+      },
+      {
+        title: "Списки",
+        category: "Дані",
+        description: "Список зберігає впорядковані значення і може змінюватися.",
+        points: ["Створення: [] або list().", "Доступ через індекс, починаючи з 0.", "append додає елемент.", "remove видаляє значення.", "sort сортує список."],
+        code: "numbers = [3, 1, 2]\nprint(numbers[0])\n\nnumbers.append(4)\nnumbers.remove(1)\nnumbers.sort()\n\nfor number in numbers:\n    print(number)"
+      },
+      {
+        title: "Словники dict",
+        category: "Дані",
+        description: "Словник зберігає дані як пари ключ-значення.",
+        points: ["Ключ використовується для доступу до значення.", "Значення можна змінювати.", "update додає або оновлює кілька пар."],
+        code: "user = {\n    \"name\": \"Олена\",\n    \"age\": 20\n}\n\nprint(user[\"name\"])\nuser[\"age\"] = 21\nuser.update({\"city\": \"Київ\"})"
+      },
+      {
+        title: "Рядки str",
+        category: "Дані",
+        description: "Рядки мають багато методів для обробки тексту.",
+        points: ["lower переводить у нижній регістр.", "upper переводить у верхній регістр.", "replace замінює фрагмент.", "split розбиває рядок на список.", "join об’єднує список рядків."],
+        code: "text = \"Python Lessons\"\n\nprint(text.lower())\nprint(text.upper())\nprint(text.replace(\"Python\", \"Code\"))\n\nwords = text.split()\nprint(\"-\".join(words))"
+      },
+      {
+        title: "Робота з файлами",
+        category: "Файли",
+        description: "Функція open() відкриває файл для читання або запису.",
+        points: ["read читає вміст файлу.", "write записує текст.", "with автоматично закриває файл.", "Режим \"r\" читає, \"w\" записує."],
+        code: "with open(\"note.txt\", \"w\", encoding=\"utf-8\") as file:\n    file.write(\"Привіт з Python\")\n\nwith open(\"note.txt\", \"r\", encoding=\"utf-8\") as file:\n    text = file.read()\n\nprint(text)"
+      },
+      {
+        title: "Обробка помилок",
+        category: "Помилки",
+        description: "try/except/finally дозволяє обробляти помилки без аварійного завершення програми.",
+        points: ["try містить код, який може викликати помилку.", "except обробляє помилку.", "finally виконується завжди."],
+        code: "try:\n    number = int(\"abc\")\nexcept ValueError as error:\n    print(\"Невірне число\", error)\nfinally:\n    print(\"Перевірку завершено\")"
+      },
+      {
+        title: "ООП у Python",
+        category: "ООП",
+        description: "Клас описує шаблон об’єкта: дані та методи.",
+        points: ["class створює клас.", "__init__ запускається при створенні об’єкта.", "self посилається на поточний об’єкт.", "Методи — функції всередині класу."],
+        code: "class Player:\n    def __init__(self, name):\n        self.name = name\n        self.score = 0\n\n    def add_score(self, points):\n        self.score += points\n\nplayer = Player(\"Alex\")\nplayer.add_score(10)\nprint(player.score)"
+      },
+      {
+        title: "Модулі",
+        category: "Організація коду",
+        description: "Модулі дозволяють використовувати код з інших файлів або стандартної бібліотеки.",
+        points: ["import підключає модуль.", "from ... import бере конкретну функцію або клас.", "Модулі допомагають ділити програму на частини."],
+        code: "import math\nfrom random import randint\n\nprint(math.sqrt(16))\nprint(randint(1, 10))"
+      }
+    ];
+
+    const examples = [
+      { title: "Калькулятор", code: "a = 10\nb = 5\n\nprint(a + b)\nprint(a - b)\nprint(a * b)\nprint(a / b)" },
+      { title: "Перевірка числа", code: "number = 7\n\nif number % 2 == 0:\n    print(\"Парне\")\nelse:\n    print(\"Непарне\")" },
+      { title: "Робота зі списком", code: "tasks = []\ntasks.append(\"Вивчити Python\")\ntasks.append(\"Написати код\")\ntasks.remove(\"Написати код\")\n\nfor task in tasks:\n    print(task)" },
+      { title: "Простий клас Car", code: "class Car:\n    def __init__(self, model):\n        self.model = model\n        self.speed = 0\n\n    def accelerate(self):\n        self.speed += 10\n\ncar = Car(\"Tesla\")\ncar.accelerate()\nprint(car.speed)" },
+      { title: "Простий клас Player", code: "class Player:\n    def __init__(self, name):\n        self.name = name\n        self.health = 100\n\n    def take_damage(self, damage):\n        self.health -= damage\n\nplayer = Player(\"Alex\")\nplayer.take_damage(20)\nprint(player.health)" },
+      { title: "Читання файлу", code: "with open(\"data.txt\", \"r\", encoding=\"utf-8\") as file:\n    text = file.read()\n\nprint(text)" }
+    ];
+
+    const referenceDocs = [
+      { name: "print()", description: "Виводить значення в консоль.", syntax: "print(value)", example: 'print("Привіт")', note: "Можна передавати кілька значень через кому." },
+      { name: "input()", description: "Зчитує текст, введений користувачем.", syntax: "input(prompt)", example: 'name = input("Ваше ім’я: ")', note: "Завжди повертає рядок str." },
+      { name: "int()", description: "Перетворює значення на ціле число.", syntax: "int(value)", example: 'age = int("18")', note: "Може викликати ValueError, якщо рядок не є числом." },
+      { name: "float()", description: "Перетворює значення на дробове число.", syntax: "float(value)", example: 'price = float("99.5")', note: "Корисно для чисел із дробовою частиною." },
+      { name: "str()", description: "Перетворює значення на рядок.", syntax: "str(value)", example: "text = str(123)", note: "Часто використовується при формуванні повідомлень." },
+      { name: "bool()", description: "Перетворює значення на True або False.", syntax: "bool(value)", example: "is_empty = bool([])", note: "Порожні колекції, 0 і порожній рядок дають False." },
+      { name: "if / elif / else", description: "Умовне виконання коду.", syntax: "if condition:\n    ...\nelif other:\n    ...\nelse:\n    ...", example: "if age >= 18:\n    print(\"OK\")", note: "Блоки визначаються відступами." },
+      { name: "for", description: "Цикл для перебору послідовності.", syntax: "for item in collection:\n    ...", example: "for name in names:\n    print(name)", note: "Часто використовується зі списками, рядками, range()." },
+      { name: "while", description: "Цикл, який працює, поки умова True.", syntax: "while condition:\n    ...", example: "while count < 5:\n    count += 1", note: "Стежте, щоб цикл мав умову завершення." },
+      { name: "break", description: "Достроково зупиняє цикл.", syntax: "break", example: "if item == target:\n    break", note: "Працює всередині циклів." },
+      { name: "continue", description: "Пропускає поточну ітерацію циклу.", syntax: "continue", example: "if number < 0:\n    continue", note: "Після continue цикл переходить до наступного елемента." },
+      { name: "def", description: "Оголошує функцію.", syntax: "def name(params):\n    ...", example: "def greet(name):\n    print(\"Привіт\", name)", note: "Тіло функції має бути з відступом." },
+      { name: "return", description: "Повертає результат із функції.", syntax: "return value", example: "def add(a, b):\n    return a + b", note: "Без return функція повертає None." },
+      { name: "lambda", description: "Коротка анонімна функція.", syntax: "lambda args: result", example: "square = lambda x: x * x", note: "Краще використовувати для простих коротких операцій." },
+      { name: "list.append()", description: "Додає елемент у кінець списку.", syntax: "list.append(item)", example: "names.append(\"Олена\")", note: "Змінює початковий список." },
+      { name: "list.remove()", description: "Видаляє перше входження значення зі списку.", syntax: "list.remove(item)", example: "names.remove(\"Іван\")", note: "Якщо значення немає, буде ValueError." },
+      { name: "list.sort()", description: "Сортує список на місці.", syntax: "list.sort()", example: "numbers.sort()", note: "Для нового відсортованого списку використовуйте sorted()." },
+      { name: "dict.update()", description: "Додає або оновлює пари ключ-значення.", syntax: "dict.update(other)", example: "user.update({\"city\": \"Київ\"})", note: "Змінює словник." },
+      { name: "str.lower()", description: "Повертає рядок у нижньому регістрі.", syntax: "text.lower()", example: '"Hello".lower()', note: "Корисно для нечутливого до регістру порівняння." },
+      { name: "str.upper()", description: "Повертає рядок у верхньому регістрі.", syntax: "text.upper()", example: '"hello".upper()', note: "Не змінює початковий рядок." },
+      { name: "str.replace()", description: "Замінює частину рядка.", syntax: "text.replace(old, new)", example: '"cat".replace("c", "b")', note: "Повертає новий рядок." },
+      { name: "str.split()", description: "Розбиває рядок на список.", syntax: "text.split(separator)", example: '"a,b,c".split(",")', note: "Без аргументу розбиває по пробілах." },
+      { name: "str.join()", description: "Об’єднує список рядків.", syntax: "separator.join(items)", example: '"-".join([\"a\", \"b\"]);', note: "Усі елементи мають бути рядками." },
+      { name: "open()", description: "Відкриває файл.", syntax: "open(path, mode, encoding)", example: 'open("data.txt", "r", encoding="utf-8")', note: "Краще використовувати разом із with." },
+      { name: "read()", description: "Читає вміст файлу.", syntax: "file.read()", example: "text = file.read()", note: "Повертає рядок." },
+      { name: "write()", description: "Записує текст у файл.", syntax: "file.write(text)", example: 'file.write("Hello")', note: "Файл має бути відкритий у режимі запису." },
+      { name: "try / except / finally", description: "Обробляє помилки.", syntax: "try:\n    ...\nexcept Error:\n    ...\nfinally:\n    ...", example: "try:\n    int(\"abc\")\nexcept ValueError:\n    print(\"Помилка\")", note: "finally виконується незалежно від помилки." },
+      { name: "class", description: "Оголошує клас.", syntax: "class Name:\n    ...", example: "class Car:\n    pass", note: "Клас є шаблоном для об’єктів." },
+      { name: "__init__", description: "Метод ініціалізації об’єкта.", syntax: "def __init__(self, ...):", example: "def __init__(self, name):\n    self.name = name", note: "Викликається при створенні об’єкта." },
+      { name: "self", description: "Посилання на поточний об’єкт.", syntax: "self.name", example: "self.speed = 0", note: "Перший параметр методів екземпляра." },
+      { name: "import", description: "Підключає модуль.", syntax: "import module", example: "import math", note: "Після import можна звертатися як math.sqrt()." },
+      { name: "from ... import", description: "Імпортує конкретну частину модуля.", syntax: "from module import name", example: "from random import randint", note: "Дозволяє писати randint() без random." }
+    ];
+
+    const typesContainer = document.querySelector("#typesContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTypes() {
+      typesContainer.innerHTML = "";
+      typeDocs.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Коли використовувати</dt><dd>${escapeHtml(item.usage)}</dd></div>
+          </dl>
+        `;
+        typesContainer.appendChild(article);
+      });
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topicDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = topicDocs.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+
+        topicsContainer.appendChild(group);
+      });
+
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `<h3>${escapeHtml(item.title)}</h3>${makeCodeBlock(item.code)}`;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = referenceDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Синтаксис</dt><dd>${makeCodeBlock(item.syntax)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Примітка</dt><dd>${escapeHtml(item.note)}</dd></div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const topicCount = renderTopics(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: тем ${topicCount}, записів довідника ${referenceCount}.`
+        : "Показано всі теми довідника.";
+    }
+
+    // Копіювання коду для всіх прикладів.
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    // Розгортання і згортання секцій.
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    // Мобільне меню.
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTypes();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+

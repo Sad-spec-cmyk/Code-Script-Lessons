@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Lessons / HTML Directory</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    code,
+    pre,
+    kbd,
+    samp {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .top-nav a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 60px 18px 38px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button,
+    button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .layout {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .sidebar a:hover,
+    .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .section,
+    .section-content,
+    .info-card,
+    .doc-card,
+    .example-card {
+      min-width: 0;
+    }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .section-content {
+      padding: 18px;
+    }
+
+    .section.is-collapsed .section-content {
+      display: none;
+    }
+
+    .section.is-collapsed .section-header span {
+      transform: rotate(-90deg);
+    }
+
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card,
+    .doc-card,
+    .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+    }
+
+    .info-card h3,
+    .doc-card h3,
+    .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .info-card p,
+    .doc-card p,
+    .example-card p {
+      margin: 6px 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .tag-name {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .doc-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .doc-card dd {
+      margin: 2px 0 0;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover,
+    .copy-btn:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .examples-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 24px 18px 36px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .doc-grid,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        align-items: flex-start;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .top-nav {
+        display: none;
+        width: 100%;
+        padding-top: 10px;
+      }
+
+      .top-nav.is-open {
+        display: grid;
+      }
+
+      .header-inner {
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header h2 {
+        font-size: 21px;
+      }
+
+      .hero,
+      .layout,
+      .footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .section-content {
+        padding: 12px;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .doc-card h3,
+      .info-card h3,
+      .example-card h3 {
+        overflow-wrap: anywhere;
+      }
+
+      .doc-card,
+      .doc-card dl,
+      .doc-card dt,
+      .doc-card dd,
+      .info-card,
+      .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .tag-name {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+
+      .copy-btn {
+        position: static;
+        margin-bottom: 8px;
+      }
+
+      pre {
+        font-size: 13px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">HTML Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#structure">Структура</a>
+        <a href="#tags">HTML теги</a>
+        <a href="#attributes">Атрибути</a>
+        <a href="#examples">Приклади</a>
+        <a href="#search">Пошук</a>
+        <a href="css.html">CSS довідник</a>
+        <a href="javascript.html">JavaScript довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>HTML Lessons</h1>
+    <p>Простий довідник по HTML тегах, структурі документа та основних елементах веб-сторінки.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#structure">Почати</a>
+      <a class="button" href="#tags">Всі HTML теги</a>
+      <a class="button" href="#examples">Приклади коду</a>
+      <a class="button" href="css.html">Перейти до CSS</a>
+      <a class="button" href="javascript.html">Перейти до JavaScript</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#structure">Базова структура HTML</a>
+      <a href="#tags">Повна документація тегів</a>
+      <a href="#attributes">Атрибути HTML</a>
+      <a href="#examples">Готові приклади</a>
+      <a href="#search">Пошук по тегах</a>
+      <a href="css.html">CSS довідник</a>
+      <a href="javascript.html">JavaScript довідник</a>
+    </aside>
+
+    <main>
+      <section class="section" id="structure">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Базова структура HTML</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">HTML-документ складається з кількох обов’язкових і службових частин. Вони допомагають браузеру зрозуміти тип документа, мову, кодування, масштабування та вміст сторінки.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;!DOCTYPE html&gt;</span></h3>
+              <p>Оголошує, що документ написаний за стандартом HTML5.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;html&gt;</span></h3>
+              <p>Кореневий елемент сторінки. У ньому знаходяться <code>&lt;head&gt;</code> і <code>&lt;body&gt;</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;head&gt;</span></h3>
+              <p>Містить службову інформацію: кодування, заголовок, стилі, підключення файлів.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;meta charset="UTF-8"&gt;</span></h3>
+              <p>Встановлює кодування UTF-8, щоб українські символи відображалися правильно.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;meta name="viewport"&gt;</span></h3>
+              <p>Налаштовує адаптивність сторінки на телефонах і планшетах.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;title&gt;</span></h3>
+              <p>Визначає назву вкладки браузера.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="tag-name">&lt;body&gt;</span></h3>
+              <p>Містить видимий вміст сторінки: текст, зображення, кнопки, форми, таблиці.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="uk"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, HTML!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по тегах і атрибутах</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть тег, атрибут або слово з опису</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: &lt;img&gt;, href, form, таблиця">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі теги та атрибути.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tags">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Повна документація HTML тегів</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Кожен блок містить категорію, опис, призначення, приклад, важливі атрибути та коротку примітку.</p>
+          <div id="tagsContainer"></div>
+          <div class="empty-state" id="tagsEmpty">Теги за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="attributes">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Атрибути HTML</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Атрибути додають елементам властивості: адресу посилання, опис зображення, CSS-клас, стан поля форми та інші налаштування.</p>
+          <div id="attributesContainer" class="doc-grid"></div>
+          <div class="empty-state" id="attributesEmpty">Атрибути за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Приклади коду</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові короткі фрагменти, які можна копіювати та змінювати під власну сторінку.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const tagDocs = [
+      { tag: "<html>", category: "Основні", description: "Кореневий елемент HTML-документа.", usage: "Огортає весь документ і задає мову через атрибут lang.", example: '<html lang="uk">...</html>', attrs: "lang", note: "На сторінці має бути один елемент <html>." },
+      { tag: "<head>", category: "Основні", description: "Службова частина документа.", usage: "Містить метадані, назву вкладки, стилі та підключення ресурсів.", example: "<head>\n  <title>Сайт</title>\n</head>", attrs: "Немає обов’язкових.", note: "Вміст <head> зазвичай не показується на сторінці." },
+      { tag: "<body>", category: "Основні", description: "Видима частина HTML-документа.", usage: "Містить текст, зображення, посилання, форми та інші елементи.", example: "<body>\n  <h1>Привіт!</h1>\n</body>", attrs: "id, class, style", note: "Усе, що бачить користувач, зазвичай знаходиться в <body>." },
+      { tag: "<title>", category: "Основні", description: "Назва сторінки у вкладці браузера.", usage: "Допомагає користувачу і пошуковим системам зрозуміти тему сторінки.", example: "<title>HTML Lessons</title>", attrs: "Немає.", note: "Розміщується всередині <head>." },
+      { tag: "<meta>", category: "Основні", description: "Метадані сторінки.", usage: "Задає кодування, опис, viewport та іншу службову інформацію.", example: '<meta charset="UTF-8">', attrs: "charset, name, content", note: "Це порожній елемент без закривального тегу." },
+      { tag: "<link>", category: "Основні", description: "Підключає зовнішні ресурси.", usage: "Найчастіше використовується для CSS-файлів і favicon.", example: '<link rel="stylesheet" href="style.css">', attrs: "rel, href, type", note: "Розміщується в <head>." },
+      { tag: "<style>", category: "Основні", description: "Вбудовані CSS-стилі.", usage: "Додає стилі прямо в HTML-файл.", example: "<style>\n  body { font-family: Arial; }\n</style>", attrs: "media", note: "Для великих сайтів CSS часто виносять в окремий файл." },
+      { tag: "<script>", category: "Основні", description: "Підключає або містить JavaScript.", usage: "Додає інтерактивність: пошук, кнопки, меню, перевірку форм.", example: '<script src="script.js"></' + 'script>', attrs: "src, defer, async, type", note: "Якщо код не потрібен до завантаження сторінки, часто використовують defer." },
+      { tag: "<noscript>", category: "Основні", description: "Вміст для користувачів без JavaScript.", usage: "Показує повідомлення, якщо JS вимкнено або не підтримується.", example: "<noscript>Увімкніть JavaScript.</noscript>", attrs: "Глобальні атрибути.", note: "Корисний для важливих попереджень." },
+
+      { tag: "<h1>", category: "Текст", description: "Головний заголовок сторінки.", usage: "Позначає основну тему документа.", example: "<h1>HTML Lessons</h1>", attrs: "id, class", note: "Зазвичай один <h1> на сторінку." },
+      { tag: "<h2>", category: "Текст", description: "Заголовок другого рівня.", usage: "Позначає великий розділ сторінки.", example: "<h2>Теги тексту</h2>", attrs: "id, class", note: "Допомагає створити зрозумілу структуру." },
+      { tag: "<h3>", category: "Текст", description: "Заголовок третього рівня.", usage: "Позначає підрозділ всередині <h2>.", example: "<h3>Абзаци</h3>", attrs: "id, class", note: "Рівні заголовків не варто пропускати без потреби." },
+      { tag: "<h4>", category: "Текст", description: "Заголовок четвертого рівня.", usage: "Підходить для дрібніших підрозділів.", example: "<h4>Приклад</h4>", attrs: "id, class", note: "Використовується рідше, ніж h1-h3." },
+      { tag: "<h5>", category: "Текст", description: "Заголовок п’ятого рівня.", usage: "Позначає глибоку вкладеність структури.", example: "<h5>Деталі</h5>", attrs: "id, class", note: "Не використовуйте тільки заради малого розміру тексту." },
+      { tag: "<h6>", category: "Текст", description: "Заголовок шостого рівня.", usage: "Найнижчий стандартний рівень заголовка.", example: "<h6>Примітка</h6>", attrs: "id, class", note: "Для стилізації краще використовувати CSS." },
+      { tag: "<p>", category: "Текст", description: "Абзац тексту.", usage: "Оформлює звичайний текстовий блок.", example: "<p>Це абзац українського тексту.</p>", attrs: "id, class, title", note: "Не вкладайте в <p> великі блочні елементи." },
+      { tag: "<br>", category: "Текст", description: "Перенесення рядка.", usage: "Примусово переносить текст на новий рядок.", example: "Рядок 1<br>Рядок 2", attrs: "Немає.", note: "Не використовуйте <br> для великих відступів." },
+      { tag: "<hr>", category: "Текст", description: "Тематичний розділювач.", usage: "Відділяє одну частину контенту від іншої.", example: "<p>Вступ</p>\n<hr>\n<p>Наступний розділ</p>", attrs: "Глобальні атрибути.", note: "Візуальний вигляд краще налаштовувати через CSS." },
+      { tag: "<span>", category: "Текст", description: "Рядковий контейнер.", usage: "Виділяє невелику частину тексту для стилізації або JS.", example: '<span class="accent">важливо</span>', attrs: "id, class, style", note: "Сам по собі не має семантичного значення." },
+      { tag: "<div>", category: "Текст", description: "Блочний контейнер.", usage: "Групує елементи для стилізації або структури.", example: '<div class="card">Текст</div>', attrs: "id, class, style", note: "Для змістових блоків краще використовувати семантичні теги." },
+      { tag: "<strong>", category: "Текст", description: "Важливий текст.", usage: "Позначає змістову важливість.", example: "<strong>Увага!</strong>", attrs: "Глобальні атрибути.", note: "Зазвичай відображається жирним." },
+      { tag: "<b>", category: "Текст", description: "Візуальне жирне виділення.", usage: "Виділяє текст без додаткового семантичного значення.", example: "<b>Жирний текст</b>", attrs: "Глобальні атрибути.", note: "Для важливості краще <strong>." },
+      { tag: "<em>", category: "Текст", description: "Смисловий наголос.", usage: "Підкреслює інтонаційний акцент у тексті.", example: "Це <em>дуже</em> важливо.", attrs: "Глобальні атрибути.", note: "Зазвичай відображається курсивом." },
+      { tag: "<i>", category: "Текст", description: "Курсивне виділення.", usage: "Позначає терміни, назви або інший текст, що відрізняється від основного.", example: "<i>HTML</i>", attrs: "Глобальні атрибути.", note: "Для наголосу краще <em>." },
+      { tag: "<mark>", category: "Текст", description: "Підсвічений текст.", usage: "Виділяє релевантний або знайдений фрагмент.", example: "<mark>знайдене слово</mark>", attrs: "Глобальні атрибути.", note: "Стандартно має жовтий фон." },
+      { tag: "<small>", category: "Текст", description: "Дрібний допоміжний текст.", usage: "Підходить для приміток, юридичних уточнень, підписів.", example: "<small>© 2026</small>", attrs: "Глобальні атрибути.", note: "Не використовуйте для приховування важливої інформації." },
+      { tag: "<del>", category: "Текст", description: "Видалений текст.", usage: "Показує, що фрагмент було прибрано або скасовано.", example: "<del>Стара ціна</del>", attrs: "cite, datetime", note: "Часто відображається закресленим." },
+      { tag: "<ins>", category: "Текст", description: "Доданий текст.", usage: "Показує, що фрагмент було додано.", example: "<ins>Новий текст</ins>", attrs: "cite, datetime", note: "Часто відображається підкресленим." },
+      { tag: "<sub>", category: "Текст", description: "Нижній індекс.", usage: "Використовується у формулах і позначеннях.", example: "H<sub>2</sub>O", attrs: "Глобальні атрибути.", note: "Не варто використовувати лише для декоративного зменшення тексту." },
+      { tag: "<sup>", category: "Текст", description: "Верхній індекс.", usage: "Використовується для степенів, приміток, формул.", example: "2<sup>3</sup>", attrs: "Глобальні атрибути.", note: "Підходить для математичних і довідкових позначень." },
+      { tag: "<blockquote>", category: "Текст", description: "Блочна цитата.", usage: "Позначає довгу цитату з іншого джерела.", example: "<blockquote>HTML описує структуру веб-сторінки.</blockquote>", attrs: "cite", note: "Для коротких цитат використовуйте <q>." },
+      { tag: "<q>", category: "Текст", description: "Коротка рядкова цитата.", usage: "Вставляє цитату всередині речення.", example: "<q>Простота важлива</q>", attrs: "cite", note: "Браузер може автоматично додати лапки." },
+      { tag: "<abbr>", category: "Текст", description: "Абревіатура або скорочення.", usage: "Пояснює скорочення через title.", example: '<abbr title="HyperText Markup Language">HTML</abbr>', attrs: "title", note: "Допомагає доступності й розумінню тексту." },
+      { tag: "<address>", category: "Текст", description: "Контактна інформація.", usage: "Містить автора, email, адресу або інші контакти.", example: "<address>Автор: Іван, email@example.com</address>", attrs: "Глобальні атрибути.", note: "Не призначений для будь-якої поштової адреси без контексту автора." },
+      { tag: "<cite>", category: "Текст", description: "Назва джерела або твору.", usage: "Позначає назву книги, статті, сайту чи іншого джерела.", example: "<cite>Документація MDN</cite>", attrs: "Глобальні атрибути.", note: "Не використовується для імені автора цитати." },
+      { tag: "<code>", category: "Текст", description: "Фрагмент коду.", usage: "Показує короткий код усередині тексту.", example: "Використайте <code>&lt;p&gt;</code>.", attrs: "Глобальні атрибути.", note: "Для великих блоків коду поєднують з <pre>." },
+      { tag: "<pre>", category: "Текст", description: "Попередньо форматований текст.", usage: "Зберігає пробіли та перенесення рядків.", example: "<pre>рядок 1\n  рядок 2</pre>", attrs: "Глобальні атрибути.", note: "Добре підходить для блоків коду." },
+      { tag: "<kbd>", category: "Текст", description: "Введення з клавіатури.", usage: "Позначає клавіші або команди користувача.", example: "Натисніть <kbd>Ctrl</kbd> + <kbd>C</kbd>.", attrs: "Глобальні атрибути.", note: "Вигляд налаштовується CSS." },
+      { tag: "<samp>", category: "Текст", description: "Приклад виводу програми.", usage: "Показує текст, який могла вивести програма.", example: "<samp>Готово</samp>", attrs: "Глобальні атрибути.", note: "Корисний у технічній документації." },
+      { tag: "<var>", category: "Текст", description: "Змінна або параметр.", usage: "Позначає змінні у формулах, коді або поясненнях.", example: "<var>x</var> = 10", attrs: "Глобальні атрибути.", note: "Зазвичай відображається курсивом." },
+
+      { tag: "<a>", category: "Посилання", description: "Гіперпосилання.", usage: "Переходить на іншу сторінку, файл, email або якір.", example: '<a href="https://example.com">Відкрити сайт</a>', attrs: "href, target, rel, download", note: "Для target=\"_blank\" додавайте rel=\"noopener\"." },
+      { tag: "<nav>", category: "Посилання", description: "Навігаційний блок.", usage: "Групує основні посилання сторінки або сайту.", example: "<nav>\n  <a href=\"#home\">Головна</a>\n</nav>", attrs: "aria-label, id, class", note: "Не кожна група посилань обов’язково має бути <nav>." },
+
+      { tag: "<img>", category: "Зображення і медіа", description: "Зображення.", usage: "Вставляє картинку на сторінку.", example: '<img src="photo.jpg" alt="Опис фото">', attrs: "src, alt, width, height, loading", note: "alt важливий для доступності." },
+      { tag: "<picture>", category: "Зображення і медіа", description: "Адаптивне зображення.", usage: "Дозволяє підставляти різні зображення для різних умов.", example: '<picture>\n  <source srcset="wide.jpg" media="(min-width: 800px)">\n  <img src="small.jpg" alt="Приклад">\n</picture>', attrs: "Містить <source> і <img>.", note: "<img> всередині є обов’язковим запасним варіантом." },
+      { tag: "<source>", category: "Зображення і медіа", description: "Джерело медіа.", usage: "Вказує альтернативні файли для picture, audio або video.", example: '<source src="video.webm" type="video/webm">', attrs: "src, srcset, type, media", note: "Самостійно не показує контент." },
+      { tag: "<figure>", category: "Зображення і медіа", description: "Самостійний ілюстративний блок.", usage: "Групує зображення, схему, код або діаграму з підписом.", example: "<figure>\n  <img src=\"cat.jpg\" alt=\"Кіт\">\n  <figcaption>Підпис</figcaption>\n</figure>", attrs: "Глобальні атрибути.", note: "Може містити не тільки зображення." },
+      { tag: "<figcaption>", category: "Зображення і медіа", description: "Підпис до figure.", usage: "Описує зображення або інший вміст <figure>.", example: "<figcaption>Пояснення до зображення</figcaption>", attrs: "Глобальні атрибути.", note: "Розміщується всередині <figure>." },
+      { tag: "<audio>", category: "Зображення і медіа", description: "Аудіопрогравач.", usage: "Додає звук або музику.", example: '<audio controls src="sound.mp3"></audio>', attrs: "src, controls, autoplay, loop, muted, preload", note: "autoplay часто блокується браузерами." },
+      { tag: "<video>", category: "Зображення і медіа", description: "Відеопрогравач.", usage: "Додає відео на сторінку.", example: '<video controls width="400" src="movie.mp4"></video>', attrs: "src, controls, width, height, poster, muted", note: "Краще вказувати кілька форматів через <source>." },
+      { tag: "<track>", category: "Зображення і медіа", description: "Субтитри або текстові доріжки.", usage: "Додає субтитри, описи або глави до audio/video.", example: '<track src="subtitles.vtt" kind="subtitles" srclang="uk" label="Українська">', attrs: "src, kind, srclang, label, default", note: "Файл зазвичай має формат WebVTT." },
+      { tag: "<iframe>", category: "Зображення і медіа", description: "Вбудована сторінка.", usage: "Показує інший HTML-документ усередині поточної сторінки.", example: '<iframe src="page.html" title="Вбудована сторінка"></iframe>', attrs: "src, title, width, height, loading, sandbox", note: "Для безпеки використовуйте sandbox, коли це доречно." },
+
+      { tag: "<ul>", category: "Списки", description: "Невпорядкований список.", usage: "Створює список без нумерації.", example: "<ul>\n  <li>HTML</li>\n  <li>CSS</li>\n</ul>", attrs: "Глобальні атрибути.", note: "Елементи списку мають бути в <li>." },
+      { tag: "<ol>", category: "Списки", description: "Впорядкований список.", usage: "Створює нумерований список.", example: "<ol>\n  <li>Крок 1</li>\n  <li>Крок 2</li>\n</ol>", attrs: "start, reversed, type", note: "Підходить для інструкцій і рейтингів." },
+      { tag: "<li>", category: "Списки", description: "Елемент списку.", usage: "Описує один пункт у <ul> або <ol>.", example: "<li>Пункт списку</li>", attrs: "value", note: "Не використовується окремо без списку." },
+      { tag: "<dl>", category: "Списки", description: "Список описів.", usage: "Групує терміни та їх пояснення.", example: "<dl>\n  <dt>HTML</dt>\n  <dd>Мова розмітки</dd>\n</dl>", attrs: "Глобальні атрибути.", note: "Добре підходить для словників і характеристик." },
+      { tag: "<dt>", category: "Списки", description: "Термін у списку описів.", usage: "Позначає назву терміна.", example: "<dt>CSS</dt>", attrs: "Глобальні атрибути.", note: "Використовується всередині <dl>." },
+      { tag: "<dd>", category: "Списки", description: "Опис терміна.", usage: "Містить пояснення для <dt>.", example: "<dd>Мова стилів</dd>", attrs: "Глобальні атрибути.", note: "Один термін може мати кілька описів." },
+
+      { tag: "<table>", category: "Таблиці", description: "Таблиця даних.", usage: "Показує структуровані дані в рядках і стовпцях.", example: "<table>\n  <tr><td>Дані</td></tr>\n</table>", attrs: "Глобальні атрибути.", note: "Не використовуйте таблиці для макета сторінки." },
+      { tag: "<caption>", category: "Таблиці", description: "Назва таблиці.", usage: "Коротко пояснює зміст таблиці.", example: "<caption>Розклад занять</caption>", attrs: "Глобальні атрибути.", note: "Розміщується одразу після <table>." },
+      { tag: "<thead>", category: "Таблиці", description: "Головна частина таблиці.", usage: "Групує рядки заголовків.", example: "<thead>\n  <tr><th>Назва</th></tr>\n</thead>", attrs: "Глобальні атрибути.", note: "Покращує структуру й доступність." },
+      { tag: "<tbody>", category: "Таблиці", description: "Основне тіло таблиці.", usage: "Групує основні рядки з даними.", example: "<tbody>\n  <tr><td>HTML</td></tr>\n</tbody>", attrs: "Глобальні атрибути.", note: "Браузер може додати <tbody> автоматично." },
+      { tag: "<tfoot>", category: "Таблиці", description: "Підсумкова частина таблиці.", usage: "Містить підсумки або примітки.", example: "<tfoot>\n  <tr><td>Разом</td></tr>\n</tfoot>", attrs: "Глобальні атрибути.", note: "Корисний для фінальних рядків." },
+      { tag: "<tr>", category: "Таблиці", description: "Рядок таблиці.", usage: "Містить комірки <td> або <th>.", example: "<tr>\n  <td>Комірка</td>\n</tr>", attrs: "Глобальні атрибути.", note: "Розміщується всередині table, thead, tbody або tfoot." },
+      { tag: "<th>", category: "Таблиці", description: "Заголовкова комірка.", usage: "Позначає назву стовпця або рядка.", example: "<th>Ім’я</th>", attrs: "scope, colspan, rowspan", note: "scope допомагає доступності." },
+      { tag: "<td>", category: "Таблиці", description: "Звичайна комірка таблиці.", usage: "Містить дані таблиці.", example: "<td>Олена</td>", attrs: "colspan, rowspan, headers", note: "Для заголовків використовуйте <th>." },
+      { tag: "<colgroup>", category: "Таблиці", description: "Група стовпців.", usage: "Дозволяє задавати властивості для колонок.", example: '<colgroup>\n  <col span="2">\n</colgroup>', attrs: "span", note: "Розміщується перед рядками таблиці." },
+      { tag: "<col>", category: "Таблиці", description: "Опис окремого стовпця.", usage: "Налаштовує одну або кілька колонок.", example: '<col style="width: 120px;">', attrs: "span, style", note: "Не містить текстового вмісту." },
+
+      { tag: "<form>", category: "Форми", description: "Форма для введення даних.", usage: "Групує поля та надсилає дані на сервер.", example: '<form action="/signup" method="post">...</form>', attrs: "action, method, autocomplete", note: "Поля форми мають мати зрозумілі label." },
+      { tag: "<input>", category: "Форми", description: "Поле введення.", usage: "Створює текстові поля, чекбокси, радіокнопки, файли та інші контролери.", example: '<input type="email" name="email" required>', attrs: "type, name, value, placeholder, required, disabled", note: "type визначає поведінку поля." },
+      { tag: "<label>", category: "Форми", description: "Підпис до поля.", usage: "Пов’язує текст із елементом форми.", example: '<label for="email">Email</label>\n<input id="email" type="email">', attrs: "for", note: "Покращує доступність і зручність кліку." },
+      { tag: "<textarea>", category: "Форми", description: "Багаторядкове текстове поле.", usage: "Підходить для повідомлень і описів.", example: '<textarea name="message" rows="4"></textarea>', attrs: "name, rows, cols, placeholder, required", note: "Текст за замовчуванням пишеться між тегами." },
+      { tag: "<button>", category: "Форми", description: "Кнопка.", usage: "Надсилає форму або запускає дію JavaScript.", example: '<button type="submit">Надіслати</button>', attrs: "type, disabled, name, value", note: "Для звичайної JS-кнопки вказуйте type=\"button\"." },
+      { tag: "<select>", category: "Форми", description: "Випадний список.", usage: "Дозволяє вибрати один або кілька варіантів.", example: '<select name="city">\n  <option>Київ</option>\n</select>', attrs: "name, multiple, required, disabled", note: "Варіанти задаються через <option>." },
+      { tag: "<option>", category: "Форми", description: "Варіант у списку.", usage: "Описує один вибір у <select> або <datalist>.", example: '<option value="html">HTML</option>', attrs: "value, selected, disabled", note: "Текст між тегами бачить користувач." },
+      { tag: "<optgroup>", category: "Форми", description: "Група варіантів.", usage: "Групує option у select.", example: '<optgroup label="Frontend">\n  <option>HTML</option>\n</optgroup>', attrs: "label, disabled", note: "Допомагає впорядкувати довгі списки." },
+      { tag: "<fieldset>", category: "Форми", description: "Група полів форми.", usage: "Об’єднує пов’язані поля.", example: "<fieldset>\n  <legend>Контакти</legend>\n</fieldset>", attrs: "disabled, name", note: "Часто використовується з <legend>." },
+      { tag: "<legend>", category: "Форми", description: "Заголовок fieldset.", usage: "Пояснює групу полів.", example: "<legend>Особисті дані</legend>", attrs: "Глобальні атрибути.", note: "Має бути першим дочірнім елементом fieldset." },
+      { tag: "<datalist>", category: "Форми", description: "Список підказок для input.", usage: "Додає варіанти автодоповнення.", example: '<input list="langs">\n<datalist id="langs">\n  <option value="HTML">\n</datalist>', attrs: "id", note: "Пов’язується з input через атрибут list." },
+      { tag: "<output>", category: "Форми", description: "Результат обчислення.", usage: "Показує результат дії форми або скрипта.", example: '<output name="sum">0</output>', attrs: "for, form, name", note: "Корисний для калькуляторів і інтерактивних форм." },
+      { tag: "<progress>", category: "Форми", description: "Індикатор прогресу.", usage: "Показує виконання задачі.", example: '<progress value="60" max="100">60%</progress>', attrs: "value, max", note: "Для невідомого прогресу не вказуйте value." },
+      { tag: "<meter>", category: "Форми", description: "Індикатор значення в діапазоні.", usage: "Показує рейтинг, рівень, заповненість або показник.", example: '<meter value="0.7">70%</meter>', attrs: "value, min, max, low, high, optimum", note: "Не використовуйте замість progress." },
+
+      { tag: "<header>", category: "Семантичні теги", description: "Вступна частина сторінки або розділу.", usage: "Містить логотип, заголовок, меню або вступ.", example: "<header>\n  <h1>Сайт</h1>\n</header>", attrs: "Глобальні атрибути.", note: "Може бути не тільки один на сторінці." },
+      { tag: "<footer>", category: "Семантичні теги", description: "Нижня частина сторінки або розділу.", usage: "Містить копірайт, контакти, додаткові посилання.", example: "<footer>© 2026</footer>", attrs: "Глобальні атрибути.", note: "Може належати всій сторінці або окремій статті." },
+      { tag: "<main>", category: "Семантичні теги", description: "Головний вміст сторінки.", usage: "Огортає основний унікальний контент.", example: "<main>\n  <h1>Тема</h1>\n</main>", attrs: "Глобальні атрибути.", note: "На сторінці має бути один основний <main>." },
+      { tag: "<section>", category: "Семантичні теги", description: "Тематичний розділ.", usage: "Групує контент однієї теми.", example: "<section>\n  <h2>Про нас</h2>\n</section>", attrs: "id, class, aria-labelledby", note: "Зазвичай має заголовок." },
+      { tag: "<article>", category: "Семантичні теги", description: "Самостійний матеріал.", usage: "Підходить для статті, новини, поста або картки.", example: "<article>\n  <h2>Новина</h2>\n</article>", attrs: "Глобальні атрибути.", note: "Матеріал має мати сенс окремо від сторінки." },
+      { tag: "<aside>", category: "Семантичні теги", description: "Додатковий контент.", usage: "Містить сайдбар, примітки, рекламу або пов’язані посилання.", example: "<aside>Корисні посилання</aside>", attrs: "Глобальні атрибути.", note: "Не має бути головним змістом сторінки." },
+      { tag: "<details>", category: "Семантичні теги", description: "Розкривний блок.", usage: "Дозволяє приховувати й відкривати додаткову інформацію.", example: "<details>\n  <summary>Більше</summary>\n  <p>Текст</p>\n</details>", attrs: "open", note: "Працює без JavaScript." },
+      { tag: "<summary>", category: "Семантичні теги", description: "Заголовок details.", usage: "Текст, по якому користувач відкриває блок.", example: "<summary>Показати пояснення</summary>", attrs: "Глобальні атрибути.", note: "Має бути всередині <details>." },
+      { tag: "<dialog>", category: "Семантичні теги", description: "Діалогове вікно.", usage: "Створює модальне або немодальне вікно.", example: '<dialog open>Повідомлення</dialog>', attrs: "open", note: "Для керування часто використовують JavaScript-методи showModal() і close()." },
+
+      { tag: "<template>", category: "Інтерактивні / службові", description: "Шаблон HTML, який не показується одразу.", usage: "Зберігає фрагмент розмітки для подальшого клонування JavaScript.", example: '<template id="card-template">\n  <article>Картка</article>\n</template>', attrs: "id, class", note: "Вміст не рендериться, доки його не вставити в DOM." },
+      { tag: "<slot>", category: "Інтерактивні / службові", description: "Місце для вставки в Web Components.", usage: "Дозволяє передавати контент у власні компоненти.", example: "<slot name=\"title\"></slot>", attrs: "name", note: "Використовується всередині shadow DOM." },
+      { tag: "<canvas>", category: "Інтерактивні / службові", description: "Полотно для графіки.", usage: "Малює 2D або 3D-графіку через JavaScript.", example: '<canvas id="game" width="300" height="150"></canvas>', attrs: "width, height", note: "Сам HTML не малює на canvas без JS." },
+      { tag: "<svg>", category: "Інтерактивні / службові", description: "Векторна графіка.", usage: "Створює масштабовані іконки, схеми та прості малюнки.", example: '<svg width="80" height="80"><circle cx="40" cy="40" r="30"></circle></svg>', attrs: "width, height, viewBox, fill", note: "SVG можна стилізувати CSS і керувати ним через JS." }
+    ];
+
+    const attributeDocs = [
+      { name: "id", description: "Унікальний ідентифікатор елемента.", where: "Майже всі HTML-елементи.", example: '<h2 id="about">Про нас</h2>' },
+      { name: "class", description: "Один або кілька CSS-класів для стилізації чи пошуку елементів.", where: "Майже всі HTML-елементи.", example: '<p class="lead text-muted">Текст</p>' },
+      { name: "style", description: "Вбудовані CSS-стилі для конкретного елемента.", where: "Майже всі HTML-елементи.", example: '<p style="color: red;">Увага</p>' },
+      { name: "title", description: "Додаткова підказка, яка часто показується при наведенні.", where: "Майже всі HTML-елементи.", example: '<abbr title="HyperText Markup Language">HTML</abbr>' },
+      { name: "lang", description: "Мова елемента або документа.", where: "<html> та інші текстові елементи.", example: '<html lang="uk">' },
+      { name: "hidden", description: "Приховує елемент зі сторінки.", where: "Майже всі HTML-елементи.", example: '<p hidden>Прихований текст</p>' },
+      { name: "data-*", description: "Користувацькі дані для JavaScript або логіки сторінки.", where: "Майже всі HTML-елементи.", example: '<button data-id="42">Вибрати</button>' },
+      { name: "href", description: "Адреса посилання або ресурсу.", where: "<a>, <link>.", example: '<a href="contacts.html">Контакти</a>' },
+      { name: "src", description: "Шлях до файлу, який потрібно завантажити.", where: "<img>, <script>, <iframe>, <audio>, <video>, <source>.", example: '<img src="photo.jpg" alt="Фото">' },
+      { name: "alt", description: "Текстовий опис зображення.", where: "<img>.", example: '<img src="logo.png" alt="Логотип компанії">' },
+      { name: "width", description: "Ширина елемента або медіа.", where: "<img>, <video>, <canvas>, <iframe>, <svg>.", example: '<img src="photo.jpg" alt="Фото" width="300">' },
+      { name: "height", description: "Висота елемента або медіа.", where: "<img>, <video>, <canvas>, <iframe>, <svg>.", example: '<canvas width="300" height="150"></canvas>' },
+      { name: "target", description: "Де відкривати посилання.", where: "<a>, <form>.", example: '<a href="page.html" target="_blank" rel="noopener">Відкрити</a>' },
+      { name: "rel", description: "Відношення між поточною сторінкою і ресурсом.", where: "<a>, <link>.", example: '<link rel="stylesheet" href="style.css">' },
+      { name: "type", description: "Тип елемента, файлу або кнопки.", where: "<input>, <button>, <script>, <link>, <source>.", example: '<input type="email" name="email">' },
+      { name: "name", description: "Ім’я поля або елемента для відправлення даних.", where: "Поля форм, <button>, <output>, <meta>.", example: '<input name="username">' },
+      { name: "value", description: "Початкове або поточне значення елемента.", where: "<input>, <button>, <option>, <progress>, <meter>.", example: '<input type="text" value="Олена">' },
+      { name: "placeholder", description: "Підказка всередині порожнього поля.", where: "<input>, <textarea>.", example: '<input placeholder="Ваш email">' },
+      { name: "required", description: "Робить поле обов’язковим.", where: "<input>, <select>, <textarea>.", example: '<input type="email" required>' },
+      { name: "disabled", description: "Вимикає елемент і не дає з ним взаємодіяти.", where: "Поля форм, кнопки, option, fieldset.", example: '<button disabled>Недоступно</button>' },
+      { name: "readonly", description: "Забороняє редагування, але залишає поле доступним для читання.", where: "<input>, <textarea>.", example: '<input value="Тільки читання" readonly>' },
+      { name: "checked", description: "Позначає checkbox або radio як вибраний.", where: '<input type="checkbox">, <input type="radio">.', example: '<input type="checkbox" checked>' },
+      { name: "selected", description: "Позначає option як вибраний за замовчуванням.", where: "<option>.", example: '<option selected>Україна</option>' },
+      { name: "multiple", description: "Дозволяє вибрати кілька значень.", where: '<select>, <input type="file">.', example: '<select multiple><option>HTML</option></select>' },
+      { name: "autocomplete", description: "Керує автозаповненням браузера.", where: "<form>, <input>, <textarea>, <select>.", example: '<input name="email" autocomplete="email">' },
+      { name: "action", description: "Адреса, куди форма надсилає дані.", where: "<form>.", example: '<form action="/register"></form>' },
+      { name: "method", description: "HTTP-метод надсилання форми.", where: "<form>.", example: '<form method="post"></form>' }
+    ];
+
+    const examples = [
+      { title: "Проста HTML-сторінка", code: '<!DOCTYPE html>\n<html lang="uk">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Моя сторінка</title>\n</head>\n<body>\n  <h1>Привіт!</h1>\n  <p>Це моя перша HTML-сторінка.</p>\n</body>\n</html>' },
+      { title: "Сторінка з текстом", code: '<main>\n  <h1>Про HTML</h1>\n  <p>HTML описує структуру веб-сторінки.</p>\n  <p><strong>Теги</strong> допомагають браузеру зрозуміти зміст.</p>\n  <blockquote>Добра структура робить сторінку зрозумілою.</blockquote>\n</main>' },
+      { title: "Сторінка з картинкою", code: '<figure>\n  <img src="images/city.jpg" alt="Вид на місто" width="600">\n  <figcaption>Фото міста на заході сонця.</figcaption>\n</figure>' },
+      { title: "Меню навігації", code: '<nav aria-label="Головне меню">\n  <a href="#home">Головна</a>\n  <a href="#about">Про нас</a>\n  <a href="#contacts">Контакти</a>\n</nav>' },
+      { title: "Форма реєстрації", code: '<form action="/register" method="post">\n  <label for="name">Ім’я</label>\n  <input id="name" name="name" type="text" required>\n\n  <label for="email">Email</label>\n  <input id="email" name="email" type="email" placeholder="name@example.com" required>\n\n  <label for="password">Пароль</label>\n  <input id="password" name="password" type="password" required>\n\n  <button type="submit">Зареєструватися</button>\n</form>' },
+      { title: "Таблиця", code: '<table>\n  <caption>Розклад</caption>\n  <thead>\n    <tr>\n      <th scope="col">День</th>\n      <th scope="col">Тема</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Понеділок</td>\n      <td>HTML</td>\n    </tr>\n    <tr>\n      <td>Вівторок</td>\n      <td>CSS</td>\n    </tr>\n  </tbody>\n</table>' },
+      { title: "Картка товару", code: '<article class="product-card">\n  <img src="keyboard.jpg" alt="Механічна клавіатура">\n  <h2>Клавіатура KeyPro</h2>\n  <p>Компактна клавіатура для навчання і роботи.</p>\n  <p><strong>Ціна:</strong> 2499 грн</p>\n  <button type="button">Купити</button>\n</article>' },
+      { title: "Простий лендинг", code: '<header>\n  <nav>\n    <a href="#home">Головна</a>\n    <a href="#features">Переваги</a>\n    <a href="#contact">Контакти</a>\n  </nav>\n</header>\n\n<main id="home">\n  <section>\n    <h1>Навчайтесь HTML українською</h1>\n    <p>Короткі пояснення, прості приклади та зрозуміла структура.</p>\n    <a href="#features">Дізнатися більше</a>\n  </section>\n\n  <section id="features">\n    <h2>Переваги</h2>\n    <ul>\n      <li>Працює офлайн</li>\n      <li>Підходить для новачків</li>\n      <li>Містить приклади коду</li>\n    </ul>\n  </section>\n</main>\n\n<footer id="contact">\n  <p>Контакти: hello@example.com</p>\n</footer>' }
+    ];
+
+    const tagsContainer = document.querySelector("#tagsContainer");
+    const attributesContainer = document.querySelector("#attributesContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const tagsEmpty = document.querySelector("#tagsEmpty");
+    const attributesEmpty = document.querySelector("#attributesEmpty");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTags(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(tagDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      tagsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = tagDocs.filter((item) => {
+          const haystack = `${item.tag} ${item.category} ${item.description} ${item.usage} ${item.attrs} ${item.note}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${category}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.dataset.searchText = `${item.tag} ${item.category} ${item.description} ${item.usage} ${item.attrs} ${item.note}`;
+          article.innerHTML = `
+            <h3>Назва тегу: <span class="tag-name">${escapeHtml(item.tag)}</span></h3>
+            <dl>
+              <div>
+                <dt>Категорія</dt>
+                <dd>${escapeHtml(item.category)}</dd>
+              </div>
+              <div>
+                <dt>Опис</dt>
+                <dd>${escapeHtml(item.description)}</dd>
+              </div>
+              <div>
+                <dt>Для чого використовується</dt>
+                <dd>${escapeHtml(item.usage)}</dd>
+              </div>
+              <div>
+                <dt>Приклад</dt>
+                <dd>${makeCodeBlock(item.example)}</dd>
+              </div>
+              <div>
+                <dt>Важливі атрибути</dt>
+                <dd>${escapeHtml(item.attrs)}</dd>
+              </div>
+              <div>
+                <dt>Примітка</dt>
+                <dd>${escapeHtml(item.note)}</dd>
+              </div>
+            </dl>
+          `;
+          grid.appendChild(article);
+        });
+
+        tagsContainer.appendChild(group);
+      });
+
+      tagsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderAttributes(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = attributeDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.where} ${item.example}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      attributesContainer.innerHTML = "";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.dataset.searchText = `${item.name} ${item.description} ${item.where} ${item.example}`;
+        article.innerHTML = `
+          <h3>Назва: <span class="tag-name">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div>
+              <dt>Опис</dt>
+              <dd>${escapeHtml(item.description)}</dd>
+            </div>
+            <div>
+              <dt>Де використовується</dt>
+              <dd>${escapeHtml(item.where)}</dd>
+            </div>
+            <div>
+              <dt>Приклад</dt>
+              <dd>${makeCodeBlock(item.example)}</dd>
+            </div>
+          </dl>
+        `;
+        attributesContainer.appendChild(article);
+      });
+
+      attributesEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `
+          <h3>${escapeHtml(item.title)}</h3>
+          ${makeCodeBlock(item.code)}
+        `;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function updateSearch() {
+      const query = searchInput.value;
+      const tagCount = renderTags(query);
+      const attrCount = renderAttributes(query);
+
+      if (query.trim()) {
+        searchCount.textContent = `Знайдено: тегів ${tagCount}, атрибутів ${attrCount}.`;
+      } else {
+        searchCount.textContent = "Показано всі теги та атрибути.";
+      }
+    }
+
+    // Копіювання коду працює для всіх блоків, навіть створених динамічно.
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    // Відкриття і закриття великих розділів.
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    // Просте мобільне меню.
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTags();
+    renderAttributes();
+    renderExamples();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+

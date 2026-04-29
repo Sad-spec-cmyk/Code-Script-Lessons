@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# Lessons / C# Довідник</title>
+  <style>
+    /* Мінімалістичний офлайн-дизайн без фреймворків */
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    code,
+    pre,
+    kbd,
+    samp {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner,
+    .hero,
+    .layout,
+    .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a,
+    .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover,
+    .top-nav a:focus-visible,
+    .sidebar a:hover,
+    .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero {
+      padding: 60px 18px 38px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button,
+    button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a {
+      display: block;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .section-content {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .section.is-collapsed .section-content {
+      display: none;
+    }
+
+    .section.is-collapsed .section-header span {
+      transform: rotate(-90deg);
+    }
+
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .grid,
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card,
+    .doc-card,
+    .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3,
+    .doc-card h3,
+    .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .doc-card dd {
+      margin: 2px 0 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover,
+    .copy-btn:focus-visible {
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .examples-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .footer {
+      padding: 24px 18px 36px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .grid,
+      .doc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .top-nav {
+        display: none;
+        width: 100%;
+        padding-top: 10px;
+      }
+
+      .top-nav.is-open {
+        display: grid;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header h2 {
+        font-size: 21px;
+      }
+
+      .hero,
+      .layout,
+      .footer {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .section-content {
+        padding: 12px;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .doc-card,
+      .doc-card dl,
+      .doc-card dt,
+      .doc-card dd,
+      .info-card,
+      .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+
+      .copy-btn {
+        position: static;
+        margin-bottom: 8px;
+      }
+
+      pre {
+        font-size: 13px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">C# Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>C# Lessons</h1>
+    <p>Український довідник по C# з прикладами, синтаксисом та базовими концепціями.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#basics">Почати навчання</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#basics">Основи C#</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section searchable" id="basics" data-title="Основи C# Unity .NET ігри бекенд проста програма Console.WriteLine">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Основи C#</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">C# — сучасна об’єктно-орієнтована мова програмування від Microsoft. Її часто використовують для .NET-застосунків, бекенду, десктопних програм, Unity-ігор і сервісів.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Що таке C#</h3>
+              <p>Це строго типізована мова: змінні, методи й об’єкти мають визначені типи. Такий підхід допомагає знаходити багато помилок ще до запуску програми.</p>
+            </article>
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>C# застосовують у Unity, ASP.NET Core, .NET MAUI, Windows-програмах, API, іграх, мікросервісах і корпоративних системах.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">using System;</span></h3>
+              <p>Підключає простір імен <code>System</code>, де знаходиться клас <code>Console</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">class Program</span></h3>
+              <p>Оголошує клас. У C# майже весь код знаходиться всередині класів або інших типів.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">static void Main()</span></h3>
+              <p>Точка входу в консольну програму. З неї починається виконання коду.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">Console.WriteLine()</span></h3>
+              <p>Виводить текст у консоль і переходить на новий рядок.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Привіт, світ!");
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис коментарі регістр структура коду using namespace">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="grid">
+            <article class="info-card">
+              <h3>Коментарі</h3>
+              <p><code>//</code> створює однорядковий коментар, а <code>/* ... */</code> — багаторядковий.</p>
+            </article>
+            <article class="info-card">
+              <h3>Регістр</h3>
+              <p>C# чутливий до регістру: <code>name</code> і <code>Name</code> — різні імена.</p>
+            </article>
+            <article class="info-card">
+              <h3>Структура коду</h3>
+              <p>Код зазвичай організований у простори імен, класи, методи й блоки у фігурних дужках.</p>
+            </article>
+            <article class="info-card">
+              <h3>using і namespace</h3>
+              <p><code>using</code> підключає простір імен, а <code>namespace</code> групує ваші класи.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>// Однорядковий коментар
+/*
+   Багаторядковий коментар
+*/
+
+using System;
+
+namespace MyApp
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.WriteLine("C#");
+        }
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="types" data-title="Типи даних int float double decimal bool char string var">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Типи даних</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Тип даних визначає, які значення може зберігати змінна і які операції з ними можна виконувати.</p>
+          <div id="typesContainer" class="doc-grid"></div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по темах і ключових словах</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть тему, тип, метод або слово з опису</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: class, List, LINQ, try, foreach">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі теми довідника.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми C#</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Короткі уроки по ключових частинах C#: змінні, оператори, умови, цикли, методи, масиви, списки, ООП, файли, помилки та LINQ.</p>
+          <div id="topicsContainer"></div>
+          <div class="empty-state" id="topicsEmpty">Теми за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові фрагменти коду, які можна копіювати в консольний C# проєкт.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Коротка документація популярних конструкцій, типів і методів C#.</p>
+          <div id="referenceContainer"></div>
+          <div class="empty-state" id="referenceEmpty">Записи довідника за цим запитом не знайдено.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>C# Lessons / C# Довідник. Один офлайн-файл без бібліотек і фреймворків.</p>
+  </footer>
+
+  <script>
+    // Дані сайту зберігаються в масивах, щоб пошук і документацію було легко підтримувати.
+    const typeDocs = [
+      { name: "int", description: "Ціле число без дробової частини.", example: "int age = 18;", usage: "Для віку, кількості, індексів, лічильників." },
+      { name: "float", description: "Дробове число одинарної точності. Літерал має суфікс f.", example: "float speed = 12.5f;", usage: "Для ігор, графіки, приблизних обчислень, де важлива швидкість." },
+      { name: "double", description: "Дробове число подвійної точності.", example: "double distance = 123.45;", usage: "Для більшості звичайних дробових обчислень." },
+      { name: "decimal", description: "Точний десятковий тип. Літерал має суфікс m.", example: "decimal price = 99.99m;", usage: "Для грошей і фінансових значень." },
+      { name: "bool", description: "Логічне значення true або false.", example: "bool isActive = true;", usage: "Для умов, станів, прапорців." },
+      { name: "char", description: "Один символ у одинарних лапках.", example: "char grade = 'A';", usage: "Для окремих символів, літер, маркерів." },
+      { name: "string", description: "Рядок тексту в подвійних лапках.", example: "string name = \"Олена\";", usage: "Для імен, повідомлень, шляхів, текстових даних." },
+      { name: "var", description: "Автоматичне визначення типу компілятором.", example: "var score = 100;", usage: "Коли тип очевидний з правої частини, але не для приховування незрозумілого коду." }
+    ];
+
+    const topicDocs = [
+      {
+        title: "Змінні",
+        category: "Основи",
+        description: "Змінна зберігає значення певного типу. Її можна оголосити, ініціалізувати і змінювати, якщо вона не є const.",
+        points: ["Оголошення: вказуємо тип і назву.", "Ініціалізація: одразу присвоюємо значення.", "const: значення відоме під час компіляції й не змінюється.", "readonly: значення можна задати в конструкторі, після цього не змінюється."],
+        code: "int count;\ncount = 10;\n\nstring name = \"Олена\";\nconst double Pi = 3.14159;\n\nclass Settings\n{\n    public readonly string AppName;\n\n    public Settings()\n    {\n        AppName = \"Demo\";\n    }\n}"
+      },
+      {
+        title: "Оператори",
+        category: "Основи",
+        description: "Оператори виконують дії зі значеннями: обчислення, порівняння, логічні перевірки та присвоєння.",
+        points: ["Арифметичні: +, -, *, /, %.", "Порівняння: ==, !=, >, <, >=, <=.", "Логічні: &&, ||, !.", "Присвоєння: =, +=, -=."],
+        code: "int a = 10;\nint b = 3;\n\nint sum = a + b;\nbool isBig = sum > 10;\nbool canRun = isBig && b > 0;\n\na += 5;"
+      },
+      {
+        title: "Умови",
+        category: "Керування потоком",
+        description: "Умови дозволяють виконувати різний код залежно від результату перевірки.",
+        points: ["if виконується, якщо умова true.", "else виконується, якщо if не спрацював.", "else if додає ще одну перевірку.", "switch зручний для вибору з багатьох варіантів."],
+        code: "int score = 85;\n\nif (score >= 90)\n{\n    Console.WriteLine(\"Відмінно\");\n}\nelse if (score >= 60)\n{\n    Console.WriteLine(\"Зараховано\");\n}\nelse\n{\n    Console.WriteLine(\"Спробуй ще\");\n}\n\nstring role = \"admin\";\nswitch (role)\n{\n    case \"admin\":\n        Console.WriteLine(\"Повний доступ\");\n        break;\n    default:\n        Console.WriteLine(\"Гість\");\n        break;\n}"
+      },
+      {
+        title: "Цикли",
+        category: "Керування потоком",
+        description: "Цикли повторюють блок коду кілька разів.",
+        points: ["for зручний для повторів із лічильником.", "while працює, поки умова true.", "do while виконує тіло мінімум один раз.", "foreach перебирає елементи колекції."],
+        code: "for (int i = 0; i < 3; i++)\n{\n    Console.WriteLine(i);\n}\n\nint count = 0;\nwhile (count < 3)\n{\n    count++;\n}\n\ndo\n{\n    Console.WriteLine(\"Виконається хоча б раз\");\n} while (false);\n\nstring[] names = { \"Олена\", \"Іван\" };\nforeach (string name in names)\n{\n    Console.WriteLine(name);\n}"
+      },
+      {
+        title: "Методи",
+        category: "Функції",
+        description: "Метод — це блок коду з назвою. Він може приймати параметри і повертати результат.",
+        points: ["Оголошення містить тип повернення, назву і параметри.", "Параметри передають дані в метод.", "return повертає значення.", "void означає, що метод нічого не повертає."],
+        code: "static int Sum(int a, int b)\n{\n    return a + b;\n}\n\nstatic void PrintMessage(string message)\n{\n    Console.WriteLine(message);\n}\n\nint result = Sum(2, 3);\nPrintMessage(\"Готово\");"
+      },
+      {
+        title: "Масиви",
+        category: "Дані",
+        description: "Масив зберігає фіксовану кількість елементів одного типу.",
+        points: ["Створення: вказуємо тип і квадратні дужки.", "Доступ: через індекс, починаючи з 0.", "Перебір: for або foreach."],
+        code: "int[] numbers = { 1, 2, 3 };\n\nConsole.WriteLine(numbers[0]);\n\nfor (int i = 0; i < numbers.Length; i++)\n{\n    Console.WriteLine(numbers[i]);\n}\n\nforeach (int number in numbers)\n{\n    Console.WriteLine(number);\n}"
+      },
+      {
+        title: "Списки List<T>",
+        category: "Дані",
+        description: "List<T> — гнучка колекція, яка може змінювати розмір під час роботи програми.",
+        points: ["List<T> зберігає елементи одного типу.", "Add додає елемент.", "Remove видаляє елемент.", "Count повертає кількість елементів."],
+        code: "using System.Collections.Generic;\n\nList<string> tasks = new List<string>();\ntasks.Add(\"Вивчити C#\");\ntasks.Add(\"Написати код\");\ntasks.Remove(\"Написати код\");\n\nConsole.WriteLine(tasks.Count);"
+      },
+      {
+        title: "Класи і ООП",
+        category: "ООП",
+        description: "Клас описує шаблон об’єкта: які дані він має і що вміє робити.",
+        points: ["class створює тип.", "object — конкретний екземпляр класу.", "Поля зберігають дані.", "Методи описують поведінку.", "Конструктор запускається при створенні об’єкта."],
+        code: "class Player\n{\n    public string Name;\n    public int Health;\n\n    public Player(string name)\n    {\n        Name = name;\n        Health = 100;\n    }\n\n    public void TakeDamage(int damage)\n    {\n        Health -= damage;\n    }\n}\n\nPlayer player = new Player(\"Alex\");\nplayer.TakeDamage(20);"
+      },
+      {
+        title: "Принципи ООП",
+        category: "ООП",
+        description: "ООП допомагає будувати програму з об’єктів, які мають стан і поведінку.",
+        points: ["Інкапсуляція приховує внутрішні деталі й відкриває безпечний інтерфейс.", "Наслідування дозволяє створювати нові класи на основі існуючих.", "Поліморфізм дозволяє працювати з різними класами через спільний базовий тип."],
+        code: "class Enemy\n{\n    public virtual void Attack()\n    {\n        Console.WriteLine(\"Enemy attacks\");\n    }\n}\n\nclass Boss : Enemy\n{\n    public override void Attack()\n    {\n        Console.WriteLine(\"Boss attacks harder\");\n    }\n}\n\nEnemy enemy = new Boss();\nenemy.Attack();"
+      },
+      {
+        title: "Властивості Properties",
+        category: "ООП",
+        description: "Властивості дають контрольований доступ до даних класу.",
+        points: ["get повертає значення.", "set змінює значення.", "Auto-properties скорочують код для простих властивостей."],
+        code: "class User\n{\n    public string Name { get; set; }\n    public int Age { get; private set; }\n\n    public User(int age)\n    {\n        Age = age;\n    }\n}\n\nUser user = new User(20);\nuser.Name = \"Олена\";"
+      },
+      {
+        title: "Події і делегати",
+        category: "Базова просунута тема",
+        description: "Делегат описує тип методу, а подія повідомляє інший код, що щось сталося.",
+        points: ["delegate може зберігати посилання на метод.", "event обмежує виклик події тільки класом-власником.", "Події часто використовують у UI, іграх і системах повідомлень."],
+        code: "class Button\n{\n    public event Action Clicked;\n\n    public void Click()\n    {\n        Clicked?.Invoke();\n    }\n}\n\nButton button = new Button();\nbutton.Clicked += () => Console.WriteLine(\"Клік!\");\nbutton.Click();"
+      },
+      {
+        title: "Робота з файлами",
+        category: "Файли",
+        description: "Клас File дозволяє швидко читати й записувати текстові файли.",
+        points: ["ReadAllText читає весь текст із файлу.", "WriteAllText записує текст у файл.", "Для роботи потрібен using System.IO."],
+        code: "using System.IO;\n\nFile.WriteAllText(\"note.txt\", \"Привіт з C#\");\nstring text = File.ReadAllText(\"note.txt\");\n\nConsole.WriteLine(text);"
+      },
+      {
+        title: "Обробка помилок",
+        category: "Помилки",
+        description: "try/catch/finally дозволяє реагувати на помилки без аварійного завершення програми.",
+        points: ["try містить код, який може викликати помилку.", "catch обробляє виняток.", "finally виконується завжди, навіть якщо була помилка."],
+        code: "try\n{\n    int number = int.Parse(\"abc\");\n}\ncatch (FormatException error)\n{\n    Console.WriteLine(\"Невірний формат: \" + error.Message);\n}\nfinally\n{\n    Console.WriteLine(\"Перевірку завершено\");\n}"
+      },
+      {
+        title: "LINQ базово",
+        category: "Дані",
+        description: "LINQ дозволяє зручно фільтрувати, перетворювати й запитувати колекції.",
+        points: ["Where залишає елементи, які проходять умову.", "Select перетворює кожен елемент.", "Для LINQ часто потрібен using System.Linq."],
+        code: "using System.Linq;\n\nint[] numbers = { 1, 2, 3, 4, 5 };\n\nvar even = numbers.Where(n => n % 2 == 0);\nvar squares = numbers.Select(n => n * n);\n\nforeach (int number in even)\n{\n    Console.WriteLine(number);\n}"
+      }
+    ];
+
+    const examples = [
+      {
+        title: "Калькулятор",
+        code: "using System;\n\nclass Program\n{\n    static void Main()\n    {\n        int a = 10;\n        int b = 5;\n\n        Console.WriteLine(a + b);\n        Console.WriteLine(a - b);\n        Console.WriteLine(a * b);\n        Console.WriteLine(a / b);\n    }\n}"
+      },
+      {
+        title: "Перевірка числа: парне чи непарне",
+        code: "int number = 7;\n\nif (number % 2 == 0)\n{\n    Console.WriteLine(\"Парне\");\n}\nelse\n{\n    Console.WriteLine(\"Непарне\");\n}"
+      },
+      {
+        title: "Робота зі списком",
+        code: "using System;\nusing System.Collections.Generic;\n\nList<string> names = new List<string>();\nnames.Add(\"Олена\");\nnames.Add(\"Іван\");\nnames.Remove(\"Іван\");\n\nforeach (string name in names)\n{\n    Console.WriteLine(name);\n}\n\nConsole.WriteLine(\"Кількість: \" + names.Count);"
+      },
+      {
+        title: "Простий клас Player",
+        code: "class Player\n{\n    public string Name { get; set; }\n    public int Score { get; private set; }\n\n    public Player(string name)\n    {\n        Name = name;\n        Score = 0;\n    }\n\n    public void AddScore(int points)\n    {\n        Score += points;\n    }\n}\n\nPlayer player = new Player(\"Alex\");\nplayer.AddScore(10);\nConsole.WriteLine(player.Score);"
+      },
+      {
+        title: "Простий клас Car",
+        code: "class Car\n{\n    public string Model { get; set; }\n    public int Speed { get; private set; }\n\n    public Car(string model)\n    {\n        Model = model;\n    }\n\n    public void Accelerate()\n    {\n        Speed += 10;\n    }\n}\n\nCar car = new Car(\"Tesla\");\ncar.Accelerate();\nConsole.WriteLine(car.Speed);"
+      },
+      {
+        title: "Читання і запис файлу",
+        code: "using System;\nusing System.IO;\n\nclass Program\n{\n    static void Main()\n    {\n        File.WriteAllText(\"data.txt\", \"Навчаюсь C#\");\n        string text = File.ReadAllText(\"data.txt\");\n        Console.WriteLine(text);\n    }\n}"
+      }
+    ];
+
+    const referenceDocs = [
+      { name: "using", description: "Підключає простір імен, щоб не писати повний шлях до типів.", syntax: "using System;", example: "using System;\n\nConsole.WriteLine(\"Hello\");", note: "Найчастіше пишеться на початку файлу." },
+      { name: "namespace", description: "Групує класи й інші типи, щоб уникати конфліктів назв.", syntax: "namespace Name { ... }", example: "namespace MyApp\n{\n    class Program { }\n}", note: "У сучасному C# також є file-scoped namespace." },
+      { name: "class", description: "Описує тип об’єкта з полями, властивостями й методами.", syntax: "class Name { ... }", example: "class Player\n{\n    public string Name;\n}", note: "Клас є основою ООП у C#." },
+      { name: "Main()", description: "Точка входу в консольну програму.", syntax: "static void Main() { ... }", example: "static void Main()\n{\n    Console.WriteLine(\"Start\");\n}", note: "У нових проєктах можуть використовуватися top-level statements без явного Main." },
+      { name: "Console.WriteLine()", description: "Виводить текст або значення в консоль.", syntax: "Console.WriteLine(value);", example: "Console.WriteLine(\"Привіт\");", note: "Після виводу додає новий рядок." },
+      { name: "int", description: "Тип для цілих чисел.", syntax: "int name = value;", example: "int count = 5;", note: "Має обмежений діапазон, але підходить для більшості цілих значень." },
+      { name: "string", description: "Тип для тексту.", syntax: "string name = \"text\";", example: "string title = \"C# Lessons\";", note: "Рядки в C# незмінні." },
+      { name: "bool", description: "Тип для true або false.", syntax: "bool name = true;", example: "bool isReady = false;", note: "Часто використовується в умовах." },
+      { name: "var", description: "Дозволяє компілятору визначити тип автоматично.", syntax: "var name = value;", example: "var numbers = new List<int>();", note: "Тип усе одно визначається під час компіляції." },
+      { name: "const", description: "Оголошує незмінну константу.", syntax: "const type Name = value;", example: "const int MaxUsers = 100;", note: "Значення має бути відоме під час компіляції." },
+      { name: "readonly", description: "Поле, яке можна встановити при оголошенні або в конструкторі.", syntax: "readonly type name;", example: "readonly string id;\n\npublic User(string id)\n{\n    this.id = id;\n}", note: "Корисно для значень, які задаються при створенні об’єкта." },
+      { name: "if / else", description: "Виконує код залежно від умови.", syntax: "if (condition) { ... } else { ... }", example: "if (age >= 18)\n{\n    Console.WriteLine(\"OK\");\n}", note: "Умова має бути bool." },
+      { name: "switch", description: "Вибір між кількома варіантами.", syntax: "switch (value) { case x: ... }", example: "switch (role)\n{\n    case \"admin\":\n        break;\n}", note: "Після case часто потрібен break." },
+      { name: "for", description: "Цикл із лічильником.", syntax: "for (start; condition; step) { ... }", example: "for (int i = 0; i < 5; i++)\n{\n    Console.WriteLine(i);\n}", note: "Зручний для індексів і повторів." },
+      { name: "while", description: "Цикл, який працює, поки умова true.", syntax: "while (condition) { ... }", example: "while (count < 10)\n{\n    count++;\n}", note: "Слідкуйте, щоб цикл не став нескінченним." },
+      { name: "foreach", description: "Перебирає елементи колекції.", syntax: "foreach (type item in collection) { ... }", example: "foreach (string name in names)\n{\n    Console.WriteLine(name);\n}", note: "Зручний, коли не потрібен індекс." },
+      { name: "method", description: "Іменований блок коду.", syntax: "returnType Name(parameters) { ... }", example: "int Sum(int a, int b)\n{\n    return a + b;\n}", note: "Методи роблять код коротшим і повторно використовуваним." },
+      { name: "void", description: "Тип повернення для методу, який нічого не повертає.", syntax: "void Name() { ... }", example: "void Print()\n{\n    Console.WriteLine(\"Hi\");\n}", note: "Для результату використовуйте конкретний тип і return." },
+      { name: "return", description: "Повертає значення з методу або завершує метод.", syntax: "return value;", example: "return a + b;", note: "Тип значення має відповідати типу повернення методу." },
+      { name: "array", description: "Фіксований список елементів одного типу.", syntax: "type[] name = { ... };", example: "int[] numbers = { 1, 2, 3 };", note: "Розмір масиву після створення не змінюється." },
+      { name: "List<T>", description: "Динамічний список елементів одного типу.", syntax: "List<T> name = new List<T>();", example: "List<int> scores = new List<int>();", note: "Потрібен using System.Collections.Generic." },
+      { name: "Add()", description: "Додає елемент у List<T>.", syntax: "list.Add(item);", example: "names.Add(\"Олена\");", note: "Змінює список." },
+      { name: "Remove()", description: "Видаляє перше знайдене значення зі списку.", syntax: "list.Remove(item);", example: "names.Remove(\"Іван\");", note: "Повертає bool: чи було видалення успішним." },
+      { name: "Count", description: "Кількість елементів у списку.", syntax: "list.Count", example: "Console.WriteLine(names.Count);", note: "Для масиву використовуйте Length." },
+      { name: "property", description: "Контрольований доступ до даних класу.", syntax: "public type Name { get; set; }", example: "public string Name { get; set; }", note: "Auto-property зручна для простих моделей." },
+      { name: "constructor", description: "Спеціальний метод, який викликається при створенні об’єкта.", syntax: "public ClassName(parameters) { ... }", example: "public Player(string name)\n{\n    Name = name;\n}", note: "Назва конструктора збігається з назвою класу." },
+      { name: "event", description: "Механізм повідомлень про події.", syntax: "public event Action Name;", example: "public event Action Clicked;", note: "Часто використовується разом із делегатами." },
+      { name: "File.ReadAllText()", description: "Читає весь текст із файлу.", syntax: "File.ReadAllText(path);", example: "string text = File.ReadAllText(\"data.txt\");", note: "Потрібен using System.IO." },
+      { name: "File.WriteAllText()", description: "Записує текст у файл.", syntax: "File.WriteAllText(path, text);", example: "File.WriteAllText(\"data.txt\", \"Hello\");", note: "Якщо файл існує, текст буде перезаписано." },
+      { name: "try / catch / finally", description: "Обробляє помилки під час виконання.", syntax: "try { ... } catch { ... } finally { ... }", example: "try\n{\n    int.Parse(\"abc\");\n}\ncatch (FormatException)\n{\n    Console.WriteLine(\"Помилка\");\n}", note: "finally виконується незалежно від помилки." },
+      { name: "LINQ Where()", description: "Фільтрує колекцію за умовою.", syntax: "collection.Where(item => condition)", example: "var even = numbers.Where(n => n % 2 == 0);", note: "Потрібен using System.Linq." },
+      { name: "LINQ Select()", description: "Перетворює елементи колекції.", syntax: "collection.Select(item => result)", example: "var squares = numbers.Select(n => n * n);", note: "Повертає нову послідовність результатів." }
+    ];
+
+    const typesContainer = document.querySelector("#typesContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTypes() {
+      typesContainer.innerHTML = "";
+      typeDocs.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div>
+              <dt>Опис</dt>
+              <dd>${escapeHtml(item.description)}</dd>
+            </div>
+            <div>
+              <dt>Приклад</dt>
+              <dd>${makeCodeBlock(item.example)}</dd>
+            </div>
+            <div>
+              <dt>Коли використовувати</dt>
+              <dd>${escapeHtml(item.usage)}</dd>
+            </div>
+          </dl>
+        `;
+        typesContainer.appendChild(article);
+      });
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topicDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = topicDocs.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>
+              ${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
+            </ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+
+        topicsContainer.appendChild(group);
+      });
+
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `
+          <h3>${escapeHtml(item.title)}</h3>
+          ${makeCodeBlock(item.code)}
+        `;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = referenceDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div>
+              <dt>Опис</dt>
+              <dd>${escapeHtml(item.description)}</dd>
+            </div>
+            <div>
+              <dt>Синтаксис</dt>
+              <dd>${makeCodeBlock(item.syntax)}</dd>
+            </div>
+            <div>
+              <dt>Приклад</dt>
+              <dd>${makeCodeBlock(item.example)}</dd>
+            </div>
+            <div>
+              <dt>Примітка</dt>
+              <dd>${escapeHtml(item.note)}</dd>
+            </div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const topicCount = renderTopics(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      if (query) {
+        searchCount.textContent = `Знайдено: тем ${topicCount}, записів довідника ${referenceCount}.`;
+      } else {
+        searchCount.textContent = "Показано всі теми довідника.";
+      }
+    }
+
+    // Копіювання коду для всіх прикладів.
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+
+      const code = button.parentElement.querySelector("code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    // Розгортання і згортання секцій.
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    // Просте мобільне меню.
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTypes();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+

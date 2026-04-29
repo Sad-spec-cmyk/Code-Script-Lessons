@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rust Lessons / Rust Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+    }
+
+    .category-title {
+      margin: 20px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .copy-btn:hover, .copy-btn:focus-visible {
+      color: var(--text);
+      border-color: var(--text);
+      outline: none;
+    }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .search-count {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .footer {
+      padding: 24px 18px 36px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Rust Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Rust Lessons</h1>
+    <p>Український довідник по Rust з прикладами, синтаксисом та безпечним управлінням пам’яттю.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Rust</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Змінні і типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Наприклад: ownership, Vec, match, Result" aria-label="Пошук по темах">
+          <button class="button" id="clearSearch" type="button">Очистити</button>
+        </div>
+        <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+      </div>
+
+      <section class="section searchable" id="intro" data-title="Що таке Rust системне програмування бекенд high-performance безпека пам'яті швидкість">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке Rust</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Rust — це сучасна системна мова програмування, яка поєднує швидкість C/C++ з суворими правилами безпеки пам’яті.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>Rust застосовують у системному програмуванні, бекенді, CLI-інструментах, WebAssembly, high-performance сервісах та проєктах, де важлива надійність.</p>
+            </article>
+            <article class="info-card">
+              <h3>Переваги</h3>
+              <p>Головні переваги Rust: безпека пам’яті без garbage collector, висока швидкість, сильна типізація, зручний менеджер пакетів Cargo.</p>
+            </article>
+          </div>
+          <h3>Перша програма</h3>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>fn main() {
+    println!("Привіт, світ!");
+}</code></pre>
+          </div>
+          <ul>
+            <li><code>fn main()</code> оголошує головну функцію, з якої починається програма.</li>
+            <li><code>{ }</code> містять тіло функції.</li>
+            <li><code>println!</code> — макрос, який виводить текст у консоль.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис коментарі mut let крапка з комою fn">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card">
+              <h3>Коментарі</h3>
+              <p><code>//</code> створює однорядковий коментар, а <code>/* */</code> — багаторядковий.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Коментар
+/* Довгий
+   коментар */</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>let і mut</h3>
+              <p><code>let</code> створює змінну. За замовчуванням вона незмінна. <code>mut</code> дозволяє змінювати значення.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let name = "Rust";
+let mut score = 0;
+score = 10;</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Крапка з комою</h3>
+              <p>Більшість інструкцій завершується символом <code>;</code>. Вираз без <code>;</code> може повертати значення.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let x = 5;
+let y = {
+    let a = 2;
+    a + 3
+};</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Функції</h3>
+              <p><code>fn</code> оголошує функцію. Типи параметрів і результату зазвичай вказуються явно.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>fn add(a: i32, b: i32) -> i32 {
+    a + b
+}</code></pre></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="types">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Змінні і типи даних</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Rust є строго типізованою мовою. Компілятор часто може сам вивести тип, але у важливих місцях тип краще писати явно.</p>
+          <div class="doc-grid" id="typesContainer"></div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми Rust</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <div id="topicsContainer"></div>
+          <p class="empty" id="topicsEmpty">За вашим запитом тем не знайдено.</p>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="doc-grid" id="examplesContainer"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span>⌄</span>
+        </button>
+        <div class="section-content">
+          <div id="referenceContainer"></div>
+          <p class="empty" id="referenceEmpty">У довіднику немає збігів.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Rust Lessons. Сайт працює офлайн: відкрийте файл у браузері та користуйтеся довідником без інтернету.</p>
+  </footer>
+
+  <script>
+    /* Дані довідника зберігаються прямо в HTML, тому сторінка працює офлайн. */
+    const typeDocs = [
+      { name: "i32, i64", description: "Цілі числа зі знаком. i32 часто використовується за замовчуванням, i64 потрібен для більших значень.", example: "let age: i32 = 18;\nlet distance: i64 = 9000000;", usage: "Для лічильників, індексів, кількостей і числових обчислень без дробової частини." },
+      { name: "f32, f64", description: "Числа з плаваючою крапкою. f64 точніший і частіше використовується.", example: "let price: f64 = 19.99;\nlet speed: f32 = 3.5;", usage: "Для дробових чисел, фізики, вимірювань і фінальних розрахунків з обережністю." },
+      { name: "bool", description: "Логічний тип, який має значення true або false.", example: "let is_ready: bool = true;", usage: "Для умов, прапорців стану та перевірок." },
+      { name: "char", description: "Один Unicode-символ у одинарних лапках.", example: "let letter: char = 'R';\nlet emoji: char = '✓';", usage: "Коли треба зберігати саме один символ." },
+      { name: "String, &str", description: "String — змінний рядок у пам’яті, &str — посилання на текстовий зріз.", example: "let title: &str = \"Rust\";\nlet mut name = String::from(\"Ann\");\nname.push_str(\" Smith\");", usage: "String використовуйте для змінного або власного тексту, &str — для статичних рядків і параметрів." },
+      { name: "tuple", description: "Кортеж зберігає кілька значень різних типів в одному наборі.", example: "let user: (&str, i32) = (\"Ivan\", 21);\nlet name = user.0;", usage: "Для короткого групування пов’язаних значень без окремої структури." },
+      { name: "array", description: "Масив має фіксовану довжину і всі елементи одного типу.", example: "let numbers: [i32; 3] = [1, 2, 3];\nlet first = numbers[0];", usage: "Коли кількість елементів відома заздалегідь і не змінюється." }
+    ];
+
+    const topicDocs = [
+      { category: "Оператори", title: "Арифметичні оператори", description: "Rust підтримує базові математичні операції.", points: ["+ додає", "- віднімає", "* множить", "/ ділить", "% повертає остачу"], code: "let sum = 5 + 2;\nlet rest = 10 % 3;" },
+      { category: "Оператори", title: "Порівняння і логіка", description: "Порівняння повертає bool, логічні оператори поєднують умови.", points: ["==, != перевіряють рівність", ">, <, >=, <= порівнюють числа", "&&, ||, ! працюють з bool"], code: "let age = 20;\nlet can_enter = age >= 18 && age < 65;" },
+      { category: "Умови", title: "if, else", description: "Умова виконує різний код залежно від bool-виразу.", points: ["if перевіряє умову", "else виконується, якщо умова false", "if у Rust може бути виразом"], code: "let age = 18;\nif age >= 18 {\n    println!(\"Доступ дозволено\");\n} else {\n    println!(\"Доступ заборонено\");\n}" },
+      { category: "Умови", title: "match", description: "match порівнює значення з варіантами і часто замінює switch.", points: ["Кожна гілка має шаблон", "_ означає будь-який інший випадок", "match повинен покрити всі варіанти"], code: "let number = 2;\nmatch number {\n    1 => println!(\"Один\"),\n    2 => println!(\"Два\"),\n    _ => println!(\"Інше\"),\n}" },
+      { category: "Цикли", title: "loop", description: "loop створює нескінченний цикл, який зупиняють через break.", points: ["Підходить для повторення до явної зупинки", "break може повернути значення"], code: "let mut count = 0;\nloop {\n    count += 1;\n    if count == 3 { break; }\n}" },
+      { category: "Цикли", title: "while і for", description: "while працює поки умова true, for перебирає діапазони або колекції.", points: ["while зручний для умовного повторення", "for безпечний для перебору елементів", "0..5 створює діапазон від 0 до 4"], code: "let mut x = 0;\nwhile x < 3 { x += 1; }\n\nfor i in 0..5 {\n    println!(\"{}\", i);\n}" },
+      { category: "Функції", title: "Параметри і return", description: "Функції приймають параметри з типами і можуть повертати результат.", points: ["Тип параметра пишеться після двокрапки", "-> вказує тип результату", "Останній вираз без ; повертається автоматично"], code: "fn multiply(a: i32, b: i32) -> i32 {\n    a * b\n}" },
+      { category: "Власність", title: "Ownership", description: "Ownership визначає, хто володіє значенням у пам’яті.", points: ["У кожного значення є власник", "Коли власник виходить з області видимості, значення очищається", "Це дозволяє Rust працювати без garbage collector"], code: "let text = String::from(\"hello\");\nlet other = text;\n// text більше не можна використовувати, бо ownership перемістився" },
+      { category: "Власність", title: "Move і borrow", description: "Move передає власність, borrow дає тимчасове посилання без передачі власності.", points: ["Move часто стається з String, Vec та іншими heap-типами", "& створює незмінну позику", "&mut створює змінну позику"], code: "fn print_len(text: &String) {\n    println!(\"{}\", text.len());\n}\n\nlet name = String::from(\"Rust\");\nprint_len(&name);\nprintln!(\"{}\", name);" },
+      { category: "Позики", title: "& і &mut", description: "Посилання дозволяють працювати зі значенням без копіювання.", points: ["&T дає читання", "&mut T дозволяє змінювати", "Одночасно може бути або багато &T, або одне &mut T"], code: "fn add_word(text: &mut String) {\n    text.push_str(\" language\");\n}\n\nlet mut title = String::from(\"Rust\");\nadd_word(&mut title);" },
+      { category: "Lifetimes", title: "Життєвий цикл", description: "Lifetime показує, як довго посилання залишається дійсним.", points: ["У більшості простих випадків компілятор виводить lifetimes сам", "Позначення 'a використовується, коли треба явно пов’язати посилання", "Lifetimes не продовжують життя даних, а лише описують його"], code: "fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {\n    if a.len() > b.len() { a } else { b }\n}" },
+      { category: "Структури", title: "struct і impl", description: "struct описує власний тип даних, impl додає методи.", points: ["Поля мають назву і тип", "impl містить функції для структури", "self означає поточний об’єкт"], code: "struct Player {\n    name: String,\n    score: i32,\n}\n\nimpl Player {\n    fn show(&self) {\n        println!(\"{}: {}\", self.name, self.score);\n    }\n}" },
+      { category: "Enum", title: "enum і match", description: "enum описує набір можливих варіантів значення.", points: ["Кожен варіант може мати дані", "match зручно обробляє всі варіанти", "Option і Result теж є enum"], code: "enum Direction { Up, Down, Left, Right }\n\nlet dir = Direction::Up;\nmatch dir {\n    Direction::Up => println!(\"Вгору\"),\n    _ => println!(\"Інший напрям\"),\n}" },
+      { category: "Вектори", title: "Vec<T>", description: "Vec — динамічний список елементів одного типу.", points: ["push додає елемент", "pop видаляє останній елемент", "len повертає довжину"], code: "let mut numbers: Vec<i32> = Vec::new();\nnumbers.push(10);\nnumbers.push(20);\nnumbers.pop();" },
+      { category: "Result і Option", title: "Option", description: "Option описує значення, яке може існувати або бути відсутнім.", points: ["Some(value) означає наявність значення", "None означає відсутність", "Краще обробляти через match або if let"], code: "let value: Option<i32> = Some(5);\nmatch value {\n    Some(n) => println!(\"{}\", n),\n    None => println!(\"Немає значення\"),\n}" },
+      { category: "Result і Option", title: "Result", description: "Result описує успішний результат або помилку.", points: ["Ok(value) означає успіх", "Err(error) означає помилку", "unwrap швидкий, але може викликати panic"], code: "fn divide(a: i32, b: i32) -> Result<i32, String> {\n    if b == 0 { Err(String::from(\"Ділення на нуль\")) } else { Ok(a / b) }\n}" },
+      { category: "Обробка помилок", title: "panic! і match", description: "panic! аварійно зупиняє програму, а match дозволяє обробити помилку контрольовано.", points: ["panic! використовуйте для критичних помилок", "Result краще для очікуваних помилок", "match змушує явно подумати про обидва випадки"], code: "let result = divide(10, 0);\nmatch result {\n    Ok(value) => println!(\"{}\", value),\n    Err(message) => println!(\"Помилка: {}\", message),\n}" },
+      { category: "Модулі", title: "mod і use", description: "Модулі допомагають розділяти код на частини.", points: ["mod оголошує модуль", "use імпортує шлях", "pub робить елемент доступним ззовні"], code: "mod math {\n    pub fn add(a: i32, b: i32) -> i32 { a + b }\n}\n\nuse math::add;" }
+    ];
+
+    const examples = [
+      { title: "Калькулятор", code: "fn add(a: i32, b: i32) -> i32 { a + b }\nfn sub(a: i32, b: i32) -> i32 { a - b }\n\nfn main() {\n    println!(\"{}\", add(5, 3));\n    println!(\"{}\", sub(5, 3));\n}" },
+      { title: "Перевірка числа", code: "fn main() {\n    let number = 8;\n    if number % 2 == 0 {\n        println!(\"Парне\");\n    } else {\n        println!(\"Непарне\");\n    }\n}" },
+      { title: "Vec приклад", code: "fn main() {\n    let mut names = vec![\"Анна\", \"Іван\"];\n    names.push(\"Оля\");\n\n    for name in names {\n        println!(\"{}\", name);\n    }\n}" },
+      { title: "Struct приклад", code: "struct Car {\n    model: String,\n    year: i32,\n}\n\nimpl Car {\n    fn info(&self) {\n        println!(\"{} {}\", self.model, self.year);\n    }\n}\n\nfn main() {\n    let car = Car { model: String::from(\"Ford\"), year: 2020 };\n    car.info();\n}" },
+      { title: "Робота з Result", code: "fn parse_age(text: &str) -> Result<i32, String> {\n    match text.parse::<i32>() {\n        Ok(age) => Ok(age),\n        Err(_) => Err(String::from(\"Не число\")),\n    }\n}\n\nfn main() {\n    match parse_age(\"21\") {\n        Ok(age) => println!(\"Вік: {}\", age),\n        Err(error) => println!(\"Помилка: {}\", error),\n    }\n}" }
+    ];
+
+    const referenceDocs = [
+      { name: "fn", description: "Оголошує функцію.", syntax: "fn name(param: Type) -> ReturnType { }", example: "fn hello() {\n    println!(\"Привіт\");\n}", note: "main — головна функція програми." },
+      { name: "let", description: "Створює змінну.", syntax: "let name = value;", example: "let count = 3;", note: "Без mut змінна незмінна." },
+      { name: "mut", description: "Дозволяє змінювати значення змінної або посилання.", syntax: "let mut name = value;", example: "let mut x = 1;\nx = 2;", note: "Rust спеціально вимагає явно позначати змінність." },
+      { name: "if", description: "Виконує код за умовою.", syntax: "if condition { } else { }", example: "if score > 0 {\n    println!(\"OK\");\n}", note: "Умова повинна бути bool." },
+      { name: "match", description: "Порівнює значення з наборами шаблонів.", syntax: "match value { pattern => action }", example: "match x {\n    1 => println!(\"one\"),\n    _ => println!(\"other\"),\n}", note: "match має покривати всі можливі випадки." },
+      { name: "loop", description: "Створює нескінченний цикл.", syntax: "loop { }", example: "loop {\n    break;\n}", note: "Потрібен break, якщо цикл має завершитись." },
+      { name: "while", description: "Повторює код, поки умова true.", syntax: "while condition { }", example: "while x < 5 {\n    x += 1;\n}", note: "Стан умови треба змінювати всередині або поруч з циклом." },
+      { name: "for", description: "Перебирає діапазон або колекцію.", syntax: "for item in collection { }", example: "for n in 1..4 {\n    println!(\"{}\", n);\n}", note: "Найзручніший цикл для перебору." },
+      { name: "struct", description: "Створює власний тип з полями.", syntax: "struct Name { field: Type }", example: "struct User {\n    name: String,\n}", note: "Для поведінки використовуйте impl." },
+      { name: "impl", description: "Додає методи або пов’язані функції до типу.", syntax: "impl Type { fn method(&self) { } }", example: "impl User {\n    fn say(&self) { println!(\"{}\", self.name); }\n}", note: "&self означає читання поточного об’єкта." },
+      { name: "enum", description: "Описує тип з кількома варіантами.", syntax: "enum Name { A, B }", example: "enum Status { Active, Blocked }", note: "Добре працює разом з match." },
+      { name: "Vec<T>", description: "Динамічний масив.", syntax: "let mut items: Vec<T> = Vec::new();", example: "let mut nums = vec![1, 2];\nnums.push(3);", note: "Усі елементи Vec мають один тип." },
+      { name: "Option", description: "Тип для значення, яке може бути відсутнім.", syntax: "Option<T>", example: "let item: Option<i32> = None;", note: "Замінює null-підхід безпечнішою моделлю." },
+      { name: "Result", description: "Тип для успіху або помилки.", syntax: "Result<T, E>", example: "let result: Result<i32, String> = Ok(10);", note: "Основа для обробки очікуваних помилок." },
+      { name: "unwrap", description: "Дістає значення з Option або Result.", syntax: "value.unwrap()", example: "let n = Some(5).unwrap();", note: "Може викликати panic, якщо значення None або Err." },
+      { name: "mod", description: "Оголошує модуль.", syntax: "mod name { }", example: "mod utils {\n    pub fn hello() {}\n}", note: "Допомагає організувати великий код." },
+      { name: "use", description: "Імпортує шлях у поточну область.", syntax: "use path::item;", example: "use std::collections::HashMap;", note: "Зменшує довжину запису імен." }
+    ];
+
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const typesContainer = document.querySelector("#typesContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTypes() {
+      typesContainer.innerHTML = "";
+      typeDocs.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Коли використовувати</dt><dd>${escapeHtml(item.usage)}</dd></div>
+          </dl>
+        `;
+        typesContainer.appendChild(article);
+      });
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topicDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = topicDocs.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+        topicsContainer.appendChild(group);
+      });
+
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `<h3>${escapeHtml(item.title)}</h3>${makeCodeBlock(item.code)}`;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = referenceDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Синтаксис</dt><dd>${makeCodeBlock(item.syntax)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Примітка</dt><dd>${escapeHtml(item.note)}</dd></div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const topicCount = renderTopics(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: тем ${topicCount}, записів довідника ${referenceCount}.`
+        : "Показано всі теми довідника.";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTypes();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

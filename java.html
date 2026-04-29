@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Lessons / Java Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .muted { color: var(--muted); }
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .search-panel { display: grid; gap: 10px; margin-bottom: 16px; }
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .search-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font: inherit;
+    }
+    .search-input:focus { border-color: var(--text); outline: none; }
+
+    .category-title {
+      margin: 22px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+    }
+
+    .doc-card, .doc-card dl {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+    .doc-card dl { margin: 0; }
+    .doc-card dt {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .doc-card dd {
+      margin: 2px 0 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0 0;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      padding: 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { border-color: var(--text); outline: none; }
+    .examples-list { display: grid; gap: 14px; }
+    .empty-state {
+      display: none;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .footer { padding: 24px 18px 36px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout, .footer { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .doc-card, .doc-card dl, .doc-card dt, .doc-card dd, .info-card, .example-card {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .badge {
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      .copy-btn { position: static; margin-bottom: 8px; }
+      pre { font-size: 13px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Java Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Java Lessons</h1>
+    <p>Український довідник по Java з прикладами, синтаксисом та базовими концепціями.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Навігація по сторінці">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Java</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section searchable" id="intro" data-title="Що таке Java Android бекенд великі системи JVM">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке Java</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Java — об’єктно-орієнтована мова програмування для Android, бекенду, великих корпоративних систем, сервісів і кросплатформних застосунків.</p>
+          <div class="grid">
+            <article class="info-card"><h3>Що це за мова</h3><p>Java є строго типізованою мовою. Код організовується у класи, а програма зазвичай починається з методу <code>main</code>.</p></article>
+            <article class="info-card"><h3>Де використовується</h3><p>Android, Spring Boot бекенд, фінансові системи, мікросервіси, великі enterprise-проєкти, десктопні й серверні застосунки.</p></article>
+            <article class="info-card"><h3>JVM коротко</h3><p>JVM, Java Virtual Machine, запускає скомпільований bytecode. Завдяки цьому Java може працювати на різних платформах.</p></article>
+            <article class="info-card"><h3><span class="badge">System.out.println()</span></h3><p>Виводить текст у консоль і переходить на новий рядок.</p></article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Привіт, світ!");
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="syntax" data-title="Синтаксис коментарі регістр крапка з комою структура класу">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="grid">
+            <article class="info-card"><h3>Коментарі</h3><p><code>//</code> створює однорядковий коментар, <code>/* ... */</code> — багаторядковий.</p></article>
+            <article class="info-card"><h3>Регістр</h3><p>Java чутлива до регістру: <code>name</code> і <code>Name</code> — різні імена.</p></article>
+            <article class="info-card"><h3>Крапка з комою</h3><p>Більшість інструкцій завершується символом <code>;</code>.</p></article>
+            <article class="info-card"><h3>Структура класу</h3><p>Файл зазвичай містить клас, поля, методи й конструктори. Публічний клас часто має назву файлу.</p></article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>// Однорядковий коментар
+/*
+   Багаторядковий коментар
+*/
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Java");
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section searchable" id="types" data-title="Типи даних int float double boolean char String">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Типи даних</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Java є строго типізованою: тип змінної потрібно вказати явно або через сучасний <code>var</code> у локальному контексті.</p>
+          <div id="typesContainer" class="doc-grid"></div>
+        </div>
+      </section>
+
+      <section class="section" id="search">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Пошук по темах</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <div class="search-panel">
+            <label for="searchInput">Введіть тему, тип або ключове слово</label>
+            <div class="search-row">
+              <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: ArrayList, class, interface, file">
+              <button class="button" id="clearSearch" type="button">Очистити</button>
+            </div>
+            <p class="muted" id="searchCount">Показано всі теми довідника.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми Java</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Короткі уроки по основних частинах Java: змінні, оператори, умови, цикли, методи, масиви, ArrayList, ООП, інтерфейси, файли, помилки та колекції.</p>
+          <div id="topicsContainer"></div>
+          <div class="empty-state" id="topicsEmpty">Теми за цим запитом не знайдено.</div>
+        </div>
+      </section>
+
+      <section class="section" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Готові фрагменти коду для навчання і копіювання.</p>
+          <div id="examplesContainer" class="examples-list"></div>
+        </div>
+      </section>
+
+      <section class="section" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="section-content">
+          <p class="lead">Коротка документація популярних конструкцій, типів і класів Java.</p>
+          <div id="referenceContainer"></div>
+          <div class="empty-state" id="referenceEmpty">Записи довідника за цим запитом не знайдено.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Java Lessons / Java Довідник. Один офлайн-файл без бібліотек і фреймворків.</p>
+  </footer>
+
+  <script>
+    const typeDocs = [
+      { name: "int", description: "Ціле число.", example: "int age = 18;", usage: "Для лічильників, віку, кількості, індексів." },
+      { name: "float", description: "Дробове число одинарної точності. Літерал має суфікс f.", example: "float speed = 12.5f;", usage: "Для приблизних дробових значень, графіки, ігор." },
+      { name: "double", description: "Дробове число подвійної точності.", example: "double price = 99.99;", usage: "Для більшості дробових обчислень." },
+      { name: "boolean", description: "Логічне значення true або false.", example: "boolean isActive = true;", usage: "Для умов, станів і прапорців." },
+      { name: "char", description: "Один символ у одинарних лапках.", example: "char grade = 'A';", usage: "Для окремих символів." },
+      { name: "String", description: "Рядок тексту. Це клас, а не примітивний тип.", example: "String name = \"Олена\";", usage: "Для тексту, повідомлень, імен, шляхів." }
+    ];
+
+    const topicDocs = [
+      { title: "Змінні", category: "Основи", description: "Змінна зберігає значення певного типу.", points: ["Оголошення: тип і назва.", "Ініціалізація: початкове значення.", "final робить змінну незмінною після присвоєння."], code: "int count;\ncount = 10;\n\nString name = \"Олена\";\nfinal int MAX_USERS = 100;" },
+      { title: "Оператори", category: "Основи", description: "Оператори виконують дії зі значеннями.", points: ["Арифметичні: +, -, *, /, %.", "Порівняння: ==, !=, >, <, >=, <=.", "Логічні: &&, ||, !.", "Присвоєння: =, +=, -=."], code: "int a = 10;\nint b = 3;\n\nint sum = a + b;\nboolean isBig = sum > 10;\nboolean ok = isBig && b > 0;\n\na += 5;" },
+      { title: "Умови", category: "Керування потоком", description: "Умови дозволяють виконувати різний код залежно від перевірки.", points: ["if виконується, якщо умова true.", "else виконується, якщо if не спрацював.", "else if додає перевірку.", "switch зручний для багатьох варіантів."], code: "int score = 75;\n\nif (score >= 90) {\n    System.out.println(\"Відмінно\");\n} else if (score >= 60) {\n    System.out.println(\"Зараховано\");\n} else {\n    System.out.println(\"Спробуй ще\");\n}\n\nint day = 1;\nswitch (day) {\n    case 1:\n        System.out.println(\"Понеділок\");\n        break;\n    default:\n        System.out.println(\"Інший день\");\n}" },
+      { title: "Цикли", category: "Керування потоком", description: "Цикли повторюють блок коду.", points: ["for зручний для лічильника.", "while працює, поки умова true.", "do while виконується мінімум один раз."], code: "for (int i = 0; i < 5; i++) {\n    System.out.println(i);\n}\n\nint count = 0;\nwhile (count < 3) {\n    count++;\n}\n\ndo {\n    System.out.println(\"Раз\");\n} while (false);" },
+      { title: "Методи", category: "Функції", description: "Метод — блок коду всередині класу.", points: ["Оголошення містить тип повернення, назву і параметри.", "Параметри передають дані.", "return повертає результат.", "static дозволяє викликати метод без створення об’єкта."], code: "static int sum(int a, int b) {\n    return a + b;\n}\n\nstatic void printMessage(String message) {\n    System.out.println(message);\n}\n\nint result = sum(2, 3);" },
+      { title: "Масиви", category: "Дані", description: "Масив зберігає фіксовану кількість елементів одного типу.", points: ["Створення через тип і квадратні дужки.", "Доступ за індексом з 0.", "Перебір через for або enhanced for."], code: "int[] numbers = {1, 2, 3};\n\nSystem.out.println(numbers[0]);\n\nfor (int i = 0; i < numbers.length; i++) {\n    System.out.println(numbers[i]);\n}\n\nfor (int number : numbers) {\n    System.out.println(number);\n}" },
+      { title: "ArrayList", category: "Колекції", description: "ArrayList — динамічний список зі стандартної бібліотеки.", points: ["Створення через ArrayList<T>.", "add додає елемент.", "remove видаляє елемент.", "size повертає кількість."], code: "import java.util.ArrayList;\n\nArrayList<String> names = new ArrayList<>();\nnames.add(\"Олена\");\nnames.add(\"Іван\");\nnames.remove(\"Іван\");\n\nSystem.out.println(names.size());" },
+      { title: "ООП у Java", category: "ООП", description: "Клас описує об’єкт: поля, методи і конструктор.", points: ["class створює тип.", "object — екземпляр класу.", "Поля зберігають дані.", "Методи описують поведінку.", "Конструктор запускається при створенні."], code: "class Player {\n    String name;\n    int health;\n\n    Player(String name) {\n        this.name = name;\n        this.health = 100;\n    }\n\n    void takeDamage(int damage) {\n        health -= damage;\n    }\n}\n\nPlayer player = new Player(\"Alex\");" },
+      { title: "Принципи ООП", category: "ООП", description: "ООП допомагає будувати програму з класів та об’єктів.", points: ["Інкапсуляція приховує дані через private і відкриває методи.", "Наслідування створює клас на основі іншого.", "Поліморфізм дозволяє перевизначати поведінку."], code: "class Enemy {\n    void attack() {\n        System.out.println(\"Enemy attacks\");\n    }\n}\n\nclass Boss extends Enemy {\n    @Override\n    void attack() {\n        System.out.println(\"Boss attacks\");\n    }\n}" },
+      { title: "Інтерфейси", category: "ООП", description: "Інтерфейс описує контракт: які методи має реалізувати клас.", points: ["interface оголошує контракт.", "implements підключає інтерфейс до класу.", "Клас має реалізувати методи інтерфейсу."], code: "interface Movable {\n    void move();\n}\n\nclass Player implements Movable {\n    public void move() {\n        System.out.println(\"Player moves\");\n    }\n}" },
+      { title: "Обробка помилок", category: "Помилки", description: "try/catch/finally дозволяє обробляти винятки.", points: ["try містить ризикований код.", "catch обробляє помилку.", "finally виконується завжди."], code: "try {\n    int number = Integer.parseInt(\"abc\");\n} catch (NumberFormatException error) {\n    System.out.println(\"Невірне число\");\n} finally {\n    System.out.println(\"Готово\");\n}" },
+      { title: "Робота з файлами", category: "Файли", description: "Java має класи для читання і запису файлів.", points: ["File представляє шлях до файлу.", "Scanner читає файл.", "FileWriter записує текст."], code: "import java.io.File;\nimport java.io.FileWriter;\nimport java.util.Scanner;\n\nFileWriter writer = new FileWriter(\"data.txt\");\nwriter.write(\"Привіт з Java\");\nwriter.close();\n\nFile file = new File(\"data.txt\");\nScanner scanner = new Scanner(file);\nwhile (scanner.hasNextLine()) {\n    System.out.println(scanner.nextLine());\n}\nscanner.close();" },
+      { title: "Колекції", category: "Колекції", description: "Колекції зберігають групи об’єктів.", points: ["ArrayList — впорядкований динамічний список.", "HashMap — колекція ключ-значення.", "Колекції знаходяться у java.util."], code: "import java.util.ArrayList;\nimport java.util.HashMap;\n\nArrayList<String> names = new ArrayList<>();\nnames.add(\"Олена\");\n\nHashMap<String, Integer> scores = new HashMap<>();\nscores.put(\"Alex\", 10);\nSystem.out.println(scores.get(\"Alex\"));" }
+    ];
+
+    const examples = [
+      { title: "Калькулятор", code: "public class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 5;\n\n        System.out.println(a + b);\n        System.out.println(a - b);\n        System.out.println(a * b);\n        System.out.println(a / b);\n    }\n}" },
+      { title: "Перевірка числа", code: "int number = 7;\n\nif (number % 2 == 0) {\n    System.out.println(\"Парне\");\n} else {\n    System.out.println(\"Непарне\");\n}" },
+      { title: "Робота з ArrayList", code: "import java.util.ArrayList;\n\nArrayList<String> tasks = new ArrayList<>();\ntasks.add(\"Вивчити Java\");\ntasks.add(\"Написати код\");\ntasks.remove(\"Написати код\");\n\nfor (String task : tasks) {\n    System.out.println(task);\n}" },
+      { title: "Простий клас Car", code: "class Car {\n    String model;\n    int speed;\n\n    Car(String model) {\n        this.model = model;\n        this.speed = 0;\n    }\n\n    void accelerate() {\n        speed += 10;\n    }\n}\n\nCar car = new Car(\"Tesla\");\ncar.accelerate();\nSystem.out.println(car.speed);" },
+      { title: "Простий клас Player", code: "class Player {\n    String name;\n    int score;\n\n    Player(String name) {\n        this.name = name;\n        this.score = 0;\n    }\n\n    void addScore(int points) {\n        score += points;\n    }\n}" },
+      { title: "Читання файлу", code: "import java.io.File;\nimport java.util.Scanner;\n\nFile file = new File(\"data.txt\");\nScanner scanner = new Scanner(file);\n\nwhile (scanner.hasNextLine()) {\n    System.out.println(scanner.nextLine());\n}\n\nscanner.close();" }
+    ];
+
+    const referenceDocs = [
+      { name: "public class", description: "Оголошує публічний клас.", syntax: "public class Name { ... }", example: "public class Main { }", note: "Публічний клас зазвичай має збігатися з назвою файлу." },
+      { name: "main()", description: "Точка входу в програму.", syntax: "public static void main(String[] args)", example: "public static void main(String[] args) { }", note: "JVM запускає програму з цього методу." },
+      { name: "System.out.println()", description: "Виводить текст у консоль.", syntax: "System.out.println(value);", example: "System.out.println(\"Привіт\");", note: "Додає новий рядок після виводу." },
+      { name: "int", description: "Тип для цілих чисел.", syntax: "int name = value;", example: "int count = 10;", note: "Підходить для лічильників та індексів." },
+      { name: "double", description: "Тип для дробових чисел.", syntax: "double name = value;", example: "double price = 99.99;", note: "Часто використовується для обчислень." },
+      { name: "boolean", description: "Тип для true або false.", syntax: "boolean name = true;", example: "boolean ready = false;", note: "Використовується в умовах." },
+      { name: "String", description: "Клас для рядків тексту.", syntax: "String name = \"text\";", example: "String title = \"Java\";", note: "Починається з великої літери, бо це клас." },
+      { name: "final", description: "Забороняє повторне присвоєння.", syntax: "final type NAME = value;", example: "final int MAX = 100;", note: "Для констант часто використовують великі літери." },
+      { name: "if / else", description: "Умовне виконання коду.", syntax: "if (condition) { ... } else { ... }", example: "if (age >= 18) { }", note: "Умова має бути boolean." },
+      { name: "switch", description: "Вибір між варіантами.", syntax: "switch (value) { case x: ... }", example: "switch (day) { case 1: break; }", note: "Не забувайте break, якщо не потрібне падіння далі." },
+      { name: "for", description: "Цикл із лічильником.", syntax: "for (start; condition; step) { ... }", example: "for (int i = 0; i < 5; i++) { }", note: "Зручний для масивів та індексів." },
+      { name: "while", description: "Цикл, поки умова true.", syntax: "while (condition) { ... }", example: "while (count < 3) { count++; }", note: "Стежте за умовою завершення." },
+      { name: "method", description: "Блок коду всередині класу.", syntax: "returnType name(params) { ... }", example: "int sum(int a, int b) { return a + b; }", note: "Методи допомагають не повторювати код." },
+      { name: "static", description: "Належить класу, а не конкретному об’єкту.", syntax: "static type name", example: "static int sum(int a, int b) { return a + b; }", note: "main є static." },
+      { name: "array", description: "Фіксований набір елементів одного типу.", syntax: "type[] name = { ... };", example: "int[] nums = {1, 2, 3};", note: "Розмір масиву не змінюється." },
+      { name: "ArrayList", description: "Динамічний список.", syntax: "ArrayList<T> name = new ArrayList<>();", example: "ArrayList<String> names = new ArrayList<>();", note: "Потрібен import java.util.ArrayList." },
+      { name: "add()", description: "Додає елемент у ArrayList.", syntax: "list.add(item);", example: "names.add(\"Олена\");", note: "Змінює список." },
+      { name: "remove()", description: "Видаляє елемент зі списку.", syntax: "list.remove(item);", example: "names.remove(\"Іван\");", note: "Може видаляти за значенням або індексом." },
+      { name: "size()", description: "Повертає кількість елементів.", syntax: "list.size()", example: "System.out.println(names.size());", note: "Для масиву використовуйте length." },
+      { name: "constructor", description: "Метод створення об’єкта.", syntax: "ClassName(params) { ... }", example: "Player(String name) { this.name = name; }", note: "Назва конструктора збігається з класом." },
+      { name: "interface", description: "Контракт для класів.", syntax: "interface Name { ... }", example: "interface Movable { void move(); }", note: "Методи реалізує клас." },
+      { name: "implements", description: "Підключає інтерфейс до класу.", syntax: "class A implements B", example: "class Player implements Movable { }", note: "Клас має реалізувати методи інтерфейсу." },
+      { name: "try / catch / finally", description: "Обробка помилок.", syntax: "try { ... } catch (Exception e) { ... } finally { ... }", example: "try { } catch (Exception e) { }", note: "finally виконується завжди." },
+      { name: "File", description: "Представляє файл або шлях.", syntax: "File file = new File(path);", example: "File file = new File(\"data.txt\");", note: "Потрібен import java.io.File." },
+      { name: "Scanner", description: "Читає дані з файлу або введення.", syntax: "Scanner scanner = new Scanner(source);", example: "Scanner scanner = new Scanner(file);", note: "Потрібно закривати після використання." },
+      { name: "FileWriter", description: "Записує текст у файл.", syntax: "FileWriter writer = new FileWriter(path);", example: "writer.write(\"Hello\");", note: "Потрібно закривати через close або try-with-resources." },
+      { name: "HashMap", description: "Колекція ключ-значення.", syntax: "HashMap<K, V> map = new HashMap<>();", example: "HashMap<String, Integer> scores = new HashMap<>();", note: "Потрібен import java.util.HashMap." }
+    ];
+
+    const typesContainer = document.querySelector("#typesContainer");
+    const topicsContainer = document.querySelector("#topicsContainer");
+    const examplesContainer = document.querySelector("#examplesContainer");
+    const referenceContainer = document.querySelector("#referenceContainer");
+    const topicsEmpty = document.querySelector("#topicsEmpty");
+    const referenceEmpty = document.querySelector("#referenceEmpty");
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeCodeBlock(code) {
+      return `
+        <div class="code-wrap">
+          <button class="copy-btn" type="button">Копіювати</button>
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function renderTypes() {
+      typesContainer.innerHTML = "";
+      typeDocs.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Коли використовувати</dt><dd>${escapeHtml(item.usage)}</dd></div>
+          </dl>
+        `;
+        typesContainer.appendChild(article);
+      });
+    }
+
+    function renderTopics(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const categories = [...new Set(topicDocs.map((item) => item.category))];
+      let visibleCount = 0;
+      topicsContainer.innerHTML = "";
+
+      categories.forEach((category) => {
+        const items = topicDocs.filter((item) => {
+          const haystack = `${item.title} ${item.category} ${item.description} ${item.points.join(" ")} ${item.code}`.toLowerCase();
+          return item.category === category && haystack.includes(normalizedQuery);
+        });
+        if (!items.length) return;
+
+        visibleCount += items.length;
+        const group = document.createElement("div");
+        group.innerHTML = `<h3 class="category-title">${escapeHtml(category)}</h3><div class="doc-grid"></div>`;
+        const grid = group.querySelector(".doc-grid");
+
+        items.forEach((item) => {
+          const article = document.createElement("article");
+          article.className = "doc-card";
+          article.innerHTML = `
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            <ul>${item.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+            ${makeCodeBlock(item.code)}
+          `;
+          grid.appendChild(article);
+        });
+        topicsContainer.appendChild(group);
+      });
+
+      topicsEmpty.style.display = visibleCount ? "none" : "block";
+      return visibleCount;
+    }
+
+    function renderExamples() {
+      examplesContainer.innerHTML = "";
+      examples.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "example-card";
+        article.innerHTML = `<h3>${escapeHtml(item.title)}</h3>${makeCodeBlock(item.code)}`;
+        examplesContainer.appendChild(article);
+      });
+    }
+
+    function renderReference(query = "") {
+      const normalizedQuery = query.trim().toLowerCase();
+      const filtered = referenceDocs.filter((item) => {
+        const haystack = `${item.name} ${item.description} ${item.syntax} ${item.example} ${item.note}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      });
+
+      referenceContainer.innerHTML = "";
+      const group = document.createElement("div");
+      group.className = "doc-grid";
+      filtered.forEach((item) => {
+        const article = document.createElement("article");
+        article.className = "doc-card";
+        article.innerHTML = `
+          <h3>Назва: <span class="badge">${escapeHtml(item.name)}</span></h3>
+          <dl>
+            <div><dt>Опис</dt><dd>${escapeHtml(item.description)}</dd></div>
+            <div><dt>Синтаксис</dt><dd>${makeCodeBlock(item.syntax)}</dd></div>
+            <div><dt>Приклад</dt><dd>${makeCodeBlock(item.example)}</dd></div>
+            <div><dt>Примітка</dt><dd>${escapeHtml(item.note)}</dd></div>
+          </dl>
+        `;
+        group.appendChild(article);
+      });
+
+      referenceContainer.appendChild(group);
+      referenceEmpty.style.display = filtered.length ? "none" : "block";
+      return filtered.length;
+    }
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const topicCount = renderTopics(query);
+      const referenceCount = renderReference(query);
+
+      document.querySelectorAll(".searchable").forEach((section) => {
+        const haystack = section.dataset.title.toLowerCase();
+        section.style.display = !query || haystack.includes(query) ? "" : "none";
+      });
+
+      searchCount.textContent = query
+        ? `Знайдено: тем ${topicCount}, записів довідника ${referenceCount}.`
+        : "Показано всі теми довідника.";
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest(".copy-btn");
+      if (!button) return;
+      const code = button.parentElement.querySelector("code").innerText;
+
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Скопійовано";
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        button.textContent = "Скопійовано";
+      }
+
+      setTimeout(() => {
+        button.textContent = "Копіювати";
+      }, 1400);
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+
+    renderTypes();
+    renderTopics();
+    renderExamples();
+    renderReference();
+  </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>
+
