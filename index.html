@@ -217,6 +217,79 @@
       outline: none;
     }
 
+    .support-section {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      padding: 10px 18px 64px;
+    }
+
+    .support-inner {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 34px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .support-inner h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .glow-line {
+      width: 72px;
+      height: 2px;
+      margin: 0 0 14px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .subtitle,
+    .footer-text {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .support-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .widget-card {
+      margin: 18px 0 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      overflow: hidden;
+    }
+
+    .widget-card iframe {
+      display: block;
+      width: 100%;
+      min-height: 260px;
+      border: 0;
+    }
+
     .footer {
       padding: 24px 18px 36px;
       color: var(--muted);
@@ -244,6 +317,7 @@
       }
 
       .language-section,
+      .support-section,
       .footer {
         padding-left: 12px;
         padding-right: 12px;
@@ -259,6 +333,14 @@
 
       .button {
         width: 100%;
+      }
+
+      .support-actions {
+        display: block;
+      }
+
+      .widget-card iframe {
+        min-height: 300px;
       }
     }
   </style>
@@ -279,16 +361,17 @@
         <a href="assembler.html">Assembly</a>
         <a href="c.html">C</a>
         <a href="sql.html">SQL</a>
+        <a href="json.html">JSON</a>
         <a href="typescript.html">TypeScript</a>
         <a href="php.html">PHP</a>
         <a href="powershell.html">PowerShell</a>
+        <a href="#support">Підтримка</a>
       </nav>
     </div>
   </header>
 
   <section class="hero">
     <h1>Вибери мову для навчання</h1>
-    <p>Офлайн-довідники українською мовою з короткими поясненнями, прикладами коду, пошуком і зручною навігацією.</p>
   </section>
 
   <main class="language-section">
@@ -472,6 +555,28 @@
 
       <article class="language-card">
         <div class="language-visual" aria-hidden="true">
+          <svg viewBox="0 0 260 160" role="img" aria-label="JSON">
+            <rect x="22" y="18" width="216" height="124" rx="12" fill="#ffffff" stroke="#d9dde3" />
+            <text x="50" y="58" font-family="Consolas, monospace" font-size="22" font-weight="700" fill="#222222">{</text>
+            <text x="78" y="58" font-family="Consolas, monospace" font-size="18" fill="#222222">"JSON"</text>
+            <text x="50" y="92" font-family="Consolas, monospace" font-size="18" fill="#5f6670">"data": true</text>
+            <text x="50" y="122" font-family="Consolas, monospace" font-size="22" font-weight="700" fill="#222222">}</text>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h2>JSON</h2>
+          <p>Формат обміну даними: об’єкти, масиви, типи значень, API, JSON.parse(), JSON.stringify() та конфігурації.</p>
+          <div class="meta">
+            <span class="pill">data</span>
+            <span class="pill">API</span>
+            <span class="pill">objects</span>
+          </div>
+          <a class="button" href="json.html">Відкрити</a>
+        </div>
+      </article>
+
+      <article class="language-card">
+        <div class="language-visual" aria-hidden="true">
           <img src="icon/TypeScript.png" alt="TypeScript" width="252" height="252">
         </div>
         <div class="card-body">
@@ -520,8 +625,33 @@
     </div>
   </main>
 
+  <section class="support-section" id="support" aria-labelledby="support-title">
+    <div class="support-inner">
+      <div class="badge">Donation Goal</div>
+      <h1 id="support-title">Розвиток сайту</h1>
+      <div class="glow-line" aria-hidden="true"></div>
+      <p class="subtitle">Підтримай мене, щоб я активніше розвивав сайт і додавав новий контент.</p>
+
+      <div class="support-actions">
+        <a class="button" href="https://dalink.to/sometimesatnight" target="_blank" rel="noopener noreferrer">Підтримати сайт</a>
+      </div>
+
+      <section class="widget-card" aria-label="Donation goal widget">
+        <iframe
+          title="Donation Goal"
+          src="https://www.donationalerts.com/widget/goal/9596999?token=8CFBXznlhZb0gsw3QrWD"
+          allowtransparency="true"
+          scrolling="no"
+          loading="lazy">
+        </iframe>
+      </section>
+
+      <p class="footer-text">Кожен донат допомагає рухати проєкт вперед ⚡</p>
+    </div>
+  </section>
+
   <footer class="footer">
-    <p>Programming Lessons. Усі довідники працюють офлайн і відкриваються як звичайні HTML-файли.</p>
+
   </footer>
   <script src="i18n-auto.js"></script>
   <script src="i18n.js"></script>

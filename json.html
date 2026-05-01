@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/index.png" type="image/png">
+  <title>JSON Lessons / JSON Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .hero-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+
+    .lead { color: var(--muted); margin-top: 0; }
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .muted { color: var(--muted); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--code-bg);
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    ul { margin-top: 8px; padding-left: 22px; }
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); min-width: 0; }
+
+    .search-panel {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .search-row input {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-count { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .empty {
+      display: none;
+      color: var(--muted);
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .code-wrap {
+      position: relative;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      overflow: auto;
+    }
+    pre {
+      margin: 0;
+      padding: 14px 54px 14px 14px;
+      white-space: pre;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 6px 9px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+    .copy-btn:hover, .copy-btn:focus-visible { border-color: var(--text); outline: none; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; padding-top: 10px; }
+      .top-nav.is-open { display: grid; }
+      .hero { padding-top: 40px; }
+      .search-row { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 21px; }
+      .hero, .layout { padding-left: 12px; padding-right: 12px; }
+      .section-content { padding: 12px; }
+      .hero-actions .button { width: 100%; }
+      .info-card, .doc-card, .example-card { overflow-wrap: anywhere; word-break: break-word; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" data-i18n="brand">Programming Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav" data-i18n="menu">Menu</button>
+      <nav class="top-nav" id="topNav" aria-label="Main menu">
+        <a href="index.html" data-i18n="languageChoice">Language chooser</a>
+        <a href="#topics" data-i18n="topics">Topics</a>
+        <a href="#examples" data-i18n="examples">Examples</a>
+        <a href="#reference" data-i18n="reference">Reference</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>JSON Lessons</h1>
+    <p data-i18n="heroDescription">Ukrainian JSON guide with examples, data structure, and programming usage.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro" data-i18n="start">Start</a>
+      <a class="button" href="#topics" data-i18n="topics">Topics</a>
+      <a class="button" href="#examples" data-i18n="examples">Examples</a>
+      <a class="button" href="#reference" data-i18n="reference">Reference</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Page navigation">
+      <p class="sidebar-title" data-i18n="sections">Sections</p>
+      <a href="index.html" data-i18n="languageChoice">Language chooser</a>
+      <a href="#intro" data-i18n="whatIsJson">What is JSON</a>
+      <a href="#syntax" data-i18n="syntax">Syntax</a>
+      <a href="#objects" data-i18n="objects">Objects</a>
+      <a href="#arrays" data-i18n="arrays">Arrays</a>
+      <a href="#types" data-i18n="dataTypes">Data types</a>
+      <a href="#nested" data-i18n="nested">Nested structures</a>
+      <a href="#formatting" data-i18n="formatting">Formatting</a>
+      <a href="#javascript" data-i18n="jsonAndJs">JSON and JavaScript</a>
+      <a href="#api" data-i18n="jsonAndApi">JSON and API</a>
+      <a href="#xml" data-i18n="jsonVsXml">JSON vs XML</a>
+      <a href="#errors" data-i18n="errors">Errors</a>
+      <a href="#examples" data-i18n="examples">Examples</a>
+      <a href="#reference" data-i18n="reference">Reference</a>
+    </aside>
+
+    <main>
+      <div class="search-panel" id="search">
+        <div class="search-row">
+          <input id="searchInput" type="search" aria-label="Search topics" data-placeholder-key="searchPlaceholder">
+          <button class="button" id="clearSearch" type="button" data-i18n="clear">Clear</button>
+        </div>
+        <p class="search-count" id="searchCount"></p>
+      </div>
+
+      <section class="section search-item" id="intro">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="whatIsJson">What is JSON</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead" data-i18n="introLead">JSON is a text format for storing and exchanging structured data.</p>
+          <div class="grid" id="introCards"></div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="syntax">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="syntax">Syntax</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead" data-i18n="syntaxLead">JSON data is written as key-value pairs. Keys are always in double quotes.</p>
+          <div class="grid" id="syntaxCards"></div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button" data-i18n="copy">Copy</button>
+            <pre><code>{
+  "name": "Ivan",
+  "age": 25,
+  "isStudent": false
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="objects">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="objects">Objects</h2><span>⌄</span></button>
+        <div class="section-content" id="objectsContent"></div>
+      </section>
+
+      <section class="section search-item" id="arrays">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="arrays">Arrays</h2><span>⌄</span></button>
+        <div class="section-content" id="arraysContent"></div>
+      </section>
+
+      <section class="section search-item" id="types">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="dataTypes">Data types</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid" id="typesGrid"></div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="nested">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="nested">Nested structures</h2><span>⌄</span></button>
+        <div class="section-content" id="nestedContent"></div>
+      </section>
+
+      <section class="section search-item" id="formatting">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="formatting">Formatting</h2><span>⌄</span></button>
+        <div class="section-content" id="formattingContent"></div>
+      </section>
+
+      <section class="section search-item" id="javascript">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="jsonAndJs">JSON and JavaScript</h2><span>⌄</span></button>
+        <div class="section-content" id="javascriptContent"></div>
+      </section>
+
+      <section class="section search-item" id="api">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="jsonAndApi">JSON and API</h2><span>⌄</span></button>
+        <div class="section-content" id="apiContent"></div>
+      </section>
+
+      <section class="section search-item" id="xml">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="jsonVsXml">JSON vs XML</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="grid" id="xmlCards"></div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="errors">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="errors">Errors</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="grid" id="errorCards"></div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="examples">Examples</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid" id="examplesGrid"></div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2 data-i18n="reference">Reference</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid" id="referenceGrid"></div>
+          <p class="empty" id="emptyMessage" data-i18n="nothingFound">Nothing found for your search.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /* Local offline data and UI translations for JSON Lessons. */
+    const supported = ["uk", "en", "ru"];
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("lang");
+    const saved = localStorage.getItem("siteLanguage");
+    const savedVersion = localStorage.getItem("siteLanguageChoiceVersion");
+    const lang = supported.includes(requested)
+      ? requested
+      : savedVersion === "2" && supported.includes(saved)
+        ? saved
+        : "en";
+
+    localStorage.setItem("siteLanguage", lang);
+    if (supported.includes(requested)) localStorage.setItem("siteLanguageChoiceVersion", "2");
+    document.documentElement.lang = lang;
+
+    const ui = {
+      uk: {
+        brand: "Programming Lessons",
+        menu: "Меню",
+        languageChoice: "Вибір мови",
+        heroDescription: "Український довідник по JSON з прикладами, структурою даних та використанням у програмуванні.",
+        start: "Почати",
+        topics: "Теми",
+        examples: "Приклади",
+        reference: "Довідник",
+        sections: "Розділи",
+        whatIsJson: "Що таке JSON",
+        syntax: "Синтаксис JSON",
+        objects: "Об’єкти",
+        arrays: "Масиви",
+        dataTypes: "Типи даних",
+        nested: "Вкладені структури",
+        formatting: "Форматування",
+        jsonAndJs: "JSON і JavaScript",
+        jsonAndApi: "JSON і API",
+        jsonVsXml: "JSON vs XML",
+        errors: "Помилки в JSON",
+        introLead: "JSON — це текстовий формат для зберігання й обміну структурованими даними.",
+        syntaxLead: "Дані JSON записуються у форматі ключ: значення. Ключі завжди беруться у подвійні лапки.",
+        clear: "Очистити",
+        copy: "Копіювати",
+        copied: "Скопійовано",
+        searchPlaceholder: "Введіть тему, тип даних або ключове слово",
+        allShown: "Показано всі теми JSON.",
+        found: "Знайдено: {count} блоків.",
+        nothingFound: "За вашим запитом нічого не знайдено.",
+        name: "Назва",
+        description: "Опис",
+        syntaxLabel: "Синтаксис",
+        example: "Приклад",
+        note: "Примітка"
+      },
+      en: {
+        brand: "Programming Lessons",
+        menu: "Menu",
+        languageChoice: "Language chooser",
+        heroDescription: "A JSON guide with examples, data structures, and programming usage.",
+        start: "Start",
+        topics: "Topics",
+        examples: "Examples",
+        reference: "Reference",
+        sections: "Sections",
+        whatIsJson: "What is JSON",
+        syntax: "JSON syntax",
+        objects: "Objects",
+        arrays: "Arrays",
+        dataTypes: "Data types",
+        nested: "Nested structures",
+        formatting: "Formatting",
+        jsonAndJs: "JSON and JavaScript",
+        jsonAndApi: "JSON and API",
+        jsonVsXml: "JSON vs XML",
+        errors: "JSON errors",
+        introLead: "JSON is a text format for storing and exchanging structured data.",
+        syntaxLead: "JSON data is written as key-value pairs. Keys are always placed in double quotes.",
+        clear: "Clear",
+        copy: "Copy",
+        copied: "Copied",
+        searchPlaceholder: "Enter a topic, data type, or keyword",
+        allShown: "All JSON topics are shown.",
+        found: "Found: {count} blocks.",
+        nothingFound: "Nothing found for your search.",
+        name: "Name",
+        description: "Description",
+        syntaxLabel: "Syntax",
+        example: "Example",
+        note: "Note"
+      },
+      ru: {
+        brand: "Programming Lessons",
+        menu: "Меню",
+        languageChoice: "Выбор языка",
+        heroDescription: "Справочник по JSON с примерами, структурами данных и использованием в программировании.",
+        start: "Начать",
+        topics: "Темы",
+        examples: "Примеры",
+        reference: "Справочник",
+        sections: "Разделы",
+        whatIsJson: "Что такое JSON",
+        syntax: "Синтаксис JSON",
+        objects: "Объекты",
+        arrays: "Массивы",
+        dataTypes: "Типы данных",
+        nested: "Вложенные структуры",
+        formatting: "Форматирование",
+        jsonAndJs: "JSON и JavaScript",
+        jsonAndApi: "JSON и API",
+        jsonVsXml: "JSON vs XML",
+        errors: "Ошибки в JSON",
+        introLead: "JSON — это текстовый формат для хранения и обмена структурированными данными.",
+        syntaxLead: "Данные JSON записываются как пары ключ: значение. Ключи всегда берутся в двойные кавычки.",
+        clear: "Очистить",
+        copy: "Копировать",
+        copied: "Скопировано",
+        searchPlaceholder: "Введите тему, тип данных или ключевое слово",
+        allShown: "Показаны все темы JSON.",
+        found: "Найдено: {count} блоков.",
+        nothingFound: "По вашему запросу ничего не найдено.",
+        name: "Название",
+        description: "Описание",
+        syntaxLabel: "Синтаксис",
+        example: "Пример",
+        note: "Примечание"
+      }
+    };
+
+    const content = {
+      uk: {
+        introCards: [
+          ["JSON", "JSON означає JavaScript Object Notation. Це простий текстовий формат, який описує дані через об’єкти, масиви, рядки, числа, boolean і null."],
+          ["Для чого використовується", "JSON часто використовують в API, файлах конфігурації, збереженні налаштувань, передачі даних між frontend і backend."],
+          ["JSON і XML", "JSON зазвичай коротший і простіший за XML. XML має теги, а JSON використовує об’єкти та масиви."],
+          ["Важливо", "JSON не є мовою програмування. Це формат даних, який легко читають різні мови: JavaScript, Python, C#, Java, PHP та інші."]
+        ],
+        syntaxCards: [
+          ["Ключ: значення", "Кожне поле має ключ і значення. Між ними ставиться двокрапка."],
+          ["Подвійні лапки", "Ключі та рядкові значення пишуться тільки в подвійних лапках."],
+          ["Коми", "Поля розділяються комами, але після останнього поля кома не ставиться."],
+          ["Значення", "JSON підтримує string, number, boolean, null, object і array."]
+        ],
+        objectsText: "Об’єкт у JSON записується у фігурних дужках. Він містить набір полів у форматі ключ: значення.",
+        arraysText: "Масив у JSON записується у квадратних дужках. Він може містити рядки, числа, об’єкти або інші масиви.",
+        nestedText: "JSON може містити об’єкт у об’єкті або масив у об’єкті. Так описують складні структури: користувача з адресою, список товарів у замовленні, налаштування додатка.",
+        formattingText: "Відступи не змінюють значення JSON, але роблять файл читабельним. Для людини зручніше бачити кожен рівень структури з відступом.",
+        javascriptText: "У JavaScript JSON часто перетворюють у звичайний об’єкт через JSON.parse(), а об’єкт перетворюють у текст JSON через JSON.stringify().",
+        apiText: "API часто повертає відповідь у JSON, бо цей формат компактний і легко обробляється програмами.",
+        xmlCards: [
+          ["Простота", "JSON має менше службового тексту: немає відкривальних і закривальних тегів для кожного значення."],
+          ["Розмір", "JSON часто коротший за XML, тому його зручно передавати через мережу."],
+          ["Читабельність", "JSON добре підходить для структур даних, які схожі на об’єкти й масиви."],
+          ["XML", "XML корисний там, де потрібні атрибути, складні документи або строгі схеми."]
+        ],
+        errors: [
+          ["Зайва кома", "Після останнього елемента об’єкта або масиву кома заборонена.", "{\n  \"name\": \"Ivan\",\n}"],
+          ["Ключ без лапок", "У JSON ключ обов’язково має бути в подвійних лапках.", "{\n  name: \"Ivan\"\n}"],
+          ["Одинарні лапки", "JSON не приймає одинарні лапки для рядків.", "{\n  'name': 'Ivan'\n}"],
+          ["Неправильний тип", "undefined, function і коментарі не є валідними JSON-значеннями.", "{\n  \"value\": undefined\n}"]
+        ],
+        types: [
+          ["string", "Текстове значення у подвійних лапках.", "\"Hello\""],
+          ["number", "Ціле або дробове число без лапок.", "25"],
+          ["boolean", "Логічне значення true або false.", "true"],
+          ["null", "Порожнє або відсутнє значення.", "null"],
+          ["object", "Набір полів у фігурних дужках.", "{\"id\": 1}"],
+          ["array", "Список значень у квадратних дужках.", "[1, 2, 3]"]
+        ],
+        examples: [
+          ["Дані користувача", "{\n  \"id\": 1,\n  \"name\": \"Ivan\",\n  \"email\": \"ivan@example.com\",\n  \"isActive\": true\n}"],
+          ["Список товарів", "[\n  {\n    \"id\": 101,\n    \"title\": \"Keyboard\",\n    \"price\": 2499\n  },\n  {\n    \"id\": 102,\n    \"title\": \"Mouse\",\n    \"price\": 799\n  }\n]"],
+          ["API відповідь", "{\n  \"status\": \"success\",\n  \"data\": {\n    \"users\": [\n      { \"id\": 1, \"name\": \"Anna\" },\n      { \"id\": 2, \"name\": \"Ivan\" }\n    ]\n  }\n}"],
+          ["Налаштування конфігурації", "{\n  \"theme\": \"light\",\n  \"language\": \"uk\",\n  \"itemsPerPage\": 20,\n  \"notifications\": true\n}"]
+        ],
+        reference: [
+          ["JSON", "Текстовий формат обміну даними.", "{ ... } або [ ... ]", "{\"name\":\"Ivan\"}", "Файл часто має розширення .json."],
+          ["Object", "Колекція пар ключ: значення.", "{\"key\":\"value\"}", "{\"age\":25}", "Ключі завжди в подвійних лапках."],
+          ["Array", "Впорядкований список значень.", "[value1, value2]", "[\"HTML\", \"CSS\", \"JSON\"]", "Масив може містити об’єкти."],
+          ["JSON.parse()", "Перетворює JSON-рядок у JavaScript-об’єкт.", "JSON.parse(text)", "JSON.parse('{\"id\":1}')", "Якщо JSON неправильний, буде помилка."],
+          ["JSON.stringify()", "Перетворює JavaScript-об’єкт у JSON-рядок.", "JSON.stringify(object)", "JSON.stringify({ id: 1 })", "Зручно для збереження або відправки даних."],
+          ["MIME type", "Тип відповіді для JSON у HTTP.", "application/json", "Content-Type: application/json", "Допомагає клієнту зрозуміти формат відповіді."]
+        ]
+      },
+      en: {
+        introCards: [
+          ["JSON", "JSON means JavaScript Object Notation. It is a simple text format that describes data with objects, arrays, strings, numbers, booleans, and null."],
+          ["What it is used for", "JSON is often used in APIs, configuration files, saved settings, and data transfer between frontend and backend."],
+          ["JSON and XML", "JSON is usually shorter and simpler than XML. XML uses tags, while JSON uses objects and arrays."],
+          ["Important", "JSON is not a programming language. It is a data format that many languages can read: JavaScript, Python, C#, Java, PHP, and others."]
+        ],
+        syntaxCards: [
+          ["Key: value", "Each field has a key and a value. A colon separates them."],
+          ["Double quotes", "Keys and string values must use double quotes."],
+          ["Commas", "Fields are separated by commas, but the last field must not have a comma after it."],
+          ["Values", "JSON supports string, number, boolean, null, object, and array."]
+        ],
+        objectsText: "A JSON object is written inside curly braces. It contains fields in key-value form.",
+        arraysText: "A JSON array is written inside square brackets. It can contain strings, numbers, objects, or other arrays.",
+        nestedText: "JSON can contain an object inside an object or an array inside an object. This is how complex data is described: a user with an address, products inside an order, or app settings.",
+        formattingText: "Indentation does not change the JSON value, but it makes the file readable. For humans, each structure level is easier to understand when it has indentation.",
+        javascriptText: "In JavaScript, JSON is often converted into a normal object with JSON.parse(), and an object is converted into JSON text with JSON.stringify().",
+        apiText: "APIs often return responses as JSON because the format is compact and easy for programs to process.",
+        xmlCards: [
+          ["Simplicity", "JSON has less markup text: it does not need opening and closing tags for every value."],
+          ["Size", "JSON is often shorter than XML, so it is convenient to send over a network."],
+          ["Readability", "JSON works well for data structures that look like objects and arrays."],
+          ["XML", "XML is useful when attributes, complex documents, or strict schemas are needed."]
+        ],
+        errors: [
+          ["Extra comma", "A comma after the last object or array item is invalid.", "{\n  \"name\": \"Ivan\",\n}"],
+          ["Key without quotes", "In JSON, a key must be placed in double quotes.", "{\n  name: \"Ivan\"\n}"],
+          ["Single quotes", "JSON does not accept single quotes for strings.", "{\n  'name': 'Ivan'\n}"],
+          ["Wrong type", "undefined, function, and comments are not valid JSON values.", "{\n  \"value\": undefined\n}"]
+        ],
+        types: [
+          ["string", "Text value in double quotes.", "\"Hello\""],
+          ["number", "Integer or decimal number without quotes.", "25"],
+          ["boolean", "Logical value true or false.", "true"],
+          ["null", "Empty or missing value.", "null"],
+          ["object", "Set of fields inside curly braces.", "{\"id\": 1}"],
+          ["array", "List of values inside square brackets.", "[1, 2, 3]"]
+        ],
+        examples: [
+          ["User data", "{\n  \"id\": 1,\n  \"name\": \"Ivan\",\n  \"email\": \"ivan@example.com\",\n  \"isActive\": true\n}"],
+          ["Product list", "[\n  {\n    \"id\": 101,\n    \"title\": \"Keyboard\",\n    \"price\": 2499\n  },\n  {\n    \"id\": 102,\n    \"title\": \"Mouse\",\n    \"price\": 799\n  }\n]"],
+          ["API response", "{\n  \"status\": \"success\",\n  \"data\": {\n    \"users\": [\n      { \"id\": 1, \"name\": \"Anna\" },\n      { \"id\": 2, \"name\": \"Ivan\" }\n    ]\n  }\n}"],
+          ["Configuration settings", "{\n  \"theme\": \"light\",\n  \"language\": \"en\",\n  \"itemsPerPage\": 20,\n  \"notifications\": true\n}"]
+        ],
+        reference: [
+          ["JSON", "Text data exchange format.", "{ ... } or [ ... ]", "{\"name\":\"Ivan\"}", "The file often uses the .json extension."],
+          ["Object", "Collection of key-value pairs.", "{\"key\":\"value\"}", "{\"age\":25}", "Keys are always in double quotes."],
+          ["Array", "Ordered list of values.", "[value1, value2]", "[\"HTML\", \"CSS\", \"JSON\"]", "An array can contain objects."],
+          ["JSON.parse()", "Converts a JSON string into a JavaScript object.", "JSON.parse(text)", "JSON.parse('{\"id\":1}')", "Invalid JSON causes an error."],
+          ["JSON.stringify()", "Converts a JavaScript object into a JSON string.", "JSON.stringify(object)", "JSON.stringify({ id: 1 })", "Useful for saving or sending data."],
+          ["MIME type", "HTTP response type for JSON.", "application/json", "Content-Type: application/json", "Helps the client understand the response format."]
+        ]
+      },
+      ru: {
+        introCards: [
+          ["JSON", "JSON означает JavaScript Object Notation. Это простой текстовый формат, который описывает данные через объекты, массивы, строки, числа, boolean и null."],
+          ["Для чего используется", "JSON часто используют в API, файлах конфигурации, сохранении настроек и передаче данных между frontend и backend."],
+          ["JSON и XML", "JSON обычно короче и проще XML. XML использует теги, а JSON использует объекты и массивы."],
+          ["Важно", "JSON не является языком программирования. Это формат данных, который легко читают разные языки: JavaScript, Python, C#, Java, PHP и другие."]
+        ],
+        syntaxCards: [
+          ["Ключ: значение", "Каждое поле имеет ключ и значение. Между ними ставится двоеточие."],
+          ["Двойные кавычки", "Ключи и строковые значения пишутся только в двойных кавычках."],
+          ["Запятые", "Поля разделяются запятыми, но после последнего поля запятая не ставится."],
+          ["Значения", "JSON поддерживает string, number, boolean, null, object и array."]
+        ],
+        objectsText: "Объект в JSON записывается в фигурных скобках. Он содержит набор полей в формате ключ: значение.",
+        arraysText: "Массив в JSON записывается в квадратных скобках. Он может содержать строки, числа, объекты или другие массивы.",
+        nestedText: "JSON может содержать объект в объекте или массив в объекте. Так описывают сложные структуры: пользователя с адресом, список товаров в заказе, настройки приложения.",
+        formattingText: "Отступы не изменяют значение JSON, но делают файл читабельным. Для человека удобнее видеть каждый уровень структуры с отступом.",
+        javascriptText: "В JavaScript JSON часто преобразуют в обычный объект через JSON.parse(), а объект преобразуют в JSON-текст через JSON.stringify().",
+        apiText: "API часто возвращает ответ в JSON, потому что этот формат компактный и легко обрабатывается программами.",
+        xmlCards: [
+          ["Простота", "JSON имеет меньше служебного текста: нет открывающих и закрывающих тегов для каждого значения."],
+          ["Размер", "JSON часто короче XML, поэтому его удобно передавать по сети."],
+          ["Читабельность", "JSON хорошо подходит для структур данных, похожих на объекты и массивы."],
+          ["XML", "XML полезен там, где нужны атрибуты, сложные документы или строгие схемы."]
+        ],
+        errors: [
+          ["Лишняя запятая", "После последнего элемента объекта или массива запятая запрещена.", "{\n  \"name\": \"Ivan\",\n}"],
+          ["Ключ без кавычек", "В JSON ключ обязательно должен быть в двойных кавычках.", "{\n  name: \"Ivan\"\n}"],
+          ["Одинарные кавычки", "JSON не принимает одинарные кавычки для строк.", "{\n  'name': 'Ivan'\n}"],
+          ["Неправильный тип", "undefined, function и комментарии не являются валидными JSON-значениями.", "{\n  \"value\": undefined\n}"]
+        ],
+        types: [
+          ["string", "Текстовое значение в двойных кавычках.", "\"Hello\""],
+          ["number", "Целое или дробное число без кавычек.", "25"],
+          ["boolean", "Логическое значение true или false.", "true"],
+          ["null", "Пустое или отсутствующее значение.", "null"],
+          ["object", "Набор полей в фигурных скобках.", "{\"id\": 1}"],
+          ["array", "Список значений в квадратных скобках.", "[1, 2, 3]"]
+        ],
+        examples: [
+          ["Данные пользователя", "{\n  \"id\": 1,\n  \"name\": \"Ivan\",\n  \"email\": \"ivan@example.com\",\n  \"isActive\": true\n}"],
+          ["Список товаров", "[\n  {\n    \"id\": 101,\n    \"title\": \"Keyboard\",\n    \"price\": 2499\n  },\n  {\n    \"id\": 102,\n    \"title\": \"Mouse\",\n    \"price\": 799\n  }\n]"],
+          ["API ответ", "{\n  \"status\": \"success\",\n  \"data\": {\n    \"users\": [\n      { \"id\": 1, \"name\": \"Anna\" },\n      { \"id\": 2, \"name\": \"Ivan\" }\n    ]\n  }\n}"],
+          ["Настройки конфигурации", "{\n  \"theme\": \"light\",\n  \"language\": \"ru\",\n  \"itemsPerPage\": 20,\n  \"notifications\": true\n}"]
+        ],
+        reference: [
+          ["JSON", "Текстовый формат обмена данными.", "{ ... } или [ ... ]", "{\"name\":\"Ivan\"}", "Файл часто имеет расширение .json."],
+          ["Object", "Коллекция пар ключ: значение.", "{\"key\":\"value\"}", "{\"age\":25}", "Ключи всегда в двойных кавычках."],
+          ["Array", "Упорядоченный список значений.", "[value1, value2]", "[\"HTML\", \"CSS\", \"JSON\"]", "Массив может содержать объекты."],
+          ["JSON.parse()", "Преобразует JSON-строку в JavaScript-объект.", "JSON.parse(text)", "JSON.parse('{\"id\":1}')", "Если JSON неправильный, будет ошибка."],
+          ["JSON.stringify()", "Преобразует JavaScript-объект в JSON-строку.", "JSON.stringify(object)", "JSON.stringify({ id: 1 })", "Удобно для сохранения или отправки данных."],
+          ["MIME type", "Тип ответа для JSON в HTTP.", "application/json", "Content-Type: application/json", "Помогает клиенту понять формат ответа."]
+        ]
+      }
+    };
+
+    const t = ui[lang];
+    const page = content[lang];
+    document.title = lang === "uk" ? "JSON Lessons / JSON Довідник" : lang === "ru" ? "JSON Lessons / JSON Справочник" : "JSON Lessons / JSON Guide";
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function codeBlock(code) {
+      return `<div class="code-wrap"><button class="copy-btn" type="button">${escapeHtml(t.copy)}</button><pre><code>${escapeHtml(code)}</code></pre></div>`;
+    }
+
+    function renderCards(target, cards) {
+      document.querySelector(target).innerHTML = cards.map(([title, text]) => `
+        <article class="info-card search-item">
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(text)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderTextSection(target, text, code) {
+      document.querySelector(target).innerHTML = `
+        <p class="lead">${escapeHtml(text)}</p>
+        ${code ? codeBlock(code) : ""}
+      `;
+    }
+
+    function renderTypes() {
+      document.querySelector("#typesGrid").innerHTML = page.types.map(([name, description, example]) => `
+        <article class="doc-card search-item">
+          <h3><span class="badge">${escapeHtml(name)}</span></h3>
+          <dl>
+            <div><dt>${escapeHtml(t.description)}</dt><dd>${escapeHtml(description)}</dd></div>
+            <div><dt>${escapeHtml(t.example)}</dt><dd><code>${escapeHtml(example)}</code></dd></div>
+          </dl>
+        </article>
+      `).join("");
+    }
+
+    function renderExamples() {
+      document.querySelector("#examplesGrid").innerHTML = page.examples.map(([title, code]) => `
+        <article class="example-card search-item">
+          <h3>${escapeHtml(title)}</h3>
+          ${codeBlock(code)}
+        </article>
+      `).join("");
+    }
+
+    function renderReference() {
+      document.querySelector("#referenceGrid").innerHTML = page.reference.map(([name, description, syntax, example, note]) => `
+        <article class="doc-card search-item">
+          <h3>${escapeHtml(t.name)}: <span class="badge">${escapeHtml(name)}</span></h3>
+          <dl>
+            <div><dt>${escapeHtml(t.description)}</dt><dd>${escapeHtml(description)}</dd></div>
+            <div><dt>${escapeHtml(t.syntaxLabel)}</dt><dd><code>${escapeHtml(syntax)}</code></dd></div>
+            <div><dt>${escapeHtml(t.example)}</dt><dd>${codeBlock(example)}</dd></div>
+            <div><dt>${escapeHtml(t.note)}</dt><dd>${escapeHtml(note)}</dd></div>
+          </dl>
+        </article>
+      `).join("");
+    }
+
+    function applyStaticTranslations() {
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        element.textContent = t[element.dataset.i18n] || element.textContent;
+      });
+      document.querySelectorAll("[data-placeholder-key]").forEach((element) => {
+        element.placeholder = t[element.dataset.placeholderKey] || "";
+      });
+      document.querySelectorAll(".copy-btn").forEach((button) => {
+        button.textContent = t.copy;
+      });
+    }
+
+    function updateLocalLinks() {
+      document.querySelectorAll("a[href]").forEach((link) => {
+        const raw = link.getAttribute("href");
+        if (!raw || raw.startsWith("#") || raw.startsWith("http") || raw.startsWith("mailto:")) return;
+        if (!raw.includes(".html")) return;
+        const [pathAndQuery, hash = ""] = raw.split("#");
+        const [path, query = ""] = pathAndQuery.split("?");
+        const linkParams = new URLSearchParams(query);
+        linkParams.set("lang", lang);
+        link.setAttribute("href", `${path}?${linkParams.toString()}${hash ? "#" + hash : ""}`);
+      });
+    }
+
+    function addLanguagePicker() {
+      const header = document.querySelector(".header-inner");
+      if (!header) return;
+      const picker = document.createElement("div");
+      picker.className = "language-picker";
+      picker.setAttribute("aria-label", lang === "ru" ? "Язык сайта" : "Site language");
+      [
+        ["uk", "UKR"],
+        ["en", "ENG"],
+        ["ru", "RU"]
+      ].forEach(([code, label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        button.className = code === lang ? "is-active" : "";
+        button.addEventListener("click", () => {
+          localStorage.setItem("siteLanguage", code);
+          localStorage.setItem("siteLanguageChoiceVersion", "2");
+          const nextParams = new URLSearchParams(window.location.search);
+          nextParams.set("lang", code);
+          window.location.search = nextParams.toString();
+        });
+        picker.appendChild(button);
+      });
+      header.appendChild(picker);
+    }
+
+    function addLanguageStyles() {
+      const style = document.createElement("style");
+      style.textContent = `
+        .language-picker { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+        .language-picker button {
+          min-height: 32px;
+          padding: 5px 8px;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--surface);
+          color: var(--muted);
+          font: inherit;
+          font-size: 13px;
+          cursor: pointer;
+        }
+        .language-picker button.is-active {
+          background: var(--accent);
+          border-color: var(--accent);
+          color: #fff;
+        }
+        @media (max-width: 720px) {
+          .language-picker { width: 100%; }
+          .language-picker button { flex: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    renderCards("#introCards", page.introCards);
+    renderCards("#syntaxCards", page.syntaxCards);
+    renderTextSection("#objectsContent", page.objectsText, "{\n  \"user\": {\n    \"name\": \"Ivan\",\n    \"age\": 25\n  }\n}");
+    renderTextSection("#arraysContent", page.arraysText, "[\n  { \"id\": 1, \"name\": \"HTML\" },\n  { \"id\": 2, \"name\": \"CSS\" }\n]");
+    renderTypes();
+    renderTextSection("#nestedContent", page.nestedText, "{\n  \"order\": {\n    \"id\": 1001,\n    \"items\": [\n      { \"title\": \"Keyboard\", \"count\": 1 },\n      { \"title\": \"Mouse\", \"count\": 2 }\n    ]\n  }\n}");
+    renderTextSection("#formattingContent", page.formattingText, "{\n  \"name\": \"Ivan\",\n  \"skills\": [\"HTML\", \"CSS\", \"JSON\"]\n}");
+    renderTextSection("#javascriptContent", page.javascriptText, "const text = '{\"name\":\"Ivan\",\"age\":25}';\nconst user = JSON.parse(text);\n\nconst json = JSON.stringify(user, null, 2);");
+    renderTextSection("#apiContent", page.apiText, "{\n  \"status\": 200,\n  \"message\": \"OK\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Ivan\"\n  }\n}");
+    renderCards("#xmlCards", page.xmlCards);
+    document.querySelector("#errorCards").innerHTML = page.errors.map(([title, text, code]) => `
+      <article class="info-card search-item">
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(text)}</p>
+        ${codeBlock(code)}
+      </article>
+    `).join("");
+    renderExamples();
+    renderReference();
+    applyStaticTranslations();
+    addLanguageStyles();
+    addLanguagePicker();
+    updateLocalLinks();
+
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const haystack = item.innerText.toLowerCase();
+        const isVisible = !query || haystack.includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible) visible++;
+      });
+
+      searchCount.textContent = query ? t.found.replace("{count}", visible) : t.allShown;
+      emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", (event) => {
+      const copyButton = event.target.closest(".copy-btn");
+      if (!copyButton) return;
+      const code = copyButton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        copyButton.textContent = t.copied;
+        setTimeout(() => copyButton.textContent = t.copy, 1200);
+      });
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+    updateSearch();
+  </script>
+</body>
+</html>
