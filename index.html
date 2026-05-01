@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -275,19 +276,120 @@
       margin: 18px 0;
     }
 
-    .widget-card {
+    .donation-progress {
       margin: 18px 0 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--surface-soft);
       overflow: hidden;
+      padding: 18px;
     }
 
-    .widget-card iframe {
+    .progress-top,
+    .progress-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress-top strong {
       display: block;
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .progress-percent {
+      color: var(--text);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .progress-track {
       width: 100%;
-      min-height: 260px;
-      border: 0;
+      height: 18px;
+      margin: 14px 0 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #e7e9ed;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: var(--progress, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: #d92d20;
+    }
+
+    .progress-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .donation-thanks {
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 18px;
+    }
+
+    .donation-thanks h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .thanks-note {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .thanks-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .thanks-card {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      padding: 14px;
+    }
+
+    .thanks-card header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .thanks-name {
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .thanks-amount {
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .thanks-message,
+    .thanks-comment {
+      margin: 0;
+    }
+
+    .thanks-comment {
+      margin-top: 8px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
     }
 
     .footer {
@@ -339,12 +441,24 @@
         display: block;
       }
 
-      .widget-card iframe {
-        min-height: 300px;
+      .progress-top,
+      .progress-bottom {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .thanks-list {
+        grid-template-columns: 1fr;
+      }
+
+      .thanks-card header {
+        flex-direction: column;
+        gap: 2px;
       }
     }
   </style>
 </head>
+
 <body>
   <header class="site-header">
     <div class="header-inner">
@@ -495,7 +609,8 @@
         </div>
         <div class="card-body">
           <h2>Rust</h2>
-          <p>Системна мова для швидкого, надійного коду: ownership, borrowing, lifetimes, Result, Vec і безпечна пам’ять.</p>
+          <p>Системна мова для швидкого, надійного коду: ownership, borrowing, lifetimes, Result, Vec і безпечна
+            пам’ять.</p>
           <div class="meta">
             <span class="pill">ownership</span>
             <span class="pill">безпека</span>
@@ -559,7 +674,8 @@
         </div>
         <div class="card-body">
           <h2>JSON</h2>
-          <p>Формат обміну даними: об’єкти, масиви, типи значень, API, JSON.parse(), JSON.stringify() та конфігурації.</p>
+          <p>Формат обміну даними: об’єкти, масиви, типи значень, API, JSON.parse(), JSON.stringify() та конфігурації.
+          </p>
           <div class="meta">
             <span class="pill">data</span>
             <span class="pill">API</span>
@@ -627,17 +743,42 @@
       <p class="subtitle">Підтримай мене, щоб я активніше розвивав сайт і додавав новий контент.</p>
 
       <div class="support-actions">
-        <a class="button" href="https://dalink.to/sometimesatnight" target="_blank" rel="noopener noreferrer">Підтримати сайт</a>
+        <a class="button" href="https://dalink.to/sometimesatnight" target="_blank" rel="noopener noreferrer">Підтримати
+          сайт</a>
       </div>
 
-      <section class="widget-card" aria-label="Donation goal widget">
-        <iframe
-          title="Donation Goal"
-          src="https://www.donationalerts.com/widget/goal/9596999?token=8CFBXznlhZb0gsw3QrWD"
-          allowtransparency="true"
-          scrolling="no"
-          loading="lazy">
-        </iframe>
+      <section class="donation-progress" aria-label="Donation progress">
+        <div class="progress-top">
+          <div>
+            <span>Зібрано</span>
+            <strong>25 USD</strong>
+          </div>
+          <span class="progress-percent">0,25%</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" style="--progress: 0.25%;"></div>
+        </div>
+        <div class="progress-bottom">
+          <span>25 USD з 10 000 USD</span>
+          <span>Ціль: 10 000 USD</span>
+        </div>
+        <p class="progress-note">Прогрес оновлюється вручну після донатів.</p>
+      </section>
+
+      <section class="donation-thanks" aria-labelledby="thanks-title">
+        <h2 id="thanks-title">Подяки за донати</h2>
+        <p class="thanks-note">Тут можна вручну додавати людей, які підтримали сайт.</p>
+
+        <div class="thanks-list">
+          <article class="thanks-card">
+            <header>
+              <span class="thanks-name">Anonymous</span>
+              <span class="thanks-amount">25 USD</span>
+            </header>
+            <p class="thanks-message">Дякую за внесок у розвиток навчальних матеріалів.</p>
+            <p class="thanks-comment">Коментар: без коментаря.</p>
+          </article>
+        </div>
       </section>
 
       <p class="footer-text">Кожен донат допомагає рухати проєкт вперед ⚡</p>
@@ -650,5 +791,5 @@
   <script src="i18n-auto.js"></script>
   <script src="i18n.js"></script>
 </body>
-</html>
 
+</html>
