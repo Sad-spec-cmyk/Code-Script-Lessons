@@ -55,6 +55,7 @@
 
     .header-inner,
     .hero,
+    .info-section,
     .language-section,
     .footer {
       width: min(100%, var(--max-width));
@@ -79,13 +80,14 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 4px;
+      min-width: 0;
     }
 
     .top-nav a {
-      padding: 8px 10px;
+      padding: 7px 8px;
       border-radius: var(--radius);
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .top-nav a:hover,
@@ -115,6 +117,59 @@
 
     .language-section {
       padding: 0 18px 56px;
+    }
+
+    .info-section {
+      padding: 0 18px 34px;
+    }
+
+    .info-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 3vw, 28px);
+    }
+
+    .info-panel h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .info-panel>p {
+      max-width: 860px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .info-card {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      padding: 14px;
+    }
+
+    .info-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
     }
 
     .section-title {
@@ -276,6 +331,101 @@
       margin: 18px 0;
     }
 
+    .support-actions[hidden] {
+      display: none;
+    }
+
+    .donation-quiz {
+      margin: 18px 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+      padding: 18px;
+    }
+
+    .donation-quiz h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .quiz-note,
+    .quiz-question,
+    .quiz-result {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quiz-form {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .quiz-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .quiz-row label {
+      font-weight: 700;
+    }
+
+    .quiz-row select,
+    .quiz-row input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 11px;
+      font: inherit;
+    }
+
+    .quiz-question-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+    }
+
+    .quiz-question-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .quiz-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button.secondary {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .button.secondary:hover,
+    .button.secondary:focus-visible {
+      border-color: var(--accent);
+      background: var(--surface-soft);
+    }
+
+    .quiz-result {
+      min-height: 26px;
+      font-weight: 700;
+    }
+
+    .quiz-result.success {
+      color: #1a7f37;
+    }
+
+    .quiz-result.error {
+      color: #d92d20;
+    }
+
     .donation-progress {
       margin: 18px 0 14px;
       border: 1px solid var(--border);
@@ -399,12 +549,6 @@
     }
 
     @media (max-width: 980px) {
-      .language-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
       .header-inner {
         align-items: flex-start;
         flex-direction: column;
@@ -414,11 +558,22 @@
         justify-content: flex-start;
       }
 
+      .language-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
       .hero {
         padding: 40px 12px 24px;
       }
 
       .language-section,
+      .info-section,
       .support-section,
       .footer {
         padding-left: 12px;
@@ -426,6 +581,10 @@
       }
 
       .language-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
         grid-template-columns: 1fr;
       }
 
@@ -439,6 +598,10 @@
 
       .support-actions {
         display: block;
+      }
+
+      .quiz-buttons {
+        display: grid;
       }
 
       .progress-top,
@@ -486,6 +649,35 @@
 
   <section class="hero">
     <h1>Вибери мову для навчання</h1>
+  </section>
+
+  <section class="info-section" aria-labelledby="site-info-title">
+    <div class="info-panel">
+      <h2 id="site-info-title">Про сайт</h2>
+      <p>Programming Lessons — це простий навчальний довідник для тих, хто хоче швидко розібратися з основами програмування, веб-розробки та популярних мов.</p>
+
+      <div class="info-grid">
+        <article class="info-card">
+          <h3>Короткі пояснення</h3>
+          <p>Кожна тема подана просто: що це таке, де використовується і як виглядає в коді.</p>
+        </article>
+
+        <article class="info-card">
+          <h3>Приклади коду</h3>
+          <p>У довідниках є готові фрагменти, які можна читати, копіювати й змінювати під свої задачі.</p>
+        </article>
+
+        <article class="info-card">
+          <h3>Практика</h3>
+          <p>У кінці сторінок є задачі для самоперевірки з підказками, перевіркою коду та прикладом рішення.</p>
+        </article>
+
+        <article class="info-card">
+          <h3>Мови сайту</h3>
+          <p>Інтерфейс підтримує українську, англійську, російську, індонезійську та японську мови через перемикач у верхній частині сайту.</p>
+        </article>
+      </div>
+    </div>
   </section>
 
   <main class="language-section">
@@ -742,7 +934,52 @@
       <div class="glow-line" aria-hidden="true"></div>
       <p class="subtitle">Підтримай мене, щоб я активніше розвивав сайт і додавав новий контент.</p>
 
-      <div class="support-actions">
+      <section class="donation-quiz" aria-labelledby="quiz-title">
+        <h2 id="quiz-title">Перевірка перед донатом</h2>
+        <p class="quiz-note">Обери курс, який проходив, дай відповідь на випадкове питання і відкрий кнопку підтримки.</p>
+
+        <div class="quiz-form">
+          <div class="quiz-row">
+            <label for="quiz-course">Курс</label>
+            <select id="quiz-course">
+              <option value="html">HTML</option>
+              <option value="css">CSS</option>
+              <option value="javascript">JavaScript</option>
+              <option value="csharp">C#</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="rust">Rust</option>
+              <option value="assembly">Assembly</option>
+              <option value="c">C</option>
+              <option value="sql">SQL</option>
+              <option value="json">JSON</option>
+              <option value="typescript">TypeScript</option>
+              <option value="php">PHP</option>
+              <option value="powershell">PowerShell</option>
+            </select>
+          </div>
+
+          <div class="quiz-question-card">
+            <strong>Питання</strong>
+            <p class="quiz-question" id="quiz-question">Питання з’явиться тут.</p>
+          </div>
+
+          <div class="quiz-row">
+            <label for="quiz-answer">Відповідь</label>
+            <input id="quiz-answer" type="text" autocomplete="off" placeholder="Напиши коротку відповідь">
+          </div>
+
+          <div class="quiz-buttons">
+            <button class="button" type="button" id="quiz-check">Перевірити</button>
+            <button class="button secondary" type="button" id="quiz-next">Інше питання</button>
+          </div>
+
+          <p class="quiz-result" id="quiz-result" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <div class="support-actions" id="donation-button-wrap" hidden>
         <a class="button" href="https://dalink.to/sometimesatnight" target="_blank" rel="noopener noreferrer">Підтримати
           сайт</a>
       </div>
@@ -790,6 +1027,181 @@
   </footer>
   <script src="i18n-auto.js"></script>
   <script src="i18n.js"></script>
+  <script>
+    // Donation quiz gate: unlocks the support button only after a correct answer.
+    (function () {
+      const supported = ["uk", "en", "ru", "id", "ja"];
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get("lang");
+      const saved = localStorage.getItem("siteLanguage");
+      const savedVersion = localStorage.getItem("siteLanguageChoiceVersion");
+      const lang = supported.includes(requested)
+        ? requested
+        : savedVersion === "2" && supported.includes(saved)
+          ? saved
+          : "en";
+
+      const messages = {
+        uk: {
+          correct: "Правильно. Кнопка підтримки відкрита, дякую!",
+          wrong: "Неправильно. Йди ще трохи повчи цей розділ і спробуй знову.",
+          placeholder: "Питання з’явиться тут."
+        },
+        en: {
+          correct: "Correct. The support button is unlocked, thank you!",
+          wrong: "Incorrect. Go study this section a bit more and try again.",
+          placeholder: "The question will appear here."
+        },
+        ru: {
+          correct: "Правильно. Кнопка поддержки открыта, спасибо!",
+          wrong: "Неправильно. Иди еще немного поучи этот раздел и попробуй снова.",
+          placeholder: "Вопрос появится здесь."
+        },
+        id: {
+          correct: "Benar. Tombol dukungan sudah terbuka, terima kasih!",
+          wrong: "Belum benar. Pelajari lagi bagian ini lalu coba kembali.",
+          placeholder: "Pertanyaan akan muncul di sini."
+        },
+        ja: {
+          correct: "正解です。サポートボタンが開きました。ありがとうございます！",
+          wrong: "不正解です。このセクションをもう少し学習してから、もう一度試してください。",
+          placeholder: "ここに質問が表示されます。"
+        }
+      };
+
+      const questions = {
+        html: [
+          { q: { uk: "Який тег створює найбільший заголовок?", en: "Which tag creates the largest heading?", ru: "Какой тег создает самый большой заголовок?" }, a: ["h1", "<h1>"] },
+          { q: { uk: "Який атрибут описує зображення для доступності?", en: "Which attribute describes an image for accessibility?", ru: "Какой атрибут описывает изображение для доступности?" }, a: ["alt"] },
+          { q: { uk: "Що пишуть на початку HTML5 документа?", en: "What is written at the start of an HTML5 document?", ru: "Что пишут в начале HTML5 документа?" }, a: ["<!doctype html>", "doctype html", "doctype"] }
+        ],
+        css: [
+          { q: { uk: "Яка CSS-властивість змінює колір тексту?", en: "Which CSS property changes text color?", ru: "Какое CSS-свойство меняет цвет текста?" }, a: ["color"] },
+          { q: { uk: "Який символ використовується для селектора класу?", en: "Which symbol is used for a class selector?", ru: "Какой символ используется для селектора класса?" }, a: [".", "крапка", "dot", "точка"] },
+          { q: { uk: "Яке значення display вмикає flexbox?", en: "Which display value enables flexbox?", ru: "Какое значение display включает flexbox?" }, a: ["flex"] }
+        ],
+        javascript: [
+          { q: { uk: "Яке ключове слово створює константу?", en: "Which keyword creates a constant?", ru: "Какое ключевое слово создает константу?" }, a: ["const"] },
+          { q: { uk: "Яка команда виводить текст у консоль?", en: "Which command prints text to the console?", ru: "Какая команда выводит текст в консоль?" }, a: ["console.log", "console.log()"] },
+          { q: { uk: "Який метод шукає перший елемент за CSS-селектором?", en: "Which method finds the first element by CSS selector?", ru: "Какой метод ищет первый элемент по CSS-селектору?" }, a: ["queryselector", "document.queryselector", "document.queryselector()"] }
+        ],
+        csharp: [
+          { q: { uk: "Яка команда виводить рядок у консоль у C#?", en: "Which command prints a line to the console in C#?", ru: "Какая команда выводит строку в консоль в C#?" }, a: ["console.writeline", "console.writeline()"] },
+          { q: { uk: "Який тип зберігає текст у C#?", en: "Which type stores text in C#?", ru: "Какой тип хранит текст в C#?" }, a: ["string"] },
+          { q: { uk: "Яка колекція C# має формат List<T>?", en: "Which C# collection has the List<T> format?", ru: "Какая коллекция C# имеет формат List<T>?" }, a: ["list", "list<t>"] }
+        ],
+        python: [
+          { q: { uk: "Яке ключове слово створює функцію в Python?", en: "Which keyword creates a function in Python?", ru: "Какое ключевое слово создает функцию в Python?" }, a: ["def"] },
+          { q: { uk: "Який метод додає елемент у список?", en: "Which method adds an item to a list?", ru: "Какой метод добавляет элемент в список?" }, a: ["append", "append()"] },
+          { q: { uk: "Який тип даних зберігає пари ключ-значення?", en: "Which data type stores key-value pairs?", ru: "Какой тип данных хранит пары ключ-значение?" }, a: ["dict", "dictionary", "словник", "словарь"] }
+        ],
+        cpp: [
+          { q: { uk: "Що використовують для виводу тексту в C++?", en: "What is used to output text in C++?", ru: "Что используют для вывода текста в C++?" }, a: ["cout", "std::cout"] },
+          { q: { uk: "Який заголовок підключає cout і cin?", en: "Which header provides cout and cin?", ru: "Какой заголовок подключает cout и cin?" }, a: ["iostream", "<iostream>"] },
+          { q: { uk: "Який оператор бере адресу змінної?", en: "Which operator gets a variable address?", ru: "Какой оператор берет адрес переменной?" }, a: ["&"] }
+        ],
+        java: [
+          { q: { uk: "Яка команда виводить рядок у консоль у Java?", en: "Which command prints a line to the console in Java?", ru: "Какая команда выводит строку в консоль в Java?" }, a: ["system.out.println", "system.out.println()"] },
+          { q: { uk: "Яке ключове слово створює незмінну змінну?", en: "Which keyword creates an immutable variable?", ru: "Какое ключевое слово создает неизменяемую переменную?" }, a: ["final"] },
+          { q: { uk: "Який метод додає елемент в ArrayList?", en: "Which method adds an item to ArrayList?", ru: "Какой метод добавляет элемент в ArrayList?" }, a: ["add", "add()"] }
+        ],
+        rust: [
+          { q: { uk: "Яке ключове слово дозволяє змінювати змінну в Rust?", en: "Which keyword makes a Rust variable mutable?", ru: "Какое ключевое слово позволяет менять переменную в Rust?" }, a: ["mut"] },
+          { q: { uk: "Який тип є динамічним масивом у Rust?", en: "Which type is a dynamic array in Rust?", ru: "Какой тип является динамическим массивом в Rust?" }, a: ["vec", "vec<t>", "vector"] },
+          { q: { uk: "Яка конструкція часто використовується для Option і Result?", en: "Which construct is often used with Option and Result?", ru: "Какая конструкция часто используется с Option и Result?" }, a: ["match"] }
+        ],
+        assembly: [
+          { q: { uk: "Яка інструкція копіює значення між регістрами або пам’яттю?", en: "Which instruction copies values between registers or memory?", ru: "Какая инструкция копирует значения между регистрами или памятью?" }, a: ["mov"] },
+          { q: { uk: "У якому регістрі Linux x86-64 зазвичай зберігається номер syscall?", en: "Which register usually stores a Linux x86-64 syscall number?", ru: "В каком регистре Linux x86-64 обычно хранится номер syscall?" }, a: ["rax"] },
+          { q: { uk: "Які дві інструкції кладуть значення у стек і дістають його?", en: "Which two instructions put a value on the stack and take it back?", ru: "Какие две инструкции кладут значение в стек и достают его?" }, a: ["push pop", "push і pop", "push and pop", "push/pop"] }
+        ],
+        c: [
+          { q: { uk: "Яка функція виводить текст у C?", en: "Which function prints text in C?", ru: "Какая функция выводит текст в C?" }, a: ["printf", "printf()"] },
+          { q: { uk: "Який оператор бере адресу змінної?", en: "Which operator gets a variable address?", ru: "Какой оператор берет адрес переменной?" }, a: ["&"] },
+          { q: { uk: "Якою функцією звільняють пам’ять після malloc?", en: "Which function frees memory after malloc?", ru: "Какой функцией освобождают память после malloc?" }, a: ["free", "free()"] }
+        ],
+        sql: [
+          { q: { uk: "Яка SQL-команда читає дані з таблиці?", en: "Which SQL command reads data from a table?", ru: "Какая SQL-команда читает данные из таблицы?" }, a: ["select"] },
+          { q: { uk: "Яке слово задає умову фільтрації?", en: "Which keyword sets a filter condition?", ru: "Какое слово задает условие фильтрации?" }, a: ["where"] },
+          { q: { uk: "Який JOIN повертає тільки збіги з обох таблиць?", en: "Which JOIN returns only matches from both tables?", ru: "Какой JOIN возвращает только совпадения из обеих таблиц?" }, a: ["inner join", "inner"] }
+        ],
+        json: [
+          { q: { uk: "Який метод JavaScript перетворює JSON-рядок в об’єкт?", en: "Which JavaScript method converts a JSON string into an object?", ru: "Какой метод JavaScript превращает JSON-строку в объект?" }, a: ["json.parse", "json.parse()"] },
+          { q: { uk: "Які символи позначають масив у JSON?", en: "Which symbols represent an array in JSON?", ru: "Какие символы обозначают массив в JSON?" }, a: ["[]", "[ ]"] },
+          { q: { uk: "У JSON ключі обов’язково пишуться в яких символах?", en: "In JSON, keys must be written inside which symbols?", ru: "В JSON ключи обязательно пишутся в каких символах?" }, a: ["\"", "quotes", "лапки", "кавычки", "double quotes"] }
+        ],
+        typescript: [
+          { q: { uk: "Який тип TypeScript використовують для тексту?", en: "Which TypeScript type is used for text?", ru: "Какой тип TypeScript используют для текста?" }, a: ["string"] },
+          { q: { uk: "Яке ключове слово описує структуру об’єкта?", en: "Which keyword describes an object structure?", ru: "Какое ключевое слово описывает структуру объекта?" }, a: ["interface"] },
+          { q: { uk: "Який запис часто використовують для generic типу?", en: "Which notation is often used for a generic type?", ru: "Какая запись часто используется для generic типа?" }, a: ["<t>", "t"] }
+        ],
+        php: [
+          { q: { uk: "З якого символу починається змінна в PHP?", en: "Which symbol starts a PHP variable?", ru: "С какого символа начинается переменная в PHP?" }, a: ["$"] },
+          { q: { uk: "Яка команда часто виводить текст у PHP?", en: "Which command often outputs text in PHP?", ru: "Какая команда часто выводит текст в PHP?" }, a: ["echo"] },
+          { q: { uk: "Яка суперглобальна змінна читає дані POST-форми?", en: "Which superglobal reads POST form data?", ru: "Какая суперглобальная переменная читает данные POST-формы?" }, a: ["$_post", "post"] }
+        ],
+        powershell: [
+          { q: { uk: "Який символ передає результат однієї команди в іншу?", en: "Which symbol passes one command result to another?", ru: "Какой символ передает результат одной команды в другую?" }, a: ["|", "pipeline"] },
+          { q: { uk: "З якого символу починається змінна в PowerShell?", en: "Which symbol starts a PowerShell variable?", ru: "С какого символа начинается переменная в PowerShell?" }, a: ["$"] },
+          { q: { uk: "Яка команда показує процеси?", en: "Which command shows processes?", ru: "Какая команда показывает процессы?" }, a: ["get-process", "get process"] }
+        ]
+      };
+
+      const courseSelect = document.getElementById("quiz-course");
+      const questionText = document.getElementById("quiz-question");
+      const answerInput = document.getElementById("quiz-answer");
+      const checkButton = document.getElementById("quiz-check");
+      const nextButton = document.getElementById("quiz-next");
+      const result = document.getElementById("quiz-result");
+      const donationButton = document.getElementById("donation-button-wrap");
+      let currentQuestion = null;
+
+      function normalize(value) {
+        return String(value)
+          .trim()
+          .toLowerCase()
+          .replace(/[;`]/g, "")
+          .replace(/\s+/g, " ");
+      }
+
+      function setResult(type, text) {
+        result.className = "quiz-result " + type;
+        result.textContent = text;
+      }
+
+      function pickQuestion() {
+        const pool = questions[courseSelect.value] || questions.html;
+        currentQuestion = pool[Math.floor(Math.random() * pool.length)];
+        questionText.textContent = currentQuestion.q[lang] || (lang === "id" || lang === "ja" ? currentQuestion.q.en : "") || currentQuestion.q.uk || messages[lang].placeholder;
+        answerInput.value = "";
+        donationButton.hidden = true;
+        setResult("", "");
+      }
+
+      function checkAnswer() {
+        if (!currentQuestion) pickQuestion();
+        const userAnswer = normalize(answerInput.value);
+        const isCorrect = currentQuestion.a.some((answer) => normalize(answer) === userAnswer);
+
+        if (isCorrect) {
+          donationButton.hidden = false;
+          setResult("success", messages[lang].correct);
+        } else {
+          donationButton.hidden = true;
+          setResult("error", messages[lang].wrong);
+        }
+      }
+
+      courseSelect.addEventListener("change", pickQuestion);
+      nextButton.addEventListener("click", pickQuestion);
+      checkButton.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkAnswer();
+      });
+
+      pickQuestion();
+    })();
+  </script>
 </body>
 
 </html>

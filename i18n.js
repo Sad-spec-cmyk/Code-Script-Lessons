@@ -1,10 +1,10 @@
 /*
   Offline language helper for all lesson pages.
-  It reads ?lang=uk|en|ru, saves the choice, translates common UI text,
+  It reads ?lang=uk|en|ru|id|ja, saves the choice, translates common UI text,
   and keeps local links on the selected language.
 */
 (function () {
-  const supported = ["uk", "en", "ru"];
+  const supported = ["uk", "en", "ru", "id", "ja"];
   const params = new URLSearchParams(window.location.search);
   const requested = params.get("lang");
   const saved = localStorage.getItem("siteLanguage");
@@ -22,7 +22,9 @@
   const labels = {
     uk: "UKR",
     en: "ENG",
-    ru: "RU"
+    ru: "RU",
+    id: "ID",
+    ja: "JA"
   };
 
   const dict = {
@@ -31,12 +33,31 @@
       "Офлайн-довідники українською мовою з короткими поясненнями, прикладами коду, пошуком і зручною навігацією.": "Offline guides with short explanations, code examples, search, and convenient navigation.",
       "Доступні довідники": "Available guides",
       "Вибір мови": "Language chooser",
+      "Про сайт": "About the site",
+      "Programming Lessons — це простий навчальний довідник для тих, хто хоче швидко розібратися з основами програмування, веб-розробки та популярних мов.": "Programming Lessons is a simple learning reference for anyone who wants to quickly understand the basics of programming, web development, and popular languages.",
+      "Короткі пояснення": "Short explanations",
+      "Кожна тема подана просто: що це таке, де використовується і як виглядає в коді.": "Each topic is explained simply: what it is, where it is used, and what it looks like in code.",
+      "Приклади коду": "Code examples",
+      "У довідниках є готові фрагменти, які можна читати, копіювати й змінювати під свої задачі.": "The guides include ready-made snippets you can read, copy, and adapt to your own tasks.",
+      "Практика": "Practice",
+      "У кінці сторінок є задачі для самоперевірки з підказками, перевіркою коду та прикладом рішення.": "At the end of the pages there are self-check tasks with hints, code checking, and a sample solution.",
+      "Мови сайту": "Site languages",
+      "Інтерфейс підтримує українську, англійську та російську мови через перемикач у верхній частині сайту.": "The interface supports Ukrainian, English, and Russian through the switcher at the top of the site.",
       "Відкрити": "Open",
       "Підтримка": "Support",
       "Donation Goal": "Donation Goal",
       "Розвиток сайту": "Site development",
       "Підтримай мене, щоб я активніше розвивав сайт і додавав новий контент.": "Support me so I can develop the site more actively and add new content.",
       "Підтримати сайт": "Support the site",
+      "Перевірка перед донатом": "Check before donation",
+      "Обери курс, який проходив, дай відповідь на випадкове питання і відкрий кнопку підтримки.": "Choose the course you studied, answer a random question, and unlock the support button.",
+      "Курс": "Course",
+      "Питання": "Question",
+      "Питання з’явиться тут.": "The question will appear here.",
+      "Відповідь": "Answer",
+      "Напиши коротку відповідь": "Write a short answer",
+      "Перевірити": "Check",
+      "Інше питання": "Another question",
       "Зібрано": "Raised",
       "0 грн": "0 UAH",
       "0 грн з 5 000 грн": "0 UAH of 5,000 UAH",
@@ -123,12 +144,31 @@
       "Офлайн-довідники українською мовою з короткими поясненнями, прикладами коду, пошуком і зручною навігацією.": "Офлайн-справочники с короткими объяснениями, примерами кода, поиском и удобной навигацией.",
       "Доступні довідники": "Доступные справочники",
       "Вибір мови": "Выбор языка",
+      "Про сайт": "О сайте",
+      "Programming Lessons — це простий навчальний довідник для тих, хто хоче швидко розібратися з основами програмування, веб-розробки та популярних мов.": "Programming Lessons — это простой учебный справочник для тех, кто хочет быстро разобраться с основами программирования, веб-разработки и популярных языков.",
+      "Короткі пояснення": "Короткие объяснения",
+      "Кожна тема подана просто: що це таке, де використовується і як виглядає в коді.": "Каждая тема подана просто: что это такое, где используется и как выглядит в коде.",
+      "Приклади коду": "Примеры кода",
+      "У довідниках є готові фрагменти, які можна читати, копіювати й змінювати під свої задачі.": "В справочниках есть готовые фрагменты, которые можно читать, копировать и менять под свои задачи.",
+      "Практика": "Практика",
+      "У кінці сторінок є задачі для самоперевірки з підказками, перевіркою коду та прикладом рішення.": "В конце страниц есть задачи для самопроверки с подсказками, проверкой кода и примером решения.",
+      "Мови сайту": "Языки сайта",
+      "Інтерфейс підтримує українську, англійську та російську мови через перемикач у верхній частині сайту.": "Интерфейс поддерживает украинский, английский и русский языки через переключатель в верхней части сайта.",
       "Відкрити": "Открыть",
       "Підтримка": "Поддержка",
       "Donation Goal": "Цель донатов",
       "Розвиток сайту": "Развитие сайта",
       "Підтримай мене, щоб я активніше розвивав сайт і додавав новий контент.": "Поддержи меня, чтобы я активнее развивал сайт и добавлял новый контент.",
       "Підтримати сайт": "Поддержать сайт",
+      "Перевірка перед донатом": "Проверка перед донатом",
+      "Обери курс, який проходив, дай відповідь на випадкове питання і відкрий кнопку підтримки.": "Выбери курс, который проходил, ответь на случайный вопрос и открой кнопку поддержки.",
+      "Курс": "Курс",
+      "Питання": "Вопрос",
+      "Питання з’явиться тут.": "Вопрос появится здесь.",
+      "Відповідь": "Ответ",
+      "Напиши коротку відповідь": "Напиши короткий ответ",
+      "Перевірити": "Проверить",
+      "Інше питання": "Другой вопрос",
       "Зібрано": "Собрано",
       "0 грн": "0 грн",
       "0 грн з 5 000 грн": "0 грн из 5 000 грн",
@@ -218,6 +258,266 @@
         dict[code] = Object.assign({}, window.I18N_AUTO_TRANSLATIONS[code] || {}, dict[code] || {});
       }
     });
+  }
+  if (!dict.id) dict.id = {};
+  dict.id = Object.assign({}, dict.en || {}, dict.id);
+  if (!dict.ja) dict.ja = {};
+  dict.ja = Object.assign({}, dict.en || {}, dict.ja);
+  dict.en["????????? ????????? ??????????, ??????????, ????????? ?? ????????????? ???? ????? ????????? ? ??????? ??????? ?????."] = "The interface supports Ukrainian, English, Russian, and Indonesian through the switcher at the top of the site.";
+  dict.ru["????????? ????????? ??????????, ??????????, ????????? ?? ????????????? ???? ????? ????????? ? ??????? ??????? ?????."] = "????????? ???????????? ??????????, ??????????, ??????? ? ????????????? ????? ????? ????????????? ? ??????? ????? ?????.";
+  dict.id["????????? ????????? ??????????, ??????????, ????????? ?? ????????????? ???? ????? ????????? ? ??????? ??????? ?????."] = "Antarmuka mendukung bahasa Ukraina, Inggris, Rusia, dan Indonesia melalui tombol pilihan di bagian atas situs.";
+  dict.ja["????????? ????????? ??????????, ??????????, ????????? ?? ????????????? ???? ????? ????????? ? ??????? ??????? ?????."] = "インターフェースは、サイト上部の切り替えボタンでウクライナ語、英語、ロシア語、インドネシア語、日本語に対応しています。";
+  dict.en["Інтерфейс підтримує українську, англійську, російську, індонезійську та японську мови через перемикач у верхній частині сайту."] = "The interface supports Ukrainian, English, Russian, Indonesian, and Japanese through the switcher at the top of the site.";
+  dict.ru["Інтерфейс підтримує українську, англійську, російську, індонезійську та японську мови через перемикач у верхній частині сайту."] = "Интерфейс поддерживает украинский, английский, русский, индонезийский и японский языки через переключатель в верхней части сайта.";
+  dict.id["Інтерфейс підтримує українську, англійську, російську, індонезійську та японську мови через перемикач у верхній частині сайту."] = "Antarmuka mendukung bahasa Ukraina, Inggris, Rusia, Indonesia, dan Jepang melalui tombol pilihan di bagian atas situs.";
+  dict.ja["Інтерфейс підтримує українську, англійську, російську, індонезійську та японську мови через перемикач у верхній частині сайту."] = "インターフェースは、サイト上部の切り替えボタンでウクライナ語、英語、ロシア語、インドネシア語、日本語に対応しています。";
+
+  const englishToIndonesian = {
+    "Choose a language to learn": "Pilih bahasa untuk dipelajari",
+    "Available guides": "Panduan yang tersedia",
+    "Language chooser": "Pilihan bahasa",
+    "About the site": "Tentang situs",
+    "Programming Lessons is a simple learning reference for anyone who wants to quickly understand the basics of programming, web development, and popular languages.": "Programming Lessons adalah referensi belajar sederhana untuk siapa pun yang ingin cepat memahami dasar pemrograman, pengembangan web, dan bahasa populer.",
+    "Short explanations": "Penjelasan singkat",
+    "Each topic is explained simply: what it is, where it is used, and what it looks like in code.": "Setiap topik dijelaskan secara sederhana: apa itu, digunakan di mana, dan seperti apa bentuknya dalam kode.",
+    "Code examples": "Contoh kode",
+    "The guides include ready-made snippets you can read, copy, and adapt to your own tasks.": "Panduan berisi potongan kode siap pakai yang bisa dibaca, disalin, dan disesuaikan dengan tugasmu.",
+    "Practice": "Latihan",
+    "At the end of the pages there are self-check tasks with hints, code checking, and a sample solution.": "Di akhir halaman ada tugas latihan mandiri dengan petunjuk, pemeriksaan kode, dan contoh solusi.",
+      "Site languages": "Bahasa situs",
+    "The interface supports Ukrainian, English, and Russian through the switcher at the top of the site.": "Antarmuka mendukung bahasa Ukraina, Inggris, Rusia, dan Indonesia melalui tombol pilihan di bagian atas situs.",
+    "The interface supports Ukrainian, English, Russian, and Indonesian through the switcher at the top of the site.": "Antarmuka mendukung bahasa Ukraina, Inggris, Rusia, dan Indonesia melalui tombol pilihan di bagian atas situs.",
+    "The interface supports Ukrainian, English, Russian, Indonesian, and Japanese through the switcher at the top of the site.": "Antarmuka mendukung bahasa Ukraina, Inggris, Rusia, Indonesia, dan Jepang melalui tombol pilihan di bagian atas situs.",
+    "Open": "Buka",
+    "Support": "Dukungan",
+    "Donation Goal": "Target Donasi",
+    "Site development": "Pengembangan situs",
+    "Support me so I can develop the site more actively and add new content.": "Dukung saya agar saya bisa mengembangkan situs lebih aktif dan menambahkan konten baru.",
+    "Support the site": "Dukung situs",
+    "Check before donation": "Pemeriksaan sebelum donasi",
+    "Choose the course you studied, answer a random question, and unlock the support button.": "Pilih kursus yang sudah kamu pelajari, jawab pertanyaan acak, lalu buka tombol dukungan.",
+    "Course": "Kursus",
+    "Question": "Pertanyaan",
+    "The question will appear here.": "Pertanyaan akan muncul di sini.",
+    "Answer": "Jawaban",
+    "Write a short answer": "Tulis jawaban singkat",
+    "Check": "Periksa",
+    "Another question": "Pertanyaan lain",
+    "Raised": "Terkumpul",
+    "Goal: 10,000 USD": "Target: 10.000 USD",
+    "Progress is updated manually after donations.": "Progres diperbarui secara manual setelah donasi.",
+    "Donation thanks": "Ucapan terima kasih donasi",
+    "Here you can manually add people who supported the site.": "Di sini kamu bisa menambahkan secara manual orang yang mendukung situs.",
+    "Donor name": "Nama donatur",
+    "Thank you for supporting the site!": "Terima kasih sudah mendukung situs!",
+    "Thank you for contributing to the learning materials.": "Terima kasih atas kontribusinya untuk materi belajar.",
+    "Comment: sample comment from a donor.": "Komentar: contoh komentar dari donatur.",
+    "Comment: no comment.": "Komentar: tanpa komentar.",
+    "Every donation helps move the project forward ?": "Setiap donasi membantu proyek ini terus berkembang ?",
+    "Start": "Mulai",
+    "Start learning": "Mulai belajar",
+    "Topics": "Topik",
+    "Examples": "Contoh",
+    "Reference": "Referensi",
+    "Search": "Cari",
+    "Sections": "Bagian",
+    "Menu": "Menu",
+    "Copy": "Salin",
+    "Copied": "Tersalin",
+    "Clear": "Bersihkan",
+    "Name:": "Nama:",
+    "Description": "Deskripsi",
+    "Syntax": "Sintaks",
+    "Example": "Contoh",
+    "Note": "Catatan",
+    "Category": "Kategori",
+    "When to use": "Kapan digunakan",
+    "What it is used for": "Untuk apa digunakan",
+    "All guide topics are shown.": "Semua topik panduan ditampilkan.",
+    "All tags and attributes are shown.": "Semua tag dan atribut ditampilkan.",
+    "All selectors and properties are shown.": "Semua selector dan properti ditampilkan.",
+    "HTML guide": "Panduan HTML",
+    "CSS guide": "Panduan CSS",
+    "JavaScript guide": "Panduan JavaScript",
+    "C# guide": "Panduan C#",
+    "Python guide": "Panduan Python",
+    "C++ guide": "Panduan C++",
+    "Java guide": "Panduan Java",
+    "JSON guide": "Panduan JSON",
+    "Go to CSS": "Buka CSS",
+    "Go to JavaScript": "Buka JavaScript",
+    "Back to HTML": "Kembali ke HTML",
+    "Web page structure: tags, attributes, forms, tables, media, and semantics.": "Struktur halaman web: tag, atribut, form, tabel, media, dan semantik.",
+    "Page styling: selectors, colors, fonts, spacing, flexbox, grid, and responsiveness.": "Tampilan halaman: selector, warna, font, jarak, flexbox, grid, dan responsivitas.",
+    "Browser interactivity: variables, functions, arrays, DOM, events, fetch, and localStorage.": "Interaktivitas browser: variabel, fungsi, array, DOM, event, fetch, dan localStorage.",
+    ".NET, Unity, backend, and OOP: types, classes, methods, lists, files, LINQ, and error handling.": ".NET, Unity, backend, dan OOP: tipe, class, method, list, file, LINQ, dan penanganan error.",
+    "A simple language for scripts, automation, web, files, OOP, lists, dictionaries, and modules.": "Bahasa sederhana untuk skrip, otomatisasi, web, file, OOP, list, dictionary, dan modul.",
+    "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.": "Bahasa kuat untuk game, pemrograman sistem, STL, pointer, reference, dan kode berperforma tinggi.",
+    "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.": "Bahasa untuk Android, backend, JVM, sistem besar, OOP, collection, file, dan interface.",
+    "Data exchange format: objects, arrays, value types, API, JSON.parse(), JSON.stringify(), and configurations.": "Format pertukaran data: object, array, tipe nilai, API, JSON.parse(), JSON.stringify(), dan konfigurasi.",
+    "Enter a topic, type, or keyword": "Masukkan topik, tipe, atau kata kunci",
+    "Enter a topic, type, method, or word from a description": "Masukkan topik, tipe, method, atau kata dari deskripsi",
+    "Enter a tag, attribute, or word from a description": "Masukkan tag, atribut, atau kata dari deskripsi",
+    "Enter a selector, property, or word from a description": "Masukkan selector, properti, atau kata dari deskripsi",
+    "Main menu": "Menu utama",
+    "Quick navigation": "Navigasi cepat",
+    "Found:": "Ditemukan:",
+    "registers": "register",
+    "instructions": "instruksi",
+    "commands": "perintah",
+    "topics": "topik",
+    "examples": "contoh",
+    "reference entries": "entri referensi",
+    "tags": "tag",
+    "attributes": "atribut",
+    "selectors": "selector",
+    "properties": "properti",
+    "blocks": "blok",
+    "words": "kata",
+    "Programming Lessons / Language chooser": "Programming Lessons / Pilihan bahasa",
+    "HTML Lessons / HTML Guide": "HTML Lessons / Panduan HTML",
+    "CSS Lessons / CSS Guide": "CSS Lessons / Panduan CSS",
+    "JavaScript Lessons / JavaScript Guide": "JavaScript Lessons / Panduan JavaScript",
+    "C# Lessons / C# Guide": "C# Lessons / Panduan C#",
+    "Python Lessons / Python Guide": "Python Lessons / Panduan Python",
+    "C++ Lessons / C++ Guide": "C++ Lessons / Panduan C++",
+    "Java Lessons / Java Guide": "Java Lessons / Panduan Java",
+    "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON"
+  };
+
+  function toIndonesian(value) {
+    if (lang !== "id" || !value) return value;
+    const exact = englishToIndonesian[value];
+    if (exact) return exact;
+    return Object.keys(englishToIndonesian)
+      .sort((a, b) => b.length - a.length)
+      .reduce((text, source) => text.replaceAll(source, englishToIndonesian[source]), value);
+  }
+
+  const englishToJapanese = {
+    "Choose a language to learn": "学びたい言語を選択",
+    "Available guides": "利用できるガイド",
+    "Language chooser": "言語選択",
+    "About the site": "サイトについて",
+    "Programming Lessons is a simple learning reference for anyone who wants to quickly understand the basics of programming, web development, and popular languages.": "Programming Lessons は、プログラミング、Web 開発、人気言語の基礎をすばやく理解したい人のためのシンプルな学習リファレンスです。",
+    "Short explanations": "短い説明",
+    "Each topic is explained simply: what it is, where it is used, and what it looks like in code.": "各トピックは、それが何か、どこで使うか、コードではどう見えるかを簡単に説明しています。",
+    "Code examples": "コード例",
+    "The guides include ready-made snippets you can read, copy, and adapt to your own tasks.": "ガイドには、読んだりコピーしたり、自分の課題に合わせて変更できるコード片があります。",
+    "Practice": "練習",
+    "At the end of the pages there are self-check tasks with hints, code checking, and a sample solution.": "各ページの最後には、ヒント、コードチェック、解答例付きの自己確認タスクがあります。",
+    "Site languages": "サイトの言語",
+    "The interface supports Ukrainian, English, and Russian through the switcher at the top of the site.": "インターフェースは、サイト上部の切り替えボタンでウクライナ語、英語、ロシア語、日本語に対応しています。",
+    "The interface supports Ukrainian, English, Russian, and Indonesian through the switcher at the top of the site.": "インターフェースは、サイト上部の切り替えボタンでウクライナ語、英語、ロシア語、インドネシア語、日本語に対応しています。",
+    "The interface supports Ukrainian, English, Russian, Indonesian, and Japanese through the switcher at the top of the site.": "インターフェースは、サイト上部の切り替えボタンでウクライナ語、英語、ロシア語、インドネシア語、日本語に対応しています。",
+    "Open": "開く",
+    "Support": "サポート",
+    "Donation Goal": "寄付目標",
+    "Site development": "サイト開発",
+    "Support me so I can develop the site more actively and add new content.": "サイトをより積極的に開発し、新しいコンテンツを追加できるよう支援してください。",
+    "Support the site": "サイトを支援",
+    "Check before donation": "寄付前チェック",
+    "Choose the course you studied, answer a random question, and unlock the support button.": "学習したコースを選び、ランダムな質問に答えるとサポートボタンが開きます。",
+    "Course": "コース",
+    "Question": "質問",
+    "The question will appear here.": "ここに質問が表示されます。",
+    "Answer": "回答",
+    "Write a short answer": "短い回答を書く",
+    "Check": "確認",
+    "Another question": "別の質問",
+    "Raised": "集まった金額",
+    "Goal: 10,000 USD": "目標: 10,000 USD",
+    "Progress is updated manually after donations.": "進捗は寄付後に手動で更新されます。",
+    "Donation thanks": "寄付への感謝",
+    "Here you can manually add people who supported the site.": "ここにサイトを支援してくれた人を手動で追加できます。",
+    "Donor name": "寄付者名",
+    "Thank you for supporting the site!": "サイトを支援してくれてありがとうございます！",
+    "Thank you for contributing to the learning materials.": "学習資料への貢献ありがとうございます。",
+    "Comment: sample comment from a donor.": "コメント: 寄付者からのコメント例。",
+    "Comment: no comment.": "コメント: コメントなし。",
+    "Every donation helps move the project forward ⚡": "すべての寄付がプロジェクトの前進につながります ⚡",
+    "Start": "開始",
+    "Start learning": "学習開始",
+    "Topics": "トピック",
+    "Examples": "例",
+    "Reference": "リファレンス",
+    "Search": "検索",
+    "Sections": "セクション",
+    "Menu": "メニュー",
+    "Copy": "コピー",
+    "Copied": "コピー済み",
+    "Clear": "クリア",
+    "Name:": "名前:",
+    "Description": "説明",
+    "Syntax": "構文",
+    "Example": "例",
+    "Note": "メモ",
+    "Category": "カテゴリ",
+    "When to use": "使う場面",
+    "What it is used for": "用途",
+    "All guide topics are shown.": "すべてのガイドトピックを表示しています。",
+    "All tags and attributes are shown.": "すべてのタグと属性を表示しています。",
+    "All selectors and properties are shown.": "すべてのセレクタとプロパティを表示しています。",
+    "HTML guide": "HTML ガイド",
+    "CSS guide": "CSS ガイド",
+    "JavaScript guide": "JavaScript ガイド",
+    "C# guide": "C# ガイド",
+    "Python guide": "Python ガイド",
+    "C++ guide": "C++ ガイド",
+    "Java guide": "Java ガイド",
+    "JSON guide": "JSON ガイド",
+    "Go to CSS": "CSS へ移動",
+    "Go to JavaScript": "JavaScript へ移動",
+    "Back to HTML": "HTML に戻る",
+    "Web page structure: tags, attributes, forms, tables, media, and semantics.": "Web ページ構造: タグ、属性、フォーム、表、メディア、セマンティクス。",
+    "Page styling: selectors, colors, fonts, spacing, flexbox, grid, and responsiveness.": "ページ装飾: セレクタ、色、フォント、余白、flexbox、grid、レスポンシブ対応。",
+    "Browser interactivity: variables, functions, arrays, DOM, events, fetch, and localStorage.": "ブラウザのインタラクション: 変数、関数、配列、DOM、イベント、fetch、localStorage。",
+    ".NET, Unity, backend, and OOP: types, classes, methods, lists, files, LINQ, and error handling.": ".NET、Unity、バックエンド、OOP: 型、クラス、メソッド、リスト、ファイル、LINQ、エラー処理。",
+    "A simple language for scripts, automation, web, files, OOP, lists, dictionaries, and modules.": "スクリプト、自動化、Web、ファイル、OOP、リスト、辞書、モジュール向けのシンプルな言語。",
+    "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.": "ゲーム、システムプログラミング、STL、ポインタ、参照、高性能コード向けの強力な言語。",
+    "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.": "Android、バックエンド、JVM、大規模システム、OOP、コレクション、ファイル、インターフェース向けの言語。",
+    "Data exchange format: objects, arrays, value types, API, JSON.parse(), JSON.stringify(), and configurations.": "データ交換形式: オブジェクト、配列、値の型、API、JSON.parse()、JSON.stringify()、設定。",
+    "Enter a topic, type, or keyword": "トピック、型、キーワードを入力",
+    "Enter a topic, type, method, or word from a description": "トピック、型、メソッド、説明内の単語を入力",
+    "Enter a tag, attribute, or word from a description": "タグ、属性、説明内の単語を入力",
+    "Enter a selector, property, or word from a description": "セレクタ、プロパティ、説明内の単語を入力",
+    "Main menu": "メインメニュー",
+    "Quick navigation": "クイックナビゲーション",
+    "Found:": "見つかりました:",
+    "registers": "レジスタ",
+    "instructions": "命令",
+    "commands": "コマンド",
+    "topics": "トピック",
+    "examples": "例",
+    "reference entries": "リファレンス項目",
+    "tags": "タグ",
+    "attributes": "属性",
+    "selectors": "セレクタ",
+    "properties": "プロパティ",
+    "blocks": "ブロック",
+    "words": "単語",
+    "Programming Lessons / Language chooser": "Programming Lessons / 言語選択",
+    "HTML Lessons / HTML Guide": "HTML Lessons / HTML ガイド",
+    "CSS Lessons / CSS Guide": "CSS Lessons / CSS ガイド",
+    "JavaScript Lessons / JavaScript Guide": "JavaScript Lessons / JavaScript ガイド",
+    "C# Lessons / C# Guide": "C# Lessons / C# ガイド",
+    "Python Lessons / Python Guide": "Python Lessons / Python ガイド",
+    "C++ Lessons / C++ Guide": "C++ Lessons / C++ ガイド",
+    "Java Lessons / Java Guide": "Java Lessons / Java ガイド",
+    "JSON Lessons / JSON Guide": "JSON Lessons / JSON ガイド"
+  };
+
+  function toJapanese(value) {
+    if (lang !== "ja" || !value) return value;
+    const exact = englishToJapanese[value];
+    if (exact) return exact;
+    return Object.keys(englishToJapanese)
+      .sort((a, b) => b.length - a.length)
+      .reduce((text, source) => text.replaceAll(source, englishToJapanese[source]), value);
+  }
+
+  function translateCurrent(value) {
+    return toJapanese(toIndonesian(value));
   }
 
   const titleMap = {
@@ -1015,15 +1315,15 @@
   };
 
   function translateFragments(value) {
-    const fragments = fragmentMap[lang] || {};
+    const fragments = fragmentMap[lang] || (lang === "id" || lang === "ja" ? fragmentMap.en : {}) || {};
     return Object.keys(fragments)
       .sort((a, b) => b.length - a.length)
-      .reduce((text, source) => text.replaceAll(source, fragments[source]), value);
+      .reduce((text, source) => text.replaceAll(source, translateCurrent(fragments[source])), value);
   }
 
   const substringCache = {};
   function translateKnownSubstrings(value) {
-    const map = dict[lang] || {};
+    const map = dict[lang] || (lang === "id" || lang === "ja" ? dict.en : {}) || {};
     if (!substringCache[lang]) {
       substringCache[lang] = Object.keys(map)
         .filter((key) => /[\u0400-\u04FF]/.test(key) && key.length > 3)
@@ -1038,7 +1338,7 @@
 
   function translateValue(value) {
     if (lang === "uk" || !value) return value;
-    const map = dict[lang] || {};
+    const map = dict[lang] || (lang === "id" || lang === "ja" ? dict.en : {}) || {};
     const trimmed = value.trim();
     if (!trimmed) return value;
 
@@ -1076,27 +1376,212 @@
         }
       };
 
-      return Object.entries(replacements[lang] || {}).reduce(
-        (text, [from, to]) => text.replaceAll(from, to),
+      return Object.entries(replacements[lang] || (lang === "id" || lang === "ja" ? replacements.en : {}) || {}).reduce(
+        (text, [from, to]) => text.replaceAll(from, translateCurrent(to)),
         trimmed
       );
     }
 
     const translated = map[trimmed];
-    if (!translated) return translateKnownSubstrings(translateFragments(value));
-    return value.replace(trimmed, translated);
+    if (!translated) return translateCurrent(translateKnownSubstrings(translateFragments(value)));
+    return value.replace(trimmed, translateCurrent(translated));
   }
 
   function shouldSkip(node) {
     const parent = node.parentElement;
-    return !parent || parent.closest("script, style, textarea");
+    return !parent || parent.closest("script, style, textarea, pre, code");
+  }
+
+  const indexCardText = {
+    en: {
+      HTML: { text: "Web page structure: tags, attributes, forms, tables, media, and semantics.", pills: ["tags", "attributes", "examples"], button: "Open" },
+      CSS: { text: "Page styling: selectors, colors, fonts, spacing, flexbox, grid, and responsiveness.", pills: ["styles", "flex/grid", "responsive"], button: "Open" },
+      JavaScript: { text: "Browser interactivity: variables, functions, arrays, DOM, events, fetch, and localStorage.", pills: ["DOM", "events", "demos"], button: "Open" },
+      "C#": { text: ".NET, Unity, backend, and OOP: types, classes, methods, lists, files, LINQ, and error handling.", pills: [".NET", "OOP", "LINQ"], button: "Open" },
+      Python: { text: "A simple language for scripts, automation, web, files, OOP, lists, dictionaries, and modules.", pills: ["scripts", "automation", "OOP"], button: "Open" },
+      "C++": { text: "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.", pills: ["STL", "pointers", "OOP"], button: "Open" },
+      Java: { text: "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.", pills: ["JVM", "Android", "OOP"], button: "Open" },
+      Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
+      Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
+      C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
+      SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
+      JSON: { text: "Data exchange format: objects, arrays, value types, API, JSON.parse(), JSON.stringify(), and configurations.", pills: ["data", "API", "objects"], button: "Open" },
+      TypeScript: { text: "Typed JavaScript for modern projects: types, interface, type, classes, generics, enum, and modules.", pills: ["types", "generics", "JS"], button: "Open" },
+      PHP: { text: "A server-side language for the web: variables, arrays, forms, sessions, files, PDO, MySQL, and error handling.", pills: ["server", "forms", "PDO"], button: "Open" },
+      PowerShell: { text: "A shell and automation language: cmdlets, pipeline, files, processes, services, scripts, and administration.", pills: ["cmdlets", "pipeline", "scripts"], button: "Open" }
+    },
+    id: {
+      HTML: { text: "Struktur halaman web: tag, atribut, form, tabel, media, dan semantik.", pills: ["tag", "atribut", "contoh"], button: "Buka" },
+      CSS: { text: "Tampilan halaman: selector, warna, font, jarak, flexbox, grid, dan responsivitas.", pills: ["gaya", "flex/grid", "responsif"], button: "Buka" },
+      JavaScript: { text: "Interaktivitas browser: variabel, fungsi, array, DOM, event, fetch, dan localStorage.", pills: ["DOM", "event", "demo"], button: "Buka" },
+      "C#": { text: ".NET, Unity, backend, dan OOP: tipe, class, method, list, file, LINQ, dan penanganan error.", pills: [".NET", "OOP", "LINQ"], button: "Buka" },
+      Python: { text: "Bahasa sederhana untuk skrip, otomatisasi, web, file, OOP, list, dictionary, dan modul.", pills: ["skrip", "otomatisasi", "OOP"], button: "Buka" },
+      "C++": { text: "Bahasa kuat untuk game, pemrograman sistem, STL, pointer, reference, dan kode berperforma tinggi.", pills: ["STL", "pointer", "OOP"], button: "Buka" },
+      Java: { text: "Bahasa untuk Android, backend, JVM, sistem besar, OOP, collection, file, dan interface.", pills: ["JVM", "Android", "OOP"], button: "Buka" },
+      Rust: { text: "Bahasa sistem untuk kode cepat dan andal: ownership, borrowing, lifetimes, Result, Vec, dan keamanan memori.", pills: ["ownership", "aman", "performa"], button: "Buka" },
+      Assembly: { text: "Bahasa level rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
+      C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
+      SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
+      JSON: { text: "Format pertukaran data: object, array, tipe nilai, API, JSON.parse(), JSON.stringify(), dan konfigurasi.", pills: ["data", "API", "object"], button: "Buka" },
+      TypeScript: { text: "JavaScript bertipe untuk proyek modern: types, interface, type, class, generics, enum, dan modules.", pills: ["types", "generics", "JS"], button: "Buka" },
+      PHP: { text: "Bahasa server-side untuk web: variabel, array, form, session, file, PDO, MySQL, dan penanganan error.", pills: ["server", "form", "PDO"], button: "Buka" },
+      PowerShell: { text: "Shell dan bahasa otomatisasi: cmdlets, pipeline, file, proses, service, script, dan administrasi.", pills: ["cmdlets", "pipeline", "script"], button: "Buka" }
+    },
+    ja: {
+      HTML: { text: "Webページ構造: タグ、属性、フォーム、表、メディア、セマンティクス。", pills: ["タグ", "属性", "例"], button: "開く" },
+      CSS: { text: "ページ装飾: セレクタ、色、フォント、余白、flexbox、grid、レスポンシブ対応。", pills: ["スタイル", "flex/grid", "レスポンシブ"], button: "開く" },
+      JavaScript: { text: "ブラウザのインタラクション: 変数、関数、配列、DOM、イベント、fetch、localStorage。", pills: ["DOM", "イベント", "デモ"], button: "開く" },
+      "C#": { text: ".NET、Unity、バックエンド、OOP: 型、クラス、メソッド、リスト、ファイル、LINQ、エラー処理。", pills: [".NET", "OOP", "LINQ"], button: "開く" },
+      Python: { text: "スクリプト、自動化、Web、ファイル、OOP、リスト、辞書、モジュール向けのシンプルな言語。", pills: ["スクリプト", "自動化", "OOP"], button: "開く" },
+      "C++": { text: "ゲーム、システムプログラミング、STL、ポインタ、参照、高性能コード向けの強力な言語。", pills: ["STL", "ポインタ", "OOP"], button: "開く" },
+      Java: { text: "Android、バックエンド、JVM、大規模システム、OOP、コレクション、ファイル、インターフェース向けの言語。", pills: ["JVM", "Android", "OOP"], button: "開く" },
+      Rust: { text: "高速で信頼性の高いコードのためのシステム言語: ownership、borrowing、lifetimes、Result、Vec、安全なメモリ管理。", pills: ["ownership", "安全性", "性能"], button: "開く" },
+      Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
+      C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
+      SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },
+      JSON: { text: "データ交換形式: オブジェクト、配列、値の型、API、JSON.parse()、JSON.stringify()、設定。", pills: ["データ", "API", "オブジェクト"], button: "開く" },
+      TypeScript: { text: "現代的なプロジェクト向けの型付きJavaScript: 型、interface、type、クラス、generics、enum、modules。", pills: ["型", "generics", "JS"], button: "開く" },
+      PHP: { text: "Web向けのサーバーサイド言語: 変数、配列、フォーム、セッション、ファイル、PDO、MySQL、エラー処理。", pills: ["サーバー", "フォーム", "PDO"], button: "開く" },
+      PowerShell: { text: "シェル兼自動化言語: cmdlets、pipeline、ファイル、プロセス、サービス、スクリプト、管理。", pills: ["cmdlets", "pipeline", "スクリプト"], button: "開く" }
+    }
+  };
+
+  function translateIndexCards() {
+    const cards = indexCardText[lang];
+    if (!cards) return;
+
+    document.querySelectorAll(".language-card").forEach((card) => {
+      const title = card.querySelector(".card-body h2")?.textContent.trim();
+      const data = cards[title];
+      if (!data) return;
+
+      const description = card.querySelector(".card-body p");
+      if (description) description.textContent = data.text;
+
+      card.querySelectorAll(".pill").forEach((pill, index) => {
+        if (data.pills[index]) pill.textContent = data.pills[index];
+      });
+
+      const button = card.querySelector(".button");
+      if (button) button.textContent = data.button;
+    });
+  }
+
+  // Stable translations for the main language cards. This avoids mixed text when a
+  // page was already partially translated by smaller dictionary fragments.
+  const fixedIndexCardText = {
+    en: {
+      HTML: { text: "Web page structure: tags, attributes, forms, tables, media, and semantics.", pills: ["tags", "attributes", "examples"], button: "Open" },
+      CSS: { text: "Page styling: selectors, colors, fonts, spacing, flexbox, grid, and responsiveness.", pills: ["styles", "flex/grid", "responsive"], button: "Open" },
+      JavaScript: { text: "Browser interactivity: variables, functions, arrays, DOM, events, fetch, and localStorage.", pills: ["DOM", "events", "demos"], button: "Open" },
+      "C#": { text: ".NET, Unity, backend, and OOP: types, classes, methods, lists, files, LINQ, and error handling.", pills: [".NET", "OOP", "LINQ"], button: "Open" },
+      Python: { text: "A simple language for scripts, automation, web, files, OOP, lists, dictionaries, and modules.", pills: ["scripts", "automation", "OOP"], button: "Open" },
+      "C++": { text: "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.", pills: ["STL", "pointers", "OOP"], button: "Open" },
+      Java: { text: "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.", pills: ["JVM", "Android", "OOP"], button: "Open" },
+      Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
+      Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
+      C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
+      SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
+      JSON: { text: "Data exchange format: objects, arrays, value types, API, JSON.parse(), JSON.stringify(), and configurations.", pills: ["data", "API", "objects"], button: "Open" },
+      TypeScript: { text: "Typed JavaScript for modern projects: types, interface, type, classes, generics, enum, and modules.", pills: ["types", "generics", "JS"], button: "Open" },
+      PHP: { text: "A server-side language for the web: variables, arrays, forms, sessions, files, PDO, MySQL, and error handling.", pills: ["server", "forms", "PDO"], button: "Open" },
+      PowerShell: { text: "A shell and automation language: cmdlets, pipeline, files, processes, services, scripts, and administration.", pills: ["cmdlets", "pipeline", "scripts"], button: "Open" }
+    },
+    ru: {
+      HTML: { text: "Структура веб-страницы: теги, атрибуты, формы, таблицы, медиа и семантика.", pills: ["теги", "атрибуты", "примеры"], button: "Открыть" },
+      CSS: { text: "Оформление страниц: селекторы, цвета, шрифты, отступы, flexbox, grid и адаптивность.", pills: ["стили", "flex/grid", "адаптивность"], button: "Открыть" },
+      JavaScript: { text: "Интерактивность в браузере: переменные, функции, массивы, DOM, события, fetch и localStorage.", pills: ["DOM", "события", "демо"], button: "Открыть" },
+      "C#": { text: ".NET, Unity, backend и ООП: типы, классы, методы, списки, файлы, LINQ и обработка ошибок.", pills: [".NET", "ООП", "LINQ"], button: "Открыть" },
+      Python: { text: "Простой язык для скриптов, автоматизации, веба, файлов, ООП, списков, словарей и модулей.", pills: ["скрипты", "автоматизация", "ООП"], button: "Открыть" },
+      "C++": { text: "Мощный язык для игр, системного программирования, STL, указателей, ссылок и производительного кода.", pills: ["STL", "указатели", "ООП"], button: "Открыть" },
+      Java: { text: "Язык для Android, backend, JVM, больших систем, ООП, коллекций, файлов и интерфейсов.", pills: ["JVM", "Android", "ООП"], button: "Открыть" },
+      Rust: { text: "Системный язык для быстрого и надежного кода: ownership, borrowing, lifetimes, Result, Vec и безопасность памяти.", pills: ["ownership", "безопасность", "performance"], button: "Открыть" },
+      Assembly: { text: "Низкоуровневый язык для понимания CPU: регистры, память, стек, инструкции, syscall и NASM x86-64.", pills: ["x86-64", "регистры", "syscall"], button: "Открыть" },
+      C: { text: "Классический системный язык: синтаксис, типы, массивы, строки, указатели, struct, malloc/free и файлы.", pills: ["указатели", "память", "stdio"], button: "Открыть" },
+      SQL: { text: "Язык для работы с базами данных: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, индексы и запросы.", pills: ["SELECT", "JOIN", "database"], button: "Открыть" },
+      JSON: { text: "Формат обмена данными: объекты, массивы, типы значений, API, JSON.parse(), JSON.stringify() и конфигурации.", pills: ["данные", "API", "объекты"], button: "Открыть" },
+      TypeScript: { text: "Типизированный JavaScript для современных проектов: типы, interface, type, классы, generics, enum и modules.", pills: ["типы", "generics", "JS"], button: "Открыть" },
+      PHP: { text: "Серверный язык для веба: переменные, массивы, формы, сессии, файлы, PDO, MySQL и обработка ошибок.", pills: ["сервер", "формы", "PDO"], button: "Открыть" },
+      PowerShell: { text: "Оболочка и язык автоматизации: cmdlets, pipeline, файлы, процессы, службы, скрипты и администрирование.", pills: ["cmdlets", "pipeline", "скрипты"], button: "Открыть" }
+    },
+    id: {
+      HTML: { text: "Struktur halaman web: tag, atribut, form, tabel, media, dan semantik.", pills: ["tag", "atribut", "contoh"], button: "Buka" },
+      CSS: { text: "Tampilan halaman: selector, warna, font, jarak, flexbox, grid, dan responsivitas.", pills: ["gaya", "flex/grid", "responsif"], button: "Buka" },
+      JavaScript: { text: "Interaktivitas browser: variabel, fungsi, array, DOM, event, fetch, dan localStorage.", pills: ["DOM", "event", "demo"], button: "Buka" },
+      "C#": { text: ".NET, Unity, backend, dan OOP: tipe, class, method, list, file, LINQ, dan penanganan error.", pills: [".NET", "OOP", "LINQ"], button: "Buka" },
+      Python: { text: "Bahasa sederhana untuk skrip, otomatisasi, web, file, OOP, list, dictionary, dan modul.", pills: ["skrip", "otomatisasi", "OOP"], button: "Buka" },
+      "C++": { text: "Bahasa kuat untuk game, pemrograman sistem, STL, pointer, reference, dan kode berperforma tinggi.", pills: ["STL", "pointer", "OOP"], button: "Buka" },
+      Java: { text: "Bahasa untuk Android, backend, JVM, sistem besar, OOP, collection, file, dan interface.", pills: ["JVM", "Android", "OOP"], button: "Buka" },
+      Rust: { text: "Bahasa sistem untuk kode cepat dan andal: ownership, borrowing, lifetimes, Result, Vec, dan keamanan memori.", pills: ["ownership", "keamanan", "performa"], button: "Buka" },
+      Assembly: { text: "Bahasa tingkat rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
+      C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
+      SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
+      JSON: { text: "Format pertukaran data: object, array, tipe nilai, API, JSON.parse(), JSON.stringify(), dan konfigurasi.", pills: ["data", "API", "object"], button: "Buka" },
+      TypeScript: { text: "JavaScript bertipe untuk proyek modern: tipe, interface, type, class, generics, enum, dan modules.", pills: ["tipe", "generics", "JS"], button: "Buka" },
+      PHP: { text: "Bahasa server-side untuk web: variabel, array, form, session, file, PDO, MySQL, dan penanganan error.", pills: ["server", "form", "PDO"], button: "Buka" },
+      PowerShell: { text: "Shell dan bahasa otomatisasi: cmdlets, pipeline, file, proses, service, script, dan administrasi.", pills: ["cmdlets", "pipeline", "script"], button: "Buka" }
+    },
+    ja: {
+      HTML: { text: "Webページ構造: タグ、属性、フォーム、表、メディア、セマンティクス。", pills: ["タグ", "属性", "例"], button: "開く" },
+      CSS: { text: "ページ装飾: セレクタ、色、フォント、余白、flexbox、grid、レスポンシブ対応。", pills: ["スタイル", "flex/grid", "レスポンシブ"], button: "開く" },
+      JavaScript: { text: "ブラウザのインタラクション: 変数、関数、配列、DOM、イベント、fetch、localStorage。", pills: ["DOM", "イベント", "デモ"], button: "開く" },
+      "C#": { text: ".NET、Unity、バックエンド、OOP: 型、クラス、メソッド、リスト、ファイル、LINQ、エラー処理。", pills: [".NET", "OOP", "LINQ"], button: "開く" },
+      Python: { text: "スクリプト、自動化、Web、ファイル、OOP、リスト、辞書、モジュール向けのシンプルな言語。", pills: ["スクリプト", "自動化", "OOP"], button: "開く" },
+      "C++": { text: "ゲーム、システムプログラミング、STL、ポインタ、参照、高性能コード向けの強力な言語。", pills: ["STL", "ポインタ", "OOP"], button: "開く" },
+      Java: { text: "Android、バックエンド、JVM、大規模システム、OOP、コレクション、ファイル、インターフェース向けの言語。", pills: ["JVM", "Android", "OOP"], button: "開く" },
+      Rust: { text: "高速で信頼性の高いコードのためのシステム言語: ownership、borrowing、lifetimes、Result、Vec、メモリ安全性。", pills: ["ownership", "安全性", "performance"], button: "開く" },
+      Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
+      C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
+      SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },
+      JSON: { text: "データ交換形式: オブジェクト、配列、値の型、API、JSON.parse()、JSON.stringify()、設定。", pills: ["データ", "API", "オブジェクト"], button: "開く" },
+      TypeScript: { text: "現代的なプロジェクト向けの型付きJavaScript: 型、interface、type、クラス、generics、enum、modules。", pills: ["型", "generics", "JS"], button: "開く" },
+      PHP: { text: "Web向けのサーバーサイド言語: 変数、配列、フォーム、セッション、ファイル、PDO、MySQL、エラー処理。", pills: ["サーバー", "フォーム", "PDO"], button: "開く" },
+      PowerShell: { text: "シェル兼自動化言語: cmdlets、pipeline、ファイル、プロセス、サービス、スクリプト、管理。", pills: ["cmdlets", "pipeline", "スクリプト"], button: "開く" }
+    }
+  };
+
+  function getIndexCardKey(card) {
+    const title = card.querySelector(".card-body h2")?.textContent.trim();
+    const imageAlt = card.querySelector(".language-visual img")?.getAttribute("alt")?.trim();
+    const href = card.querySelector(".button")?.getAttribute("href") || "";
+    if (fixedIndexCardText.en[title]) return title;
+    if (fixedIndexCardText.en[imageAlt]) return imageAlt;
+    if (href.includes("csharp")) return "C#";
+    if (href.includes("cpp")) return "C++";
+    if (href.includes("javascript")) return "JavaScript";
+    if (href.includes("typescript")) return "TypeScript";
+    if (href.includes("powershell")) return "PowerShell";
+    if (href.includes("assembler")) return "Assembly";
+    const fileKey = href.split("?")[0].split("#")[0].replace(".html", "");
+    return Object.keys(fixedIndexCardText.en).find((key) => key.toLowerCase() === fileKey);
+  }
+
+  function translateIndexCards() {
+    const cards = fixedIndexCardText[lang] || fixedIndexCardText.en;
+    if (!document.querySelector(".language-card")) return;
+
+    document.querySelectorAll(".language-card").forEach((card) => {
+      const key = getIndexCardKey(card);
+      const data = key && cards[key];
+      if (!data) return;
+
+      const description = card.querySelector(".card-body p");
+      if (description) description.textContent = data.text;
+
+      card.querySelectorAll(".pill").forEach((pill, index) => {
+        if (data.pills[index]) pill.textContent = data.pills[index];
+      });
+
+      const button = card.querySelector(".button");
+      if (button) button.textContent = data.button;
+    });
   }
 
   function translatePage() {
     if (lang === "uk") return;
 
-    const titles = titleMap[lang] || {};
-    if (titles[document.title]) document.title = titles[document.title];
+    const titles = titleMap[lang] || (lang === "id" || lang === "ja" ? titleMap.en : {}) || {};
+    if (titles[document.title]) document.title = translateCurrent(titles[document.title]);
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     const nodes = [];
@@ -1112,6 +1597,8 @@
         }
       });
     });
+
+    translateIndexCards();
   }
 
   function updateLocalLinks() {
@@ -1134,7 +1621,7 @@
 
     const picker = document.createElement("div");
     picker.className = "language-picker";
-    picker.setAttribute("aria-label", lang === "en" ? "Site language" : lang === "ru" ? "Язык сайта" : "Мова сайту");
+    picker.setAttribute("aria-label", lang === "en" ? "Site language" : lang === "ru" ? "Язык сайта" : lang === "id" ? "Bahasa situs" : lang === "ja" ? "サイトの言語" : "Мова сайту");
 
     supported.forEach((code) => {
       const button = document.createElement("button");

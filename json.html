@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="icon/index.png" type="image/png">
+  <link rel="icon" href="icon/JSON.png" type="image/png">
   <title>JSON Lessons / JSON Довідник</title>
   <style>
     :root {
@@ -446,7 +446,7 @@
 
   <script>
     /* Local offline data and UI translations for JSON Lessons. */
-    const supported = ["uk", "en", "ru"];
+    const supported = ["uk", "en", "ru", "id", "ja"];
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("lang");
     const saved = localStorage.getItem("siteLanguage");
@@ -569,6 +569,67 @@
         syntaxLabel: "Синтаксис",
         example: "Пример",
         note: "Примечание"
+      },
+      id: {
+        brand: "Programming Lessons",
+        menu: "Menu",
+        languageChoice: "Pilihan bahasa",
+        nav: ["Apa itu JSON", "Sintaks", "Objek", "Array", "Tipe data", "Struktur bertingkat", "Formatting", "JSON dan JavaScript", "JSON dan API", "JSON vs XML", "Kesalahan", "Contoh", "Referensi", "Pencarian"],
+        heroTitle: "JSON Lessons",
+        heroText: "Panduan JSON dalam bahasa Indonesia dengan contoh, struktur data, dan penggunaan dalam pemrograman.",
+        buttons: ["Mulai", "Topik", "Contoh", "Referensi"],
+        searchTitle: "Pencarian",
+        searchLabel: "Masukkan topik, tipe, command, atau kata kunci",
+        searchPlaceholder: "Contoh: object, array, parse, API",
+        clear: "Bersihkan",
+        allShown: "Semua topik JSON ditampilkan.",
+        noResults: "Tidak ada hasil untuk pencarian ini.",
+        copy: "Salin",
+        copied: "Tersalin",
+        dataTypes: "Tipe data",
+        examples: "Contoh praktis",
+        reference: "Referensi",
+        name: "Nama",
+        description: "Deskripsi",
+        syntax: "Sintaks",
+        example: "Contoh",
+        note: "Catatan"
+      },
+      ja: {
+        brand: "Programming Lessons",
+        menu: "メニュー",
+        languageChoice: "言語選択",
+        heroDescription: "JSONの例、データ構造、プログラミングでの使い方を学ぶガイド。",
+        start: "開始",
+        topics: "トピック",
+        examples: "例",
+        reference: "リファレンス",
+        sections: "セクション",
+        whatIsJson: "JSONとは",
+        syntax: "JSON構文",
+        objects: "オブジェクト",
+        arrays: "配列",
+        dataTypes: "データ型",
+        nested: "ネスト構造",
+        formatting: "整形",
+        jsonAndJs: "JSONとJavaScript",
+        jsonAndApi: "JSONとAPI",
+        jsonVsXml: "JSON vs XML",
+        errors: "JSONエラー",
+        introLead: "JSONは、構造化データを保存・交換するためのテキスト形式です。",
+        syntaxLead: "JSONデータはキーと値のペアで書きます。キーは必ずダブルクォートで囲みます。",
+        clear: "クリア",
+        copy: "コピー",
+        copied: "コピー済み",
+        searchPlaceholder: "トピック、データ型、キーワードを入力",
+        allShown: "すべてのJSONトピックを表示しています。",
+        found: "見つかりました: {count} ブロック。",
+        nothingFound: "検索結果はありません。",
+        name: "名前",
+        description: "説明",
+        syntaxLabel: "構文",
+        example: "例",
+        note: "メモ"
       }
     };
 
@@ -737,9 +798,9 @@
       }
     };
 
-    const t = ui[lang];
-    const page = content[lang];
-    document.title = lang === "uk" ? "JSON Lessons / JSON Довідник" : lang === "ru" ? "JSON Lessons / JSON Справочник" : "JSON Lessons / JSON Guide";
+    const t = ui[lang] || (lang === "id" || lang === "ja" ? ui.en : ui.en);
+    const page = content[lang] || (lang === "id" || lang === "ja" ? content.uk : content.en);
+    document.title = lang === "uk" ? "JSON Lessons / JSON Довідник" : lang === "ru" ? "JSON Lessons / JSON Справочник" : lang === "id" ? "JSON Lessons / Panduan JSON" : lang === "ja" ? "JSON Lessons / JSON ガイド" : "JSON Lessons / JSON Guide";
 
     function escapeHtml(value) {
       return String(value)
@@ -835,11 +896,13 @@
       if (!header) return;
       const picker = document.createElement("div");
       picker.className = "language-picker";
-      picker.setAttribute("aria-label", lang === "ru" ? "Язык сайта" : "Site language");
+      picker.setAttribute("aria-label", lang === "ru" ? "Язык сайта" : lang === "id" ? "Bahasa situs" : lang === "ja" ? "サイトの言語" : "Site language");
       [
         ["uk", "UKR"],
         ["en", "ENG"],
-        ["ru", "RU"]
+        ["ru", "RU"],
+        ["id", "ID"],
+        ["ja", "JA"]
       ].forEach(([code, label]) => {
         const button = document.createElement("button");
         button.type = "button";
@@ -969,5 +1032,8 @@
     });
     updateSearch();
   </script>
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+  <script src="practice.js"></script>
 </body>
 </html>
