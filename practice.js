@@ -14,6 +14,7 @@
     cpp: "C++",
     java: "Java",
     rust: "Rust",
+    go: "Go",
     assembler: "Assembly",
     c: "C",
     sql: "SQL",
@@ -389,6 +390,65 @@
         },
         checks: ["option<i32>", "some", "none", "match", "println!"],
         solution: 'let value: Option<i32> = Some(5);\nmatch value {\n    Some(number) => println!("{}", number),\n    None => println!("No value"),\n}'
+      }
+    ],
+    go: [
+      {
+        title: { uk: "Slice і append", en: "Slice and append", ru: "Slice и append", id: "Slice dan append", ja: "slice と append" },
+        body: {
+          uk: "Напиши Go-код: створи slice чисел, додай ще одне число через append і виведи всі значення циклом for range.",
+          en: "Write Go code: create a slice of numbers, add one more number with append, and print all values using for range.",
+          ru: "Напиши Go-код: создай slice чисел, добавь еще одно число через append и выведи все значения циклом for range.",
+          id: "Tulis kode Go: buat slice angka, tambahkan satu angka dengan append, lalu cetak semua nilai memakai for range.",
+          ja: "Go のコードを書いてください: 数値の slice を作り、append で数値を追加し、for range ですべての値を出力します。"
+        },
+        hints: {
+          uk: ["Slice можна створити як []int{1, 2, 3}.", "append повертає оновлений slice.", "for _, value := range numbers перебирає значення."],
+          en: ["A slice can be created as []int{1, 2, 3}.", "append returns the updated slice.", "for _, value := range numbers iterates values."],
+          ru: ["Slice можно создать как []int{1, 2, 3}.", "append возвращает обновленный slice.", "for _, value := range numbers перебирает значения."],
+          id: ["Slice bisa dibuat sebagai []int{1, 2, 3}.", "append mengembalikan slice yang sudah diperbarui.", "for _, value := range numbers melakukan iterasi nilai."],
+          ja: ["slice は []int{1, 2, 3} のように作れます。", "append は更新された slice を返します。", "for _, value := range numbers で値を順番に処理できます。"]
+        },
+        checks: ["package main", "import", "fmt", "func main", "[]int", "append", "for", "range", "fmt.println"],
+        solution: 'package main\n\nimport "fmt"\n\nfunc main() {\n    numbers := []int{1, 2, 3}\n    numbers = append(numbers, 4)\n\n    for _, number := range numbers {\n        fmt.Println(number)\n    }\n}'
+      },
+      {
+        title: { uk: "Struct і метод", en: "Struct and Method", ru: "Struct и метод", id: "Struct dan method", ja: "struct とメソッド" },
+        body: {
+          uk: "Створи struct Player з полями Name і Score, додай метод Print() з receiver і виведи дані через fmt.Println.",
+          en: "Create a Player struct with Name and Score fields, add a Print() method with a receiver, and output data with fmt.Println.",
+          ru: "Создай struct Player с полями Name и Score, добавь метод Print() с receiver и выведи данные через fmt.Println.",
+          id: "Buat struct Player dengan field Name dan Score, tambahkan method Print() dengan receiver, lalu tampilkan data dengan fmt.Println.",
+          ja: "Name と Score フィールドを持つ Player struct を作り、receiver 付きの Print() メソッドを追加し、fmt.Println で表示します。"
+        },
+        hints: {
+          uk: ["Struct оголошується через type Player struct.", "Receiver пишеться перед назвою методу: func (p Player) Print().", "Створи об’єкт Player у main()."],
+          en: ["A struct is declared with type Player struct.", "A receiver is written before the method name: func (p Player) Print().", "Create a Player object inside main()."],
+          ru: ["Struct объявляется через type Player struct.", "Receiver пишется перед названием метода: func (p Player) Print().", "Создай объект Player внутри main()."],
+          id: ["Struct dideklarasikan dengan type Player struct.", "Receiver ditulis sebelum nama method: func (p Player) Print().", "Buat objek Player di dalam main()."],
+          ja: ["struct は type Player struct で宣言します。", "receiver はメソッド名の前に書きます: func (p Player) Print().", "main() の中で Player オブジェクトを作ります。"]
+        },
+        checks: ["type player struct", "name string", "score int", "func (", "print()", "fmt.println", "func main"],
+        solution: 'package main\n\nimport "fmt"\n\ntype Player struct {\n    Name  string\n    Score int\n}\n\nfunc (p Player) Print() {\n    fmt.Println(p.Name, p.Score)\n}\n\nfunc main() {\n    player := Player{Name: "Ivan", Score: 100}\n    player.Print()\n}'
+      },
+      {
+        title: { uk: "Goroutine і channel", en: "Goroutine and channel", ru: "Goroutine и channel", id: "Goroutine dan channel", ja: "goroutine と channel" },
+        body: {
+          uk: "Напиши Go-код: створи channel, запусти goroutine через go func(), передай рядок у канал і прочитай його в main.",
+          en: "Write Go code: create a channel, start a goroutine with go func(), send a string into the channel, and read it in main.",
+          ru: "Напиши Go-код: создай channel, запусти goroutine через go func(), отправь строку в канал и прочитай ее в main.",
+          id: "Tulis kode Go: buat channel, jalankan goroutine dengan go func(), kirim string ke channel, lalu baca di main.",
+          ja: "Go のコードを書いてください: channel を作り、go func() で goroutine を起動し、文字列を channel に送り、main で読み取ります。"
+        },
+        hints: {
+          uk: ["Канал створюється через make(chan string).", "Goroutine запускається ключовим словом go.", "Оператор <- передає або читає значення."],
+          en: ["A channel is created with make(chan string).", "A goroutine starts with the go keyword.", "The <- operator sends or receives a value."],
+          ru: ["Канал создается через make(chan string).", "Goroutine запускается ключевым словом go.", "Оператор <- отправляет или читает значение."],
+          id: ["Channel dibuat dengan make(chan string).", "Goroutine dimulai dengan kata kunci go.", "Operator <- mengirim atau menerima nilai."],
+          ja: ["channel は make(chan string) で作ります。", "goroutine は go キーワードで起動します。", "<- 演算子は値の送信または受信に使います。"]
+        },
+        checks: ["package main", "make(chan string)", "go func", "<-", "fmt.println"],
+        solution: 'package main\n\nimport "fmt"\n\nfunc main() {\n    messages := make(chan string)\n\n    go func() {\n        messages <- "Hello from goroutine"\n    }()\n\n    fmt.Println(<-messages)\n}'
       }
     ],
     assembler: [

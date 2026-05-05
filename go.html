@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon/GO.png" type="image/png">
+  <title>Go Lessons / Go (Golang) Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --surface: #ffffff;
+      --surface-soft: #f0f1f3;
+      --text: #1f2328;
+      --muted: #5f6670;
+      --border: #d9dde3;
+      --border-strong: #b8bec7;
+      --accent: #222222;
+      --code-bg: #f4f4f5;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --max-width: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre, kbd, samp { font-family: Consolas, "Courier New", monospace; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .header-inner, .hero, .layout, .footer {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand { font-weight: 700; white-space: nowrap; }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .top-nav a, .sidebar a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .top-nav a:hover, .top-nav a:focus-visible,
+    .sidebar a:hover, .sidebar a:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+      outline: none;
+    }
+
+    .hero { padding: 60px 18px 38px; }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button, button.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .button:hover, .button:focus-visible { border-color: var(--text); outline: none; }
+
+    .layout {
+      padding: 0 18px 56px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar a { display: block; }
+    main { min-width: 0; }
+
+    .section {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font: inherit;
+    }
+
+    .section-header h2 { margin: 0; font-size: 24px; line-height: 1.25; }
+    .section-header span { color: var(--muted); font-size: 24px; line-height: 1; }
+    .section-content { padding: 18px; min-width: 0; }
+    .section.is-collapsed .section-content { display: none; }
+    .section.is-collapsed .section-header span { transform: rotate(-90deg); }
+    .lead { color: var(--muted); margin-top: 0; }
+
+    .grid, .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .info-card, .doc-card, .example-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .info-card h3, .doc-card h3, .example-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface-soft);
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    dl { margin: 0; display: grid; gap: 8px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); }
+
+    .code-wrap {
+      position: relative;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--code-bg);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      padding: 14px 56px 14px 14px;
+      overflow-x: auto;
+      white-space: pre;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 5px 8px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+    }
+
+    .search-count, .empty {
+      color: var(--muted);
+      margin: 8px 0 0;
+      font-size: 14px;
+    }
+
+    .footer {
+      padding: 24px 18px 40px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .menu-toggle { display: inline-flex; }
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .top-nav { display: none; width: 100%; justify-content: flex-start; }
+      .top-nav.is-open { display: flex; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid, .doc-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      body { font-size: 15px; }
+      .hero { padding-top: 42px; }
+      .hero-actions, .search-box { display: grid; }
+      .button, button.button { width: 100%; }
+      .section-header, .section-content { padding: 14px; }
+      pre { padding: 48px 12px 12px; font-size: 13px; }
+      .copy-btn { left: 8px; right: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">Go Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#intro">Почати</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Go Lessons</h1>
+    <p>Український довідник по Go (Golang) з прикладами, синтаксисом та сучасним підходом до програмування.</p>
+    <div class="hero-actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Розділи сторінки">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Go</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми Go</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main>
+      <section class="section" id="search">
+        <div class="section-content">
+          <div class="search-box">
+            <input class="search-input" id="searchInput" type="search" placeholder="Наприклад: goroutine, slice, map, error">
+            <button class="button" id="clearSearch" type="button">Очистити</button>
+          </div>
+          <p class="search-count" id="searchCount">Показано всі теми довідника.</p>
+        </div>
+      </section>
+
+      <section class="section search-item" id="intro">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Що таке Go</h2><span>⌄</span></button>
+        <div class="section-content">
+          <p class="lead">Go, або Golang, це компільована мова програмування від Google, створена для простого, швидкого і надійного серверного коду.</p>
+          <div class="grid">
+            <article class="info-card">
+              <h3>Що це за мова</h3>
+              <p>Go має простий синтаксис, швидку компіляцію, статичну типізацію і стандартні інструменти для форматування, тестування та збірки.</p>
+            </article>
+            <article class="info-card">
+              <h3>Де використовується</h3>
+              <p>Go часто використовують для бекенду, серверів, мікросервісів, DevOps-інструментів, CLI-програм, API та мережевих сервісів.</p>
+            </article>
+            <article class="info-card">
+              <h3>Переваги</h3>
+              <p>Мова цінується за швидкість, простоту, зрозумілий код, вбудовану concurrency-модель, goroutines і канали.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">fmt.Println()</span></h3>
+              <p>Функція з пакета <code>fmt</code> виводить текст у консоль і додає перехід на новий рядок.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Привіт, світ!")
+}</code></pre>
+          </div>
+          <ul>
+            <li><code>package main</code> оголошує виконуваний пакет програми.</li>
+            <li><code>import "fmt"</code> підключає пакет для форматованого вводу і виводу.</li>
+            <li><code>func main()</code> є точкою входу, з якої починається програма.</li>
+            <li><code>fmt.Println</code> друкує повідомлення у консоль.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section search-item" id="syntax">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Синтаксис</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="grid">
+            <article class="info-card">
+              <h3><span class="badge">package main</span></h3>
+              <p>Оголошує пакет. Для програми, яку можна запустити, потрібен пакет <code>main</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">import</span></h3>
+              <p>Підключає стандартні або сторонні пакети. Наприклад, <code>fmt</code>, <code>os</code>, <code>net/http</code>.</p>
+            </article>
+            <article class="info-card">
+              <h3><span class="badge">func</span></h3>
+              <p>Оголошує функцію. У Go функції можуть повертати одне або кілька значень.</p>
+            </article>
+            <article class="info-card">
+              <h3>Крапка з комою і gofmt</h3>
+              <p>Крапки з комою зазвичай не пишуть вручну. Форматування коду прийнято робити через <code>gofmt</code>.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="types">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Типи даних</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">int</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Ціле число.</dd></div>
+                <div><dt>Приклад</dt><dd><code>var age int = 18</code></dd></div>
+                <div><dt>Коли використовувати</dt><dd>Для кількості, індексів, лічильників і цілих значень.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">float64</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Дробове число подвійної точності.</dd></div>
+                <div><dt>Приклад</dt><dd><code>price := 19.99</code></dd></div>
+                <div><dt>Коли використовувати</dt><dd>Для вимірювань, цін і більшості дробових розрахунків.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">string</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Текстовий рядок.</dd></div>
+                <div><dt>Приклад</dt><dd><code>name := "Ivan"</code></dd></div>
+                <div><dt>Коли використовувати</dt><dd>Для імен, повідомлень, шляхів файлів і будь-якого тексту.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">bool</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Логічне значення <code>true</code> або <code>false</code>.</dd></div>
+                <div><dt>Приклад</dt><dd><code>isReady := true</code></dd></div>
+                <div><dt>Коли використовувати</dt><dd>Для умов, прапорців, станів і перевірок.</dd></div>
+              </dl>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="topics">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Теми Go</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card">
+              <h3>Змінні</h3>
+              <p><code>var</code> оголошує змінну явно, <code>:=</code> коротко створює змінну всередині функції, <code>const</code> створює константу.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var name string = "Olena"
+age := 21
+const appName = "Shop"</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Оператори</h3>
+              <p>Go має арифметичні, логічні оператори та оператори порівняння.</p>
+              <ul>
+                <li>Арифметичні: <code>+ - * / %</code></li>
+                <li>Порівняння: <code>== != &gt; &lt; &gt;= &lt;=</code></li>
+                <li>Логічні: <code>&amp;&amp; || !</code></li>
+              </ul>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>score := 15
+isAdult := age &gt;= 18
+canEnter := isAdult &amp;&amp; score &gt; 10</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Умови</h3>
+              <p><code>if</code> і <code>else</code> дозволяють виконувати різний код залежно від умови.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if age &gt;= 18 {
+    fmt.Println("Доступ дозволено")
+} else {
+    fmt.Println("Доступ заборонено")
+}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Цикли</h3>
+              <p>У Go є один основний цикл — <code>for</code>. Він може працювати як класичний цикл, while-цикл або перебір колекції.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>for i := 0; i &lt; 5; i++ {
+    fmt.Println(i)
+}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Функції</h3>
+              <p>Функція може мати параметри, повертати результат і навіть повертати кілька значень.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>func divide(a int, b int) (int, error) {
+    if b == 0 {
+        return 0, fmt.Errorf("ділення на нуль")
+    }
+    return a / b, nil
+}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Масиви і слайси</h3>
+              <p>Array має фіксовану довжину, а slice гнучкіший і частіше використовується у реальному Go-коді.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>numbers := []int{1, 2, 3}
+numbers = append(numbers, 4)
+fmt.Println(numbers[0])</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Карти map</h3>
+              <p><code>map[key]value</code> зберігає пари ключ-значення. За ключем можна швидко отримати значення.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>ages := map[string]int{
+    "Anna": 22,
+    "Ivan": 25,
+}
+fmt.Println(ages["Ivan"])</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Структури</h3>
+              <p><code>struct</code> описує власний тип з полями. Це основа для моделювання даних у Go.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>type User struct {
+    Name string
+    Age  int
+}
+
+user := User{Name: "Anna", Age: 22}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Методи</h3>
+              <p>Метод — це функція з receiver. Receiver показує, до якого типу належить метод.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>func (u User) SayHello() {
+    fmt.Println("Привіт,", u.Name)
+}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Інтерфейси</h3>
+              <p><code>interface</code> описує поведінку через набір методів. Тип реалізує інтерфейс автоматично, якщо має потрібні методи.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>type Speaker interface {
+    Speak() string
+}</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Goroutines</h3>
+              <p><code>go</code> запускає функцію паралельно. Goroutine легша за звичайний системний потік.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>go func() {
+    fmt.Println("Працюю паралельно")
+}()</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Канали channels</h3>
+              <p><code>chan</code> дозволяє goroutines обмінюватися даними. Оператор <code>&lt;-</code> відправляє або приймає значення.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>messages := make(chan string)
+
+go func() {
+    messages &lt;- "done"
+}()
+
+fmt.Println(&lt;-messages)</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Робота з файлами</h3>
+              <p>Пакет <code>os</code> дозволяє читати й записувати файли. Старий пакет <code>ioutil</code> часто зустрічається у старих прикладах.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>data, err := os.ReadFile("data.txt")
+if err != nil {
+    fmt.Println(err)
+}
+fmt.Println(string(data))</code></pre></div>
+            </article>
+            <article class="doc-card">
+              <h3>Обробка помилок</h3>
+              <p>У Go помилки зазвичай повертаються як значення типу <code>error</code>. Перевірка <code>if err != nil</code> є типовим стилем.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>file, err := os.Open("data.txt")
+if err != nil {
+    return err
+}
+defer file.Close()</code></pre></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="examples">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Практичні приклади</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="example-card">
+              <h3>Hello World</h3>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, world!")
+}</code></pre></div>
+            </article>
+            <article class="example-card">
+              <h3>Робота зі змінними</h3>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>name := "Ivan"
+age := 25
+isStudent := false
+
+fmt.Println(name, age, isStudent)</code></pre></div>
+            </article>
+            <article class="example-card">
+              <h3>Slice приклад</h3>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>skills := []string{"HTML", "CSS"}
+skills = append(skills, "Go")
+
+for _, skill := range skills {
+    fmt.Println(skill)
+}</code></pre></div>
+            </article>
+            <article class="example-card">
+              <h3>Struct приклад</h3>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>type Player struct {
+    Name  string
+    Score int
+}
+
+player := Player{Name: "Max", Score: 100}
+fmt.Println(player.Name)</code></pre></div>
+            </article>
+            <article class="example-card">
+              <h3>Goroutine приклад</h3>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>done := make(chan bool)
+
+go func() {
+    fmt.Println("Task completed")
+    done &lt;- true
+}()
+
+&lt;-done</code></pre></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="reference">
+        <button class="section-header" type="button" aria-expanded="true"><h2>Довідник</h2><span>⌄</span></button>
+        <div class="section-content">
+          <div class="doc-grid">
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">var</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Оголошує змінну з явним або виведеним типом.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>var name type = value</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>var count int = 10</code></dd></div>
+                <div><dt>Примітка</dt><dd>Зручно для глобальних змінних або коли потрібен явний тип.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">:=</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Коротко створює змінну всередині функції.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>name := value</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>age := 18</code></dd></div>
+                <div><dt>Примітка</dt><dd>Не працює на рівні пакета.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">func</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Оголошує функцію або метод.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>func name(params) returnType</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>func add(a int, b int) int</code></dd></div>
+                <div><dt>Примітка</dt><dd>Go підтримує multiple return.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">append</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Додає елемент до slice і повертає оновлений slice.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>append(slice, value)</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>items = append(items, 4)</code></dd></div>
+                <div><dt>Примітка</dt><dd>Результат треба присвоїти назад.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">map</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Колекція пар ключ-значення.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>map[keyType]valueType</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>map[string]int{"age": 25}</code></dd></div>
+                <div><dt>Примітка</dt><dd>Для створення порожньої map часто використовують <code>make</code>.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">struct</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Описує власний тип з полями.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>type Name struct { Field Type }</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>type User struct { Name string }</code></dd></div>
+                <div><dt>Примітка</dt><dd>Поля з великої літери доступні з інших пакетів.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">go</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Запускає функцію як goroutine.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>go functionCall()</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>go sendEmail()</code></dd></div>
+                <div><dt>Примітка</dt><dd>Для синхронізації часто використовують channels або WaitGroup.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">chan</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Тип каналу для обміну даними між goroutines.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>make(chan Type)</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>ch := make(chan string)</code></dd></div>
+                <div><dt>Примітка</dt><dd>Оператор <code>&lt;-</code> використовується для відправки і прийому.</dd></div>
+              </dl>
+            </article>
+            <article class="doc-card">
+              <h3>Назва: <span class="badge">error</span></h3>
+              <dl>
+                <div><dt>Опис</dt><dd>Стандартний тип для помилок.</dd></div>
+                <div><dt>Синтаксис</dt><dd><code>if err != nil</code></dd></div>
+                <div><dt>Приклад</dt><dd><code>return 0, fmt.Errorf("error")</code></dd></div>
+                <div><dt>Примітка</dt><dd>У Go помилки зазвичай перевіряють явно.</dd></div>
+              </dl>
+            </article>
+          </div>
+          <p class="empty" id="emptyMessage" style="display:none;">За цим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Go Lessons / Go (Golang) Довідник.</p>
+  </footer>
+
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+  <script>
+    // Copy code snippets, filter topics, and collapse sections.
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+    const supportedLangs = ["uk", "en", "ru", "id", "ja"];
+    const params = new URLSearchParams(location.search);
+    const savedLang = localStorage.getItem("siteLanguage");
+    const currentLang = supportedLangs.includes(params.get("lang"))
+      ? params.get("lang")
+      : supportedLangs.includes(savedLang)
+        ? savedLang
+        : "en";
+    const uiText = {
+      uk: { found: (count) => `Знайдено: ${count} тем`, all: "Показано всі теми довідника.", copied: "Скопійовано", copy: "Копіювати" },
+      en: { found: (count) => `Found: ${count} topics`, all: "All guide topics are shown.", copied: "Copied", copy: "Copy" },
+      ru: { found: (count) => `Найдено: ${count} тем`, all: "Показаны все темы справочника.", copied: "Скопировано", copy: "Копировать" },
+      id: { found: (count) => `Ditemukan: ${count} topik`, all: "Semua topik panduan ditampilkan.", copied: "Disalin", copy: "Salin" },
+      ja: { found: (count) => `${count} 件のトピックが見つかりました`, all: "すべてのガイドトピックを表示しています。", copied: "コピー済み", copy: "コピー" }
+    };
+    const labels = uiText[currentLang] || uiText.en;
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const isVisible = !query || item.innerText.toLowerCase().includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible && item.id !== "search") visible++;
+      });
+
+      searchCount.textContent = query ? labels.found(visible) : labels.all;
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", (event) => {
+      const copyButton = event.target.closest(".copy-btn");
+      if (!copyButton) return;
+      const code = copyButton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        copyButton.textContent = labels.copied;
+        setTimeout(() => copyButton.textContent = labels.copy, 1200);
+      });
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+    updateSearch();
+  </script>
+  <script src="practice.js"></script>
+</body>
+</html>

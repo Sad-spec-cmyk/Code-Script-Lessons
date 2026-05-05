@@ -382,7 +382,8 @@
     "Python Lessons / Python Guide": "Python Lessons / Panduan Python",
     "C++ Lessons / C++ Guide": "C++ Lessons / Panduan C++",
     "Java Lessons / Java Guide": "Java Lessons / Panduan Java",
-    "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON"
+    "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON",
+    "Go Lessons / Go (Golang) Guide": "Go Lessons / Panduan Go (Golang)"
   };
 
   function toIndonesian(value) {
@@ -504,7 +505,8 @@
     "Python Lessons / Python Guide": "Python Lessons / Python ガイド",
     "C++ Lessons / C++ Guide": "C++ Lessons / C++ ガイド",
     "Java Lessons / Java Guide": "Java Lessons / Java ガイド",
-    "JSON Lessons / JSON Guide": "JSON Lessons / JSON ガイド"
+    "JSON Lessons / JSON Guide": "JSON Lessons / JSON ガイド",
+    "Go Lessons / Go (Golang) Guide": "Go Lessons / Go (Golang) ガイド"
   };
 
   function toJapanese(value) {
@@ -532,6 +534,7 @@
       "Java Lessons / Java Довідник": "Java Lessons / Java Guide",
       "JSON Lessons / JSON Довідник": "JSON Lessons / JSON Guide",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Guide",
+      "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Guide",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide",
       "C Lessons / C Довідник": "C Lessons / C Guide",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Guide",
@@ -551,6 +554,7 @@
       "Java Lessons / Java Довідник": "Java Lessons / Java Справочник",
       "JSON Lessons / JSON Довідник": "JSON Lessons / JSON Справочник",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Справочник",
+      "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Справочник",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник",
       "C Lessons / C Довідник": "C Lessons / C Справочник",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Справочник",
@@ -1316,9 +1320,18 @@
 
   function translateFragments(value) {
     const fragments = fragmentMap[lang] || (lang === "id" || lang === "ja" ? fragmentMap.en : {}) || {};
+    const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return Object.keys(fragments)
       .sort((a, b) => b.length - a.length)
-      .reduce((text, source) => text.replaceAll(source, translateCurrent(fragments[source])), value);
+      .reduce((text, source) => {
+        const replacement = translateCurrent(fragments[source]);
+        const trimmedSource = source.trim();
+        if (/[\u0400-\u04FF]/.test(trimmedSource) && trimmedSource.length <= 3 && !/^\s|\s$/.test(source)) {
+          const pattern = new RegExp(`(^|[^\\p{L}\\p{N}_])${escapeRegExp(source)}(?=$|[^\\p{L}\\p{N}_])`, "gu");
+          return text.replace(pattern, `$1${replacement}`);
+        }
+        return text.replaceAll(source, replacement);
+      }, value);
   }
 
   const substringCache = {};
@@ -1402,6 +1415,7 @@
       "C++": { text: "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.", pills: ["STL", "pointers", "OOP"], button: "Open" },
       Java: { text: "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.", pills: ["JVM", "Android", "OOP"], button: "Open" },
       Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
+      Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1496,6 +1510,7 @@
       "C++": { text: "Мощный язык для игр, системного программирования, STL, указателей, ссылок и производительного кода.", pills: ["STL", "указатели", "ООП"], button: "Открыть" },
       Java: { text: "Язык для Android, backend, JVM, больших систем, ООП, коллекций, файлов и интерфейсов.", pills: ["JVM", "Android", "ООП"], button: "Открыть" },
       Rust: { text: "Системный язык для быстрого и надежного кода: ownership, borrowing, lifetimes, Result, Vec и безопасность памяти.", pills: ["ownership", "безопасность", "performance"], button: "Открыть" },
+      Go: { text: "Современный язык для backend, серверов, DevOps, CLI, concurrency, goroutines, channels и простого надежного кода.", pills: ["backend", "goroutines", "channels"], button: "Открыть" },
       Assembly: { text: "Низкоуровневый язык для понимания CPU: регистры, память, стек, инструкции, syscall и NASM x86-64.", pills: ["x86-64", "регистры", "syscall"], button: "Открыть" },
       C: { text: "Классический системный язык: синтаксис, типы, массивы, строки, указатели, struct, malloc/free и файлы.", pills: ["указатели", "память", "stdio"], button: "Открыть" },
       SQL: { text: "Язык для работы с базами данных: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, индексы и запросы.", pills: ["SELECT", "JOIN", "database"], button: "Открыть" },
@@ -1513,6 +1528,7 @@
       "C++": { text: "Bahasa kuat untuk game, pemrograman sistem, STL, pointer, reference, dan kode berperforma tinggi.", pills: ["STL", "pointer", "OOP"], button: "Buka" },
       Java: { text: "Bahasa untuk Android, backend, JVM, sistem besar, OOP, collection, file, dan interface.", pills: ["JVM", "Android", "OOP"], button: "Buka" },
       Rust: { text: "Bahasa sistem untuk kode cepat dan andal: ownership, borrowing, lifetimes, Result, Vec, dan keamanan memori.", pills: ["ownership", "keamanan", "performa"], button: "Buka" },
+      Go: { text: "Bahasa modern untuk backend, server, DevOps, alat CLI, concurrency, goroutines, channels, dan kode sederhana yang andal.", pills: ["backend", "goroutines", "channels"], button: "Buka" },
       Assembly: { text: "Bahasa tingkat rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
       C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
       SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
@@ -1530,6 +1546,7 @@
       "C++": { text: "ゲーム、システムプログラミング、STL、ポインタ、参照、高性能コード向けの強力な言語。", pills: ["STL", "ポインタ", "OOP"], button: "開く" },
       Java: { text: "Android、バックエンド、JVM、大規模システム、OOP、コレクション、ファイル、インターフェース向けの言語。", pills: ["JVM", "Android", "OOP"], button: "開く" },
       Rust: { text: "高速で信頼性の高いコードのためのシステム言語: ownership、borrowing、lifetimes、Result、Vec、メモリ安全性。", pills: ["ownership", "安全性", "performance"], button: "開く" },
+      Go: { text: "バックエンド、サーバー、DevOps、CLI、concurrency、goroutines、channels、シンプルで信頼できるコード向けの現代的な言語。", pills: ["backend", "goroutines", "channels"], button: "開く" },
       Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
       C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
       SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },
