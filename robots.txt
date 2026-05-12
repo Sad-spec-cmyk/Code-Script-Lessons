@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://code-lessons.netlify.app/sitemap.xml
