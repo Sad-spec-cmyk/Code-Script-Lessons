@@ -5,10 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Programming Lessons / Вибір мови</title>
-  <meta name="description" content="Programming Lessons — офлайн-довідник з HTML, CSS, JavaScript, Python, C#, C++, Java, Rust, Go, SQL та інших мов програмування.">
-  <meta name="keywords" content="programming lessons, html, css, javascript, python, csharp, cpp, java, rust, go, sql, json, typescript, php, powershell, український довідник, програмування, уроки">
   <link rel="icon" href="icon/index.png" type="image/png">
-  <link rel="canonical" href="https://code-lessons.netlify.app/">
   <style>
     :root {
       --bg: #f6f7f8;
@@ -196,6 +193,9 @@
       overflow: hidden;
       display: grid;
       grid-template-rows: auto 1fr;
+    }
+    .language-card:hover {
+      transform:translateY(-10px)
     }
 
     .language-visual {
@@ -641,6 +641,7 @@
         <a href="java.html">Java</a>
         <a href="rust.html">Rust</a>
         <a href="go.html">Go</a>
+        <a href="ruby.html">Ruby</a>
         <a href="assembler.html">Assembly</a>
         <a href="c.html">C</a>
         <a href="sql.html">SQL</a>
@@ -836,6 +837,22 @@
 
       <article class="language-card">
         <div class="language-visual" aria-hidden="true">
+          <img src="icon/Ruby.svg" alt="Ruby" width="252" height="252">
+        </div>
+        <div class="card-body">
+          <h2>Ruby</h2>
+          <p>Зручна мова для вебу, автоматизації та Ruby on Rails: синтаксис, array, hash, блоки, ООП, модулі, файли й обробка помилок.</p>
+          <div class="meta">
+            <span class="pill">Rails</span>
+            <span class="pill">OOP</span>
+            <span class="pill">hash</span>
+          </div>
+          <a class="button" href="ruby.html">Відкрити</a>
+        </div>
+      </article>
+
+      <article class="language-card">
+        <div class="language-visual" aria-hidden="true">
           <img src="icon/ASM.png" alt="Assembly" width="252" height="252">
         </div>
         <div class="card-body">
@@ -973,6 +990,7 @@
               <option value="java">Java</option>
               <option value="rust">Rust</option>
               <option value="go">Go</option>
+              <option value="ruby">Ruby</option>
               <option value="assembly">Assembly</option>
               <option value="c">C</option>
               <option value="sql">SQL</option>
@@ -1137,6 +1155,11 @@
           { q: { uk: "Яке ключове слово запускає goroutine?", en: "Which keyword starts a goroutine?", ru: "Какое ключевое слово запускает goroutine?" }, a: ["go"] },
           { q: { uk: "Який тип у Go використовується для каналу?", en: "Which Go type is used for a channel?", ru: "Какой тип Go используется для канала?" }, a: ["chan", "channel"] },
           { q: { uk: "Яка команда форматує Go-код?", en: "Which command formats Go code?", ru: "Какая команда форматирует Go-код?" }, a: ["gofmt"] }
+        ],
+        ruby: [
+          { q: { uk: "Яким словом у Ruby оголошують метод?", en: "Which keyword declares a method in Ruby?", ru: "Каким словом в Ruby объявляют метод?" }, a: ["def"] },
+          { q: { uk: "Яке слово закриває блок if, class або def у Ruby?", en: "Which keyword closes an if, class, or def block in Ruby?", ru: "Какое слово закрывает блок if, class или def в Ruby?" }, a: ["end"] },
+          { q: { uk: "Який метод Ruby виводить текст у консоль з новим рядком?", en: "Which Ruby method prints text to the console with a new line?", ru: "Какой метод Ruby выводит текст в консоль с новой строкой?" }, a: ["puts"] }
         ],
         assembly: [
           { q: { uk: "Яка інструкція копіює значення між регістрами або пам’яттю?", en: "Which instruction copies values between registers or memory?", ru: "Какая инструкция копирует значения между регистрами или памятью?" }, a: ["mov"] },

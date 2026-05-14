@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="252" height="252" viewBox="0 0 252 252" role="img" aria-label="Ruby">
+  <rect width="252" height="252" rx="28" fill="#f6f7f8"/>
+  <path d="M126 28 212 78 190 183 126 224 62 183 40 78Z" fill="#b5122b"/>
+  <path d="M126 28 212 78 154 92Z" fill="#f04452"/>
+  <path d="M40 78 98 92 126 28Z" fill="#e51d38"/>
+  <path d="M98 92 154 92 126 224Z" fill="#a40f24"/>
+  <path d="M40 78 98 92 126 224 62 183Z" fill="#c71631"/>
+  <path d="M212 78 154 92 126 224 190 183Z" fill="#8f0d20"/>
+  <path d="M98 92 126 28 154 92Z" fill="#ff6b73"/>
+  <path d="M62 183 126 224 190 183 126 204Z" fill="#6f0918"/>
+  <text x="126" y="142" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800" fill="#fff">Ruby</text>
+</svg>

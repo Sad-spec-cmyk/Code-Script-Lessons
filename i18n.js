@@ -383,7 +383,8 @@
     "C++ Lessons / C++ Guide": "C++ Lessons / Panduan C++",
     "Java Lessons / Java Guide": "Java Lessons / Panduan Java",
     "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON",
-    "Go Lessons / Go (Golang) Guide": "Go Lessons / Panduan Go (Golang)"
+    "Go Lessons / Go (Golang) Guide": "Go Lessons / Panduan Go (Golang)",
+    "Ruby Lessons / Ruby Guide": "Ruby Lessons / Panduan Ruby"
   };
 
   function toIndonesian(value) {
@@ -1416,6 +1417,7 @@
       Java: { text: "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.", pills: ["JVM", "Android", "OOP"], button: "Open" },
       Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
       Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
+      Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1493,6 +1495,8 @@
       "C++": { text: "A powerful language for games, systems programming, STL, pointers, references, and high-performance code.", pills: ["STL", "pointers", "OOP"], button: "Open" },
       Java: { text: "A language for Android, backend, JVM, large systems, OOP, collections, files, and interfaces.", pills: ["JVM", "Android", "OOP"], button: "Open" },
       Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
+      Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
+      Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1511,6 +1515,7 @@
       Java: { text: "Язык для Android, backend, JVM, больших систем, ООП, коллекций, файлов и интерфейсов.", pills: ["JVM", "Android", "ООП"], button: "Открыть" },
       Rust: { text: "Системный язык для быстрого и надежного кода: ownership, borrowing, lifetimes, Result, Vec и безопасность памяти.", pills: ["ownership", "безопасность", "performance"], button: "Открыть" },
       Go: { text: "Современный язык для backend, серверов, DevOps, CLI, concurrency, goroutines, channels и простого надежного кода.", pills: ["backend", "goroutines", "channels"], button: "Открыть" },
+      Ruby: { text: "Удобный язык для веба, автоматизации и Ruby on Rails: синтаксис, array, hash, блоки, ООП, модули, файлы и обработка ошибок.", pills: ["Rails", "ООП", "hash"], button: "Открыть" },
       Assembly: { text: "Низкоуровневый язык для понимания CPU: регистры, память, стек, инструкции, syscall и NASM x86-64.", pills: ["x86-64", "регистры", "syscall"], button: "Открыть" },
       C: { text: "Классический системный язык: синтаксис, типы, массивы, строки, указатели, struct, malloc/free и файлы.", pills: ["указатели", "память", "stdio"], button: "Открыть" },
       SQL: { text: "Язык для работы с базами данных: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, индексы и запросы.", pills: ["SELECT", "JOIN", "database"], button: "Открыть" },
@@ -1529,6 +1534,7 @@
       Java: { text: "Bahasa untuk Android, backend, JVM, sistem besar, OOP, collection, file, dan interface.", pills: ["JVM", "Android", "OOP"], button: "Buka" },
       Rust: { text: "Bahasa sistem untuk kode cepat dan andal: ownership, borrowing, lifetimes, Result, Vec, dan keamanan memori.", pills: ["ownership", "keamanan", "performa"], button: "Buka" },
       Go: { text: "Bahasa modern untuk backend, server, DevOps, alat CLI, concurrency, goroutines, channels, dan kode sederhana yang andal.", pills: ["backend", "goroutines", "channels"], button: "Buka" },
+      Ruby: { text: "Bahasa yang nyaman untuk web, otomatisasi, dan Ruby on Rails: sintaks, array, hash, blok, OOP, modul, file, dan penanganan error.", pills: ["Rails", "OOP", "hash"], button: "Buka" },
       Assembly: { text: "Bahasa tingkat rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
       C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
       SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
@@ -1547,6 +1553,7 @@
       Java: { text: "Android、バックエンド、JVM、大規模システム、OOP、コレクション、ファイル、インターフェース向けの言語。", pills: ["JVM", "Android", "OOP"], button: "開く" },
       Rust: { text: "高速で信頼性の高いコードのためのシステム言語: ownership、borrowing、lifetimes、Result、Vec、メモリ安全性。", pills: ["ownership", "安全性", "performance"], button: "開く" },
       Go: { text: "バックエンド、サーバー、DevOps、CLI、concurrency、goroutines、channels、シンプルで信頼できるコード向けの現代的な言語。", pills: ["backend", "goroutines", "channels"], button: "開く" },
+      Ruby: { text: "Web、自動化、Ruby on Rails、配列、hash、ブロック、OOP、モジュール、ファイル、エラー処理向けの書きやすい言語。", pills: ["Rails", "OOP", "hash"], button: "開く" },
       Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
       C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
       SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },

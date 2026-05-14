@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ruby Lessons - український офлайн-довідник по Ruby з прикладами, синтаксисом, ООП, файлами, Rails і практичними задачами.">
+  <meta name="keywords" content="Ruby, Ruby Lessons, Ruby довідник, Ruby українською, Ruby on Rails, програмування, синтаксис Ruby">
+  <title>Ruby Lessons / Ruby Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #566170;
+      --line: #d7dde5;
+      --code: #f2f2f3;
+      --accent: #1f1f1f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95rem;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .top-nav a:hover { color: var(--text); }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 7px;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .lang-switch button.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 64px 20px 34px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 820px;
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid #b8c1ce;
+      border-radius: 7px;
+      background: var(--panel);
+      color: #111;
+      font-weight: 500;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .sidebar-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .sidebar a:hover {
+      background: #f1f3f5;
+      color: var(--text);
+    }
+
+    .content {
+      min-width: 0;
+      display: grid;
+      gap: 18px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      scroll-margin-top: 88px;
+    }
+
+    .section-header {
+      width: 100%;
+      border: 0;
+      background: var(--panel);
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+    }
+
+    .section-body {
+      border-top: 1px solid var(--line);
+      padding: 20px 22px;
+    }
+
+    .section.is-collapsed .section-body { display: none; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card, .doc-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .card h3, .doc-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .card p { margin: 0 0 10px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f4f6f8;
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 12px 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--code);
+      overflow: auto;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      white-space: pre;
+      min-width: max-content;
+    }
+
+    .copy-btn {
+      position: sticky;
+      left: calc(100% - 78px);
+      top: 8px;
+      float: right;
+      margin: 8px 8px 0 0;
+      border: 1px solid #bac2cc;
+      border-radius: 6px;
+      background: #fff;
+      padding: 7px 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.86rem;
+    }
+
+    ul { padding-left: 22px; }
+
+    dl { margin: 0; display: grid; gap: 10px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); }
+
+    .search-panel {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-panel input {
+      flex: 1 1 260px;
+      min-width: 0;
+      min-height: 46px;
+      border: 1px solid #b8c1ce;
+      border-radius: 7px;
+      padding: 10px 12px;
+      font: inherit;
+      background: #fff;
+    }
+
+    .search-note, .empty {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 44px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .menu-toggle { display: inline-flex; }
+
+      .top-nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .top-nav.is-open { display: flex; }
+
+      .top-nav a { padding: 10px 0; }
+
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-inner, .hero, .layout, .footer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .section-header, .section-body {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .actions .button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">Ruby Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Швидка навігація">
+        <a href="#language">Вибір мови</a>
+        <a href="#intro">Почати</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+        <div class="lang-switch" aria-label="Вибір мови сайту">
+          <button type="button" data-lang-switch="uk">UKR</button>
+          <button type="button" data-lang-switch="en">ENG</button>
+          <button type="button" data-lang-switch="ru">RU</button>
+          <button type="button" data-lang-switch="id">ID</button>
+          <button type="button" data-lang-switch="ja">JA</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Ruby Lessons</h1>
+    <p>Український довідник по Ruby з прикладами, синтаксисом та основами сучасного програмування.</p>
+    <div class="actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <p class="sidebar-title">Розділи</p>
+      <a href="#language">Вибір мови</a>
+      <a href="#intro">Що таке Ruby</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми Ruby</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main class="content">
+      <section class="section" id="search">
+        <div class="section-body">
+          <div class="search-panel">
+            <input id="searchInput" type="search" placeholder="Наприклад: array, hash, class, rescue">
+            <button class="button" id="clearSearch" type="button">Очистити</button>
+          </div>
+          <p class="search-note" id="searchCount">Показано всі теми довідника.</p>
+        </div>
+      </section>
+
+      <section class="section search-item" id="intro">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке Ruby?</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <p>Ruby — це динамічна об’єктно-орієнтована мова програмування з простим синтаксисом, яка часто читається майже як звичайний текст.</p>
+          <div class="grid">
+            <article class="card">
+              <h3>Що це за мова?</h3>
+              <p>Ruby створена для зручного написання коду. У Ruby майже все є об’єктом: числа, рядки, масиви, класи й навіть помилки.</p>
+            </article>
+            <article class="card">
+              <h3>Де використовується?</h3>
+              <p>Ruby використовують у веб-розробці, автоматизації, скриптах, тестуванні, CLI-інструментах і особливо у фреймворку Ruby on Rails.</p>
+            </article>
+            <article class="card">
+              <h3>Особливості Ruby</h3>
+              <p>Мова цінується за читабельність, гнучкість, блоки, ітератори, просту роботу з колекціями та сильний фокус на зручності розробника.</p>
+            </article>
+            <article class="card">
+              <h3><span class="badge">puts</span></h3>
+              <p>Метод <code>puts</code> виводить текст у консоль і додає перехід на новий рядок.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>puts "Привіт, світ!"</code></pre>
+          </div>
+          <ul>
+            <li><code>puts</code> друкує значення у консоль.</li>
+            <li><code>"Привіт, світ!"</code> — це рядок тексту.</li>
+            <li>У Ruby не потрібно писати крапку з комою після кожної інструкції.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section search-item" id="syntax">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card">
+              <h3><span class="badge">puts</span></h3>
+              <p>Виводить текст або значення. Часто використовується у перших прикладах і для простого налагодження.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>puts "Hello"</code></pre></div>
+            </article>
+            <article class="card">
+              <h3>Коментарі</h3>
+              <p>Однорядковий коментар починається з символу <code>#</code>. Коментарі пояснюють код і не виконуються.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code># Це коментар
+puts "Ruby"</code></pre></div>
+            </article>
+            <article class="card">
+              <h3><span class="badge">end</span></h3>
+              <p>Закриває блоки коду: методи, класи, умови, цикли та інші конструкції.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if true
+  puts "OK"
+end</code></pre></div>
+            </article>
+            <article class="card">
+              <h3>Змінні</h3>
+              <p>Локальні змінні починаються з маленької літери або підкреслення. Тип визначається автоматично.</p>
+              <div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>name = "Olena"
+age = 21</code></pre></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="types">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Типи даних</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="doc-card"><h3>Назва: <span class="badge">Integer</span></h3><dl><div><dt>Опис</dt><dd>Ціле число без дробової частини.</dd></div><div><dt>Приклад</dt><dd><code>age = 25</code></dd></div><div><dt>Коли використовувати</dt><dd>Для кількості, віку, індексів і лічильників.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Float</span></h3><dl><div><dt>Опис</dt><dd>Число з дробовою частиною.</dd></div><div><dt>Приклад</dt><dd><code>price = 19.99</code></dd></div><div><dt>Коли використовувати</dt><dd>Для вимірювань, цін і приблизних розрахунків.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">String</span></h3><dl><div><dt>Опис</dt><dd>Текстовий рядок.</dd></div><div><dt>Приклад</dt><dd><code>name = "Ivan"</code></dd></div><div><dt>Коли використовувати</dt><dd>Для імен, повідомлень, адрес і будь-якого тексту.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Boolean</span></h3><dl><div><dt>Опис</dt><dd>Логічне значення <code>true</code> або <code>false</code>.</dd></div><div><dt>Приклад</dt><dd><code>active = true</code></dd></div><div><dt>Коли використовувати</dt><dd>Для умов, прапорців і перевірок.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Array</span></h3><dl><div><dt>Опис</dt><dd>Впорядкована колекція значень.</dd></div><div><dt>Приклад</dt><dd><code>numbers = [1, 2, 3]</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли потрібно зберігати список елементів.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Hash</span></h3><dl><div><dt>Опис</dt><dd>Колекція пар ключ-значення.</dd></div><div><dt>Приклад</dt><dd><code>user = { name: "Ivan" }</code></dd></div><div><dt>Коли використовувати</dt><dd>Для структурованих даних з іменованими полями.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Symbol</span></h3><dl><div><dt>Опис</dt><dd>Легке незмінне ім’я, яке часто використовують як ключ.</dd></div><div><dt>Приклад</dt><dd><code>:name</code></dd></div><div><dt>Коли використовувати</dt><dd>Для ключів у hash, назв станів і службових ідентифікаторів.</dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми Ruby</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card"><h3>Змінні</h3><p>Локальні змінні зберігають дані всередині методу або блоку. Константи пишуть з великої літери, глобальні змінні починаються з <code>$</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>name = "Ivan"
+PI = 3.14
+$debug = true</code></pre></div></article>
+            <article class="card"><h3>Оператори</h3><p>Ruby має арифметичні, логічні оператори та оператори порівняння.</p><ul><li>Арифметичні: <code>+ - * / % **</code></li><li>Порівняння: <code>== != > < >= <=</code></li><li>Логічні: <code>&& || !</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>score = 15
+adult = age >= 18
+can_enter = adult && score > 10</code></pre></div></article>
+            <article class="card"><h3>Умови</h3><p><code>if</code>, <code>elsif</code>, <code>else</code> та <code>case</code> виконують різний код залежно від умови.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if age >= 18
+  puts "Доступ дозволено"
+elsif age >= 16
+  puts "Потрібен дозвіл"
+else
+  puts "Доступ заборонено"
+end</code></pre></div></article>
+            <article class="card"><h3>Цикли</h3><p><code>while</code>, <code>until</code>, <code>for</code> та <code>each</code> повторюють код. У Ruby часто використовують <code>each</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>[1, 2, 3].each do |number|
+  puts number
+end</code></pre></div></article>
+            <article class="card"><h3>Методи</h3><p>Метод оголошується через <code>def</code>, може мати параметри й повертати значення. Останній вираз часто повертається автоматично.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>def add(a, b)
+  a + b
+end
+
+puts add(2, 3)</code></pre></div></article>
+            <article class="card"><h3>Масиви</h3><p><code>Array</code> зберігає список. <code>push</code> додає елемент, <code>pop</code> забирає останній, <code>each</code> перебирає.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>items = ["book", "pen"]
+items.push("phone")
+items.pop
+items.each { |item| puts item }</code></pre></div></article>
+            <article class="card"><h3>Hash</h3><p>Hash зберігає ключі та значення. Доступ до значення робиться через ключ.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>user = { name: "Ivan", age: 25 }
+puts user[:name]
+user[:age] = 26</code></pre></div></article>
+            <article class="card"><h3>Рядки</h3><p>Інтерполяція вставляє значення у рядок через <code>#{}</code>. Рядки мають методи <code>upcase</code>, <code>downcase</code>, <code>strip</code>, <code>split</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>name = "Ruby"
+puts "Hello, #{name}"
+puts name.upcase</code></pre></div></article>
+            <article class="card"><h3>ООП у Ruby</h3><p>Клас описує об’єкт. <code>initialize</code> запускається під час створення, <code>attr_accessor</code> створює читання й запис властивості.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Player
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+end
+
+player = Player.new("Olia")</code></pre></div></article>
+            <article class="card"><h3>Модулі</h3><p><code>module</code> групує методи або константи. <code>include</code> додає методи модуля до класу.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>module Greeting
+  def hello
+    puts "Hello"
+  end
+end
+
+class User
+  include Greeting
+end</code></pre></div></article>
+            <article class="card"><h3>Робота з файлами</h3><p><code>File.open</code>, <code>read</code> і <code>write</code> дозволяють читати й записувати файли.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>File.open("data.txt", "w") do |file|
+  file.write("Hello")
+end
+
+text = File.read("data.txt")</code></pre></div></article>
+            <article class="card"><h3>Обробка помилок</h3><p><code>begin</code>, <code>rescue</code> та <code>ensure</code> дозволяють обробляти помилки й виконувати завершальний код.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>begin
+  number = Integer("abc")
+rescue ArgumentError
+  puts "Невірне число"
+ensure
+  puts "Готово"
+end</code></pre></div></article>
+            <article class="card"><h3>Ruby on Rails</h3><p>Rails — популярний веб-фреймворк на Ruby. Він використовує MVC: Model для даних, View для інтерфейсу, Controller для логіки запитів.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class ArticlesController
+  def index
+    @articles = Article.all
+  end
+end</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card"><h3>Калькулятор</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>def calculate(a, b, operator)
+  case operator
+  when "+"
+    a + b
+  when "-"
+    a - b
+  when "*"
+    a * b
+  when "/"
+    b == 0 ? "Помилка" : a / b
+  else
+    "Невідомий оператор"
+  end
+end
+
+puts calculate(10, 5, "+")</code></pre></div></article>
+            <article class="card"><h3>Робота з Array</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>numbers = [3, 8, 1]
+numbers.push(10)
+numbers.each do |number|
+  puts number
+end</code></pre></div></article>
+            <article class="card"><h3>Hash приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>product = {
+  title: "Keyboard",
+  price: 40
+}
+
+puts "#{product[:title]} costs #{product[:price]}"</code></pre></div></article>
+            <article class="card"><h3>Простий клас</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Car
+  attr_accessor :brand
+
+  def initialize(brand)
+    @brand = brand
+  end
+
+  def drive
+    puts "#{brand} їде"
+  end
+end
+
+car = Car.new("Toyota")
+car.drive</code></pre></div></article>
+            <article class="card"><h3>Читання файлу</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>begin
+  text = File.read("data.txt")
+  puts text
+rescue Errno::ENOENT
+  puts "Файл не знайдено"
+end</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="doc-card"><h3>Назва: <span class="badge">puts</span></h3><dl><div><dt>Опис</dt><dd>Виводить значення у консоль з переходом на новий рядок.</dd></div><div><dt>Синтаксис</dt><dd><code>puts value</code></dd></div><div><dt>Приклад</dt><dd><code>puts "Hello"</code></dd></div><div><dt>Примітка</dt><dd>Для налагодження також часто використовують <code>p</code>.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">def</span></h3><dl><div><dt>Опис</dt><dd>Оголошує метод.</dd></div><div><dt>Синтаксис</dt><dd><code>def name(args) ... end</code></dd></div><div><dt>Приклад</dt><dd><code>def hello(name)</code></dd></div><div><dt>Примітка</dt><dd>Останній вираз може бути поверненням без <code>return</code>.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">if</span></h3><dl><div><dt>Опис</dt><dd>Виконує код, якщо умова істинна.</dd></div><div><dt>Синтаксис</dt><dd><code>if condition ... end</code></dd></div><div><dt>Приклад</dt><dd><code>if age >= 18</code></dd></div><div><dt>Примітка</dt><dd>Для додаткових умов використовують <code>elsif</code>.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">case</span></h3><dl><div><dt>Опис</dt><dd>Зручно перевіряє кілька можливих значень.</dd></div><div><dt>Синтаксис</dt><dd><code>case value when x ... end</code></dd></div><div><dt>Приклад</dt><dd><code>case role</code></dd></div><div><dt>Примітка</dt><dd>Схоже на <code>switch</code> в інших мовах.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">each</span></h3><dl><div><dt>Опис</dt><dd>Перебирає елементи колекції.</dd></div><div><dt>Синтаксис</dt><dd><code>items.each do |item| ... end</code></dd></div><div><dt>Приклад</dt><dd><code>numbers.each { |n| puts n }</code></dd></div><div><dt>Примітка</dt><dd>У Ruby це дуже поширений спосіб перебору.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Hash</span></h3><dl><div><dt>Опис</dt><dd>Колекція пар ключ-значення.</dd></div><div><dt>Синтаксис</dt><dd><code>{ key: value }</code></dd></div><div><dt>Приклад</dt><dd><code>{ name: "Ivan" }</code></dd></div><div><dt>Примітка</dt><dd>Ключами часто є symbols.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">class</span></h3><dl><div><dt>Опис</dt><dd>Описує тип об’єкта з даними й поведінкою.</dd></div><div><dt>Синтаксис</dt><dd><code>class Name ... end</code></dd></div><div><dt>Приклад</dt><dd><code>class Player</code></dd></div><div><dt>Примітка</dt><dd>Назви класів пишуть з великої літери.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">module</span></h3><dl><div><dt>Опис</dt><dd>Групує методи, константи або спільну поведінку.</dd></div><div><dt>Синтаксис</dt><dd><code>module Name ... end</code></dd></div><div><dt>Приклад</dt><dd><code>module Helpers</code></dd></div><div><dt>Примітка</dt><dd>Модулі можна підключати через <code>include</code>.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">rescue</span></h3><dl><div><dt>Опис</dt><dd>Обробляє помилку в блоці <code>begin</code>.</dd></div><div><dt>Синтаксис</dt><dd><code>begin ... rescue ... end</code></dd></div><div><dt>Приклад</dt><dd><code>rescue ArgumentError</code></dd></div><div><dt>Примітка</dt><dd><code>ensure</code> виконується після блоку незалежно від помилки.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">File.read</span></h3><dl><div><dt>Опис</dt><dd>Читає вміст файлу в рядок.</dd></div><div><dt>Синтаксис</dt><dd><code>File.read(path)</code></dd></div><div><dt>Приклад</dt><dd><code>File.read("data.txt")</code></dd></div><div><dt>Примітка</dt><dd>Якщо файл не існує, буде помилка.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage" style="display:none;">За цим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Ruby Lessons / Ruby Довідник.</p>
+  </footer>
+
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+  <script>
+    // Пошук, копіювання коду, згортання секцій і мобільне меню.
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+    const supportedLangs = ["uk", "en", "ru", "id", "ja"];
+    const params = new URLSearchParams(location.search);
+    const savedLang = localStorage.getItem("siteLanguage");
+    const currentLang = supportedLangs.includes(params.get("lang"))
+      ? params.get("lang")
+      : supportedLangs.includes(savedLang)
+        ? savedLang
+        : "en";
+    const uiText = {
+      uk: { found: (count) => `Знайдено: ${count} тем`, all: "Показано всі теми довідника.", copied: "Скопійовано", copy: "Копіювати" },
+      en: { found: (count) => `Found: ${count} topics`, all: "All guide topics are shown.", copied: "Copied", copy: "Copy" },
+      ru: { found: (count) => `Найдено: ${count} тем`, all: "Показаны все темы справочника.", copied: "Скопировано", copy: "Копировать" },
+      id: { found: (count) => `Ditemukan: ${count} topik`, all: "Semua topik panduan ditampilkan.", copied: "Disalin", copy: "Salin" },
+      ja: { found: (count) => `${count} 件のトピックが見つかりました`, all: "すべてのガイドトピックを表示しています。", copied: "コピー済み", copy: "コピー" }
+    };
+    const labels = uiText[currentLang] || uiText.en;
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const isVisible = !query || item.innerText.toLowerCase().includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible && item.id !== "search") visible++;
+      });
+
+      searchCount.textContent = query ? labels.found(visible) : labels.all;
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", (event) => {
+      const copyButton = event.target.closest(".copy-btn");
+      if (!copyButton) return;
+      const code = copyButton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        copyButton.textContent = labels.copied;
+        setTimeout(() => copyButton.textContent = labels.copy, 1200);
+      });
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+    updateSearch();
+  </script>
+  <script src="practice.js"></script>
+</body>
+</html>
