@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="252" height="252" viewBox="0 0 252 252" role="img" aria-label="Dart">
+  <rect width="252" height="252" rx="28" fill="#f6f7f8"/>
+  <defs>
+    <linearGradient id="dartBlue" x1="54" y1="38" x2="203" y2="215" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#42c6ff"/>
+      <stop offset="0.55" stop-color="#168cce"/>
+      <stop offset="1" stop-color="#0b4f8f"/>
+    </linearGradient>
+  </defs>
+  <path d="M56 78 97 37h78l31 31v78l-41 41H87l-31-31V78Z" fill="url(#dartBlue)"/>
+  <path d="M97 37 56 78l81 81h69L97 37Z" fill="#5fd3ff" opacity=".85"/>
+  <path d="M56 78v78l31 31h78L56 78Z" fill="#0f75bc" opacity=".92"/>
+  <path d="M97 37h78l31 31v78L97 37Z" fill="#0a5fa8" opacity=".9"/>
+  <path d="M86 187h79l41-41h-69L86 187Z" fill="#063b72" opacity=".5"/>
+  <text x="126" y="224" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#20242a">Dart</text>
+</svg>

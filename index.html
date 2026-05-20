@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Programming Lessons / Вибір мови</title>
   <link rel="icon" href="icon/index.png" type="image/png">
-  <meta name="description" content="Programming Lessons is an offline learning hub with beginner-friendly guides for HTML, CSS, JavaScript, Python, C, C++, C#, Java, Go, Rust, Ruby, Swift, SQL, JSON, PHP, TypeScript, PowerShell and Assembly.">
-  <meta name="keywords" content="programming lessons, coding guide, offline programming guide, HTML lessons, CSS lessons, JavaScript lessons, Python lessons, C lessons, C++ lessons, C# lessons, Java lessons, Go lessons, Rust lessons, Ruby lessons, Swift lessons, SQL lessons, JSON guide, PHP lessons, TypeScript lessons, PowerShell lessons, Assembly lessons, learn programming">
+  <meta name="description" content="Programming Lessons is an offline learning hub with beginner-friendly guides for HTML, CSS, JavaScript, Python, C, C++, C#, Java, Go, Rust, Ruby, Swift, Dart, SQL, JSON, PHP, TypeScript, PowerShell and Assembly.">
+  <meta name="keywords" content="programming lessons, coding guide, offline programming guide, HTML lessons, CSS lessons, JavaScript lessons, Python lessons, C lessons, C++ lessons, C# lessons, Java lessons, Go lessons, Rust lessons, Ruby lessons, Swift lessons, Dart lessons, SQL lessons, JSON guide, PHP lessons, TypeScript lessons, PowerShell lessons, Assembly lessons, learn programming">
   <style>
     :root {
       --bg: #f6f7f8;
@@ -645,6 +645,7 @@
         <a href="go.html">Go</a>
         <a href="ruby.html">Ruby</a>
         <a href="swift.html">Swift</a>
+        <a href="dart.html">Dart</a>
         <a href="assembler.html">Assembly</a>
         <a href="c.html">C</a>
         <a href="sql.html">SQL</a>
@@ -872,6 +873,22 @@
 
       <article class="language-card">
         <div class="language-visual" aria-hidden="true">
+          <img src="icon/Dart.svg" alt="Dart" width="252" height="252">
+        </div>
+        <div class="card-body">
+          <h2>Dart</h2>
+          <p>Мова для Flutter, мобільної та веб-розробки: синтаксис, null safety, колекції, класи, async, Future і Flutter widgets.</p>
+          <div class="meta">
+            <span class="pill">Flutter</span>
+            <span class="pill">null safety</span>
+            <span class="pill">async</span>
+          </div>
+          <a class="button" href="dart.html">Відкрити</a>
+        </div>
+      </article>
+
+      <article class="language-card">
+        <div class="language-visual" aria-hidden="true">
           <img src="icon/ASM.png" alt="Assembly" width="252" height="252">
         </div>
         <div class="card-body">
@@ -1011,6 +1028,7 @@
               <option value="go">Go</option>
               <option value="ruby">Ruby</option>
               <option value="swift">Swift</option>
+              <option value="dart">Dart</option>
               <option value="assembly">Assembly</option>
               <option value="c">C</option>
               <option value="sql">SQL</option>
@@ -1185,6 +1203,11 @@
           { q: { uk: "Яким словом у Swift оголошують константу?", en: "Which keyword declares a constant in Swift?", ru: "Каким словом в Swift объявляют константу?" }, a: ["let"] },
           { q: { uk: "Яка конструкція Swift безпечно розпаковує Optional?", en: "Which Swift construct safely unwraps an Optional?", ru: "Какая конструкция Swift безопасно распаковывает Optional?" }, a: ["if let"] },
           { q: { uk: "Яке ключове слово описує набір вимог до поведінки у Swift?", en: "Which keyword describes a set of behavior requirements in Swift?", ru: "Какое ключевое слово описывает набор требований к поведению в Swift?" }, a: ["protocol"] }
+        ],
+        dart: [
+          { q: { uk: "Яка функція є точкою входу в Dart-програмі?", en: "Which function is the entry point of a Dart program?", ru: "Какая функция является точкой входа в Dart-программе?" }, a: ["main", "main()"] },
+          { q: { uk: "Який фреймворк найчастіше використовують разом із Dart для мобільних застосунків?", en: "Which framework is most often used with Dart for mobile apps?", ru: "Какой фреймворк чаще всего используют с Dart для мобильных приложений?" }, a: ["flutter"] },
+          { q: { uk: "Який тип у Dart описує майбутній асинхронний результат?", en: "Which Dart type represents a future asynchronous result?", ru: "Какой тип Dart описывает будущий асинхронный результат?" }, a: ["future"] }
         ],
         assembly: [
           { q: { uk: "Яка інструкція копіює значення між регістрами або пам’яттю?", en: "Which instruction copies values between registers or memory?", ru: "Какая инструкция копирует значения между регистрами или памятью?" }, a: ["mov"] },

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dart Lessons - український офлайн-довідник по Dart з прикладами, синтаксисом, Flutter, async, null safety та розробкою застосунків.">
+  <meta name="keywords" content="Dart, Dart Lessons, Dart довідник, Flutter, mobile development, web development, null safety, async await, програмування">
+  <title>Dart Lessons / Dart Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #566170;
+      --line: #d7dde5;
+      --code: #f2f2f3;
+      --accent: #1f1f1f;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; font-size: 0.95rem; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { font-weight: 700; white-space: nowrap; }
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .top-nav a:hover { color: var(--text); }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+    }
+    .lang-switch { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+    .lang-switch button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 7px;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .lang-switch button.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 64px 20px 34px;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 820px;
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 1.12rem;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 9px 15px;
+      border: 1px solid #b9c2cf;
+      border-radius: 8px;
+      background: var(--panel);
+      cursor: pointer;
+    }
+    .button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 24px;
+    }
+    .sidebar {
+      align-self: start;
+      position: sticky;
+      top: 76px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .sidebar h2 {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    .sidebar a:hover { background: var(--bg); color: var(--text); }
+    .content { min-width: 0; display: grid; gap: 18px; }
+    .section {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(20, 30, 40, 0.05);
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+    }
+    .section-header h2 { margin: 0; font-size: clamp(1.35rem, 3vw, 1.75rem); }
+    .section-body { border-top: 1px solid var(--line); padding: 20px 22px; }
+    .section.is-collapsed .section-body { display: none; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 1.08rem; }
+    .card p { margin: 0 0 10px; }
+    .card ul { margin: 8px 0 0; padding-left: 20px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+      font-weight: 700;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    .code-wrap {
+      position: relative;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--code);
+      overflow: auto;
+    }
+    .copy-btn {
+      position: sticky;
+      left: 100%;
+      top: 8px;
+      margin: 8px;
+      float: right;
+      border: 1px solid #b9c2cf;
+      background: #fff;
+      border-radius: 7px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.85rem;
+    }
+    pre { margin: 0; padding: 16px; white-space: pre; overflow-x: auto; }
+    .search-panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(20, 30, 40, 0.05);
+    }
+    .search-row { display: flex; gap: 10px; }
+    .search-row input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid #b9c2cf;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font: inherit;
+    }
+    .muted { color: var(--muted); }
+    .empty-message { display: none; margin-top: 10px; color: var(--muted); }
+    @media (max-width: 820px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; justify-content: flex-start; }
+      .top-nav.is-open { display: flex; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 44px; }
+      .search-row { flex-direction: column; }
+    }
+    @media (max-width: 520px) {
+      .header-inner, .hero, .layout { padding-left: 14px; padding-right: 14px; }
+      .section-header, .section-body { padding-left: 14px; padding-right: 14px; }
+      .actions .button { width: 100%; }
+      pre { font-size: 0.86rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Dart Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Головне меню">
+        <a href="index.html">Вибір мови</a>
+        <a href="#intro">Почати</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+        <div class="lang-switch" aria-label="Вибір мови сайту">
+          <button type="button" data-lang-switch="uk">UKR</button>
+          <button type="button" data-lang-switch="en">ENG</button>
+          <button type="button" data-lang-switch="ru">RU</button>
+          <button type="button" data-lang-switch="id">ID</button>
+          <button type="button" data-lang-switch="ja">JA</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <h1>Dart Lessons</h1>
+      <p>Український довідник по Dart з прикладами, синтаксисом та розробкою застосунків.</p>
+      <div class="actions">
+        <a class="button primary" href="#intro">Почати</a>
+        <a class="button" href="#topics">Теми</a>
+        <a class="button" href="#examples">Приклади</a>
+        <a class="button" href="#reference">Довідник</a>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Розділи</h2>
+        <a href="index.html">Вибір мови</a>
+        <a href="#intro">Що таке Dart?</a>
+        <a href="#syntax">Синтаксис</a>
+        <a href="#types">Типи даних</a>
+        <a href="#topics">Теми Dart</a>
+        <a href="#examples">Практичні приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+      </aside>
+
+      <div class="content">
+        <section class="search-panel search-item" id="search">
+          <div class="search-row">
+            <input id="searchInput" type="search" placeholder="Наприклад: Flutter, List, async, null safety">
+            <button class="button" id="clearSearch" type="button">Очистити</button>
+          </div>
+          <p class="muted" id="searchCount">Показано всі теми довідника.</p>
+          <p class="empty-message" id="emptyMessage">Нічого не знайдено. Спробуй інше слово.</p>
+        </section>
+
+        <section class="section search-item" id="intro">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Що таке Dart?</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <p>Dart — це сучасна мова програмування від Google. Її часто використовують разом із Flutter для створення мобільних, веб і desktop застосунків з однієї кодової бази.</p>
+            <div class="grid">
+              <article class="card"><h3>Що це за мова?</h3><p>Dart має зрозумілий синтаксис, статичну типізацію, null safety і добре підходить для UI-застосунків.</p></article>
+              <article class="card"><h3>Для чого використовується?</h3><p>Мобільна розробка, Flutter, веб-застосунки, desktop-програми, серверні утиліти та прототипи.</p></article>
+              <article class="card"><h3>Flutter</h3><p>Flutter — це фреймворк для інтерфейсів. Dart описує логіку і віджети, а Flutter малює застосунок на різних платформах.</p></article>
+              <article class="card"><h3>Переваги Dart</h3><p>Швидкий старт, читабельний код, hot reload у Flutter, async/await, null safety і зручні колекції.</p></article>
+            </div>
+            <div class="code-wrap">
+              <button class="copy-btn" type="button">Копіювати</button>
+              <pre><code>void main() {
+  print("Привіт, світ!");
+}</code></pre>
+            </div>
+            <ul>
+              <li><code>void main()</code> — головна функція, з якої починається програма.</li>
+              <li><code>print()</code> — виводить текст у консоль.</li>
+              <li>Крапка з комою завершує інструкцію.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section search-item" id="syntax">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Синтаксис</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <div class="grid">
+              <article class="card"><h3>Коментарі</h3><p><code>//</code> створює однорядковий коментар, <code>/* */</code> — багаторядковий.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Коментар
+/* Багаторядковий
+   коментар */</code></pre></div></article>
+              <article class="card"><h3><span class="badge">main()</span></h3><p>Точка входу в консольну Dart-програму.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>void main() {
+  print("Start");
+}</code></pre></div></article>
+              <article class="card"><h3><span class="badge">print()</span></h3><p>Виводить значення у консоль. Часто використовується для перевірки коду.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>print("Hello");</code></pre></div></article>
+              <article class="card"><h3>Імпорт бібліотек</h3><p><code>import</code> підключає стандартні бібліотеки або пакети.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>import 'dart:math';</code></pre></div></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section search-item" id="types">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Типи даних</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <div class="grid">
+              <article class="card"><h3>Назва: <span class="badge">int</span></h3><p><strong>Опис:</strong> ціле число.</p><p><strong>Приклад:</strong> <code>int age = 18;</code></p><p><strong>Коли використовувати:</strong> лічильники, вік, кількість.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">double</span></h3><p><strong>Опис:</strong> число з дробовою частиною.</p><p><strong>Приклад:</strong> <code>double price = 19.99;</code></p><p><strong>Коли використовувати:</strong> ціни, координати, вимірювання.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">String</span></h3><p><strong>Опис:</strong> текстовий рядок.</p><p><strong>Приклад:</strong> <code>String name = "Ivan";</code></p><p><strong>Коли використовувати:</strong> імена, повідомлення, назви.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">bool</span></h3><p><strong>Опис:</strong> логічне значення <code>true</code> або <code>false</code>.</p><p><strong>Приклад:</strong> <code>bool isReady = true;</code></p><p><strong>Коли використовувати:</strong> перевірки, прапорці, стани.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">List</span></h3><p><strong>Опис:</strong> впорядкований список значень.</p><p><strong>Приклад:</strong> <code>List&lt;int&gt; nums = [1, 2, 3];</code></p><p><strong>Коли використовувати:</strong> масиви даних, списки товарів, елементи UI.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">Map</span></h3><p><strong>Опис:</strong> колекція ключ-значення.</p><p><strong>Приклад:</strong> <code>Map&lt;String, int&gt; scores = {"Olia": 10};</code></p><p><strong>Коли використовувати:</strong> налаштування, словники, дані користувача.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">Set</span></h3><p><strong>Опис:</strong> колекція унікальних значень.</p><p><strong>Приклад:</strong> <code>Set&lt;String&gt; tags = {"dart", "flutter"};</code></p><p><strong>Коли використовувати:</strong> унікальні теги, ролі, фільтри.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">dynamic</span></h3><p><strong>Опис:</strong> змінна без фіксованого типу.</p><p><strong>Приклад:</strong> <code>dynamic value = 10;</code></p><p><strong>Коли використовувати:</strong> рідко, коли тип справді невідомий.</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section search-item" id="topics">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Теми Dart</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <div class="grid">
+              <article class="card"><h3>Змінні</h3><p><code>var</code> визначає тип автоматично, <code>final</code> задає значення один раз, <code>const</code> створює compile-time константу, <code>dynamic</code> дозволяє змінювати тип.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var name = "Olena";
+final createdAt = DateTime.now();
+const appName = "Shop";
+dynamic value = 10;</code></pre></div></article>
+              <article class="card"><h3>Оператори</h3><p>Dart має арифметичні, логічні оператори, оператори порівняння та присвоєння.</p><ul><li>Арифметичні: <code>+ - * / %</code></li><li>Порівняння: <code>== != > < >= <=</code></li><li>Логічні: <code>&& || !</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var total = 10 + 5;
+var canEnter = age >= 18 && score > 10;</code></pre></div></article>
+              <article class="card"><h3>Умови</h3><p><code>if</code>, <code>else</code>, <code>switch</code> і ternary оператор виконують різний код залежно від умови.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if (age >= 18) {
+  print("Доступ дозволено");
+} else {
+  print("Доступ заборонено");
+}
+
+var label = score > 10 ? "Добре" : "Спробуй ще";</code></pre></div></article>
+              <article class="card"><h3>Цикли</h3><p><code>for</code>, <code>while</code>, <code>do while</code> і <code>for-in</code> повторюють код.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>for (var item in ["Dart", "Flutter"]) {
+  print(item);
+}
+
+var count = 0;
+while (count < 3) {
+  count++;
+}</code></pre></div></article>
+              <article class="card"><h3>Функції</h3><p>Функція має назву, параметри й може повертати результат. Arrow syntax <code>=></code> підходить для коротких функцій.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>int add(int a, int b) {
+  return a + b;
+}
+
+int square(int n) => n * n;</code></pre></div></article>
+              <article class="card"><h3>Колекції</h3><p><code>List</code> зберігає порядок, <code>Map</code> працює з ключами, <code>Set</code> зберігає унікальні значення.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var names = ["Anna", "Ivan"];
+var user = {"name": "Olia", "city": "Kyiv"};
+var tags = {"dart", "flutter"};</code></pre></div></article>
+              <article class="card"><h3>Null Safety</h3><p><code>?</code> дозволяє null, <code>!</code> примусово розгортає значення, non-nullable типи не можуть бути null.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>String? name = "Ivan";
+
+if (name != null) {
+  print(name);
+}</code></pre></div></article>
+              <article class="card"><h3>Класи</h3><p><code>class</code> описує тип, constructor створює object, methods описують поведінку.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Player {
+  String name;
+
+  Player(this.name);
+
+  void sayHello() {
+    print("Привіт, $name");
+  }
+}</code></pre></div></article>
+              <article class="card"><h3>ООП</h3><p>Інкапсуляція приховує деталі, наслідування дозволяє розширити клас, поліморфізм дає працювати через спільний тип.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Animal {
+  void speak() => print("...");
+}
+
+class Dog extends Animal {
+  @override
+  void speak() => print("Woof");
+}</code></pre></div></article>
+              <article class="card"><h3>Async</h3><p><code>Future</code> представляє майбутній результат, <code>async</code> дозволяє використовувати <code>await</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Future&lt;String&gt; loadName() async {
+  await Future.delayed(Duration(seconds: 1));
+  return "Dart";
+}</code></pre></div></article>
+              <article class="card"><h3>Обробка помилок</h3><p><code>try</code>, <code>catch</code> і <code>finally</code> допомагають обробляти помилки без падіння програми.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>try {
+  var number = int.parse("abc");
+  print(number);
+} catch (error) {
+  print("Помилка");
+} finally {
+  print("Готово");
+}</code></pre></div></article>
+              <article class="card"><h3>Flutter базово</h3><p><code>Widget</code> — елемент інтерфейсу. <code>MaterialApp</code> запускає Material-додаток, <code>Scaffold</code> дає базову структуру, <code>Text</code>, <code>Column</code> і <code>Row</code> розміщують UI.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}</code></pre></div></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section search-item" id="examples">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Практичні приклади</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <div class="grid">
+              <article class="card"><h3>Калькулятор</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>double calculate(double a, double b, String op) {
+  switch (op) {
+    case "+":
+      return a + b;
+    case "-":
+      return a - b;
+    default:
+      return 0;
+  }
+}</code></pre></div></article>
+              <article class="card"><h3>Робота з List</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var numbers = [1, 2, 3];
+numbers.add(4);
+
+for (var number in numbers) {
+  print(number);
+}</code></pre></div></article>
+              <article class="card"><h3>Простий клас</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Car {
+  String brand;
+
+  Car(this.brand);
+
+  void drive() {
+    print("$brand їде");
+  }
+}</code></pre></div></article>
+              <article class="card"><h3>Async приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>Future&lt;void&gt; main() async {
+  var data = await loadData();
+  print(data);
+}
+
+Future&lt;String&gt; loadData() async {
+  return "Дані готові";
+}</code></pre></div></article>
+              <article class="card"><h3>Flutter приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Text("Привіт"),
+          Row(children: [Text("Dart")])
+        ],
+      ),
+    );
+  }
+}</code></pre></div></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section search-item" id="reference">
+          <button class="section-header" type="button" aria-expanded="true">
+            <h2>Довідник</h2>
+            <span>∨</span>
+          </button>
+          <div class="section-body">
+            <div class="grid">
+              <article class="card"><h3>Назва: <span class="badge">var</span></h3><p><strong>Опис:</strong> змінна з автоматичним визначенням типу.</p><p><strong>Синтаксис:</strong> <code>var name = value;</code></p><p><strong>Приклад:</strong> <code>var age = 18;</code></p><p><strong>Примітка:</strong> після визначення тип зазвичай не змінюється.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">final</span></h3><p><strong>Опис:</strong> значення можна присвоїти один раз.</p><p><strong>Синтаксис:</strong> <code>final name = value;</code></p><p><strong>Приклад:</strong> <code>final id = DateTime.now();</code></p><p><strong>Примітка:</strong> добре для значень, які відомі під час виконання.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">const</span></h3><p><strong>Опис:</strong> compile-time константа.</p><p><strong>Синтаксис:</strong> <code>const name = value;</code></p><p><strong>Приклад:</strong> <code>const pi = 3.14;</code></p><p><strong>Примітка:</strong> значення має бути відоме заздалегідь.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">List</span></h3><p><strong>Опис:</strong> список елементів.</p><p><strong>Синтаксис:</strong> <code>List&lt;Type&gt; items = [];</code></p><p><strong>Приклад:</strong> <code>List&lt;String&gt; names = ["Olia"];</code></p><p><strong>Примітка:</strong> індекси починаються з 0.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">Map</span></h3><p><strong>Опис:</strong> структура ключ-значення.</p><p><strong>Синтаксис:</strong> <code>Map&lt;K, V&gt; data = {};</code></p><p><strong>Приклад:</strong> <code>{"name": "Ivan"}</code></p><p><strong>Примітка:</strong> зручно для JSON-подібних даних.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">Future</span></h3><p><strong>Опис:</strong> результат, який з’явиться пізніше.</p><p><strong>Синтаксис:</strong> <code>Future&lt;Type&gt;</code></p><p><strong>Приклад:</strong> <code>Future&lt;String&gt; load()</code></p><p><strong>Примітка:</strong> часто використовується з async/await.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">class</span></h3><p><strong>Опис:</strong> опис власного типу.</p><p><strong>Синтаксис:</strong> <code>class Name {}</code></p><p><strong>Приклад:</strong> <code>class User {}</code></p><p><strong>Примітка:</strong> основа ООП у Dart.</p></article>
+              <article class="card"><h3>Назва: <span class="badge">Widget</span></h3><p><strong>Опис:</strong> базовий елемент інтерфейсу Flutter.</p><p><strong>Синтаксис:</strong> <code>Widget build(...)</code></p><p><strong>Приклад:</strong> <code>Text("Hello")</code></p><p><strong>Примітка:</strong> майже все у Flutter є віджетом.</p></article>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+  <script>
+    // Пошук, копіювання коду, згортання секцій і мобільне меню.
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+    const supportedLangs = ["uk", "en", "ru", "id", "ja"];
+    const params = new URLSearchParams(location.search);
+    const savedLang = localStorage.getItem("siteLanguage");
+    const currentLang = supportedLangs.includes(params.get("lang"))
+      ? params.get("lang")
+      : supportedLangs.includes(savedLang)
+        ? savedLang
+        : "en";
+    const uiText = {
+      uk: { found: (count) => `Знайдено: ${count} тем`, all: "Показано всі теми довідника.", copied: "Скопійовано", copy: "Копіювати" },
+      en: { found: (count) => `Found: ${count} topics`, all: "All guide topics are shown.", copied: "Copied", copy: "Copy" },
+      ru: { found: (count) => `Найдено: ${count} тем`, all: "Показаны все темы справочника.", copied: "Скопировано", copy: "Копировать" },
+      id: { found: (count) => `Ditemukan: ${count} topik`, all: "Semua topik panduan ditampilkan.", copied: "Disalin", copy: "Salin" },
+      ja: { found: (count) => `${count} 件のトピックが見つかりました`, all: "すべてのガイドトピックを表示しています。", copied: "コピー済み", copy: "コピー" }
+    };
+    const labels = uiText[currentLang] || uiText.en;
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+      items.forEach((item) => {
+        const isVisible = !query || item.innerText.toLowerCase().includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible && item.id !== "search") visible++;
+      });
+      searchCount.textContent = query ? labels.found(visible) : labels.all;
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", (event) => {
+      const copyButton = event.target.closest(".copy-btn");
+      if (!copyButton) return;
+      const code = copyButton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        copyButton.textContent = labels.copied;
+        setTimeout(() => copyButton.textContent = labels.copy, 1200);
+      });
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+    updateSearch();
+  </script>
+  <script src="practice.js"></script>
+</body>
+</html>

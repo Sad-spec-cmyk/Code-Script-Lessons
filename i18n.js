@@ -385,7 +385,8 @@
     "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON",
     "Go Lessons / Go (Golang) Guide": "Go Lessons / Panduan Go (Golang)",
     "Ruby Lessons / Ruby Guide": "Ruby Lessons / Panduan Ruby",
-    "Swift Lessons / Swift Guide": "Swift Lessons / Panduan Swift"
+    "Swift Lessons / Swift Guide": "Swift Lessons / Panduan Swift",
+    "Dart Lessons / Dart Guide": "Dart Lessons / Panduan Dart"
   };
 
   function toIndonesian(value) {
@@ -510,7 +511,8 @@
     "JSON Lessons / JSON Guide": "JSON Lessons / JSON ガイド",
     "Go Lessons / Go (Golang) Guide": "Go Lessons / Go (Golang) ガイド",
     "Ruby Lessons / Ruby Guide": "Ruby Lessons / Ruby ガイド",
-    "Swift Lessons / Swift Guide": "Swift Lessons / Swift ガイド"
+    "Swift Lessons / Swift Guide": "Swift Lessons / Swift ガイド",
+    "Dart Lessons / Dart Guide": "Dart Lessons / Dart ガイド"
   };
 
   function toJapanese(value) {
@@ -541,6 +543,7 @@
       "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Guide",
       "Ruby Lessons / Ruby Довідник": "Ruby Lessons / Ruby Guide",
       "Swift Lessons / Swift Довідник": "Swift Lessons / Swift Guide",
+      "Dart Lessons / Dart Довідник": "Dart Lessons / Dart Guide",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide",
       "C Lessons / C Довідник": "C Lessons / C Guide",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Guide",
@@ -563,6 +566,7 @@
       "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Справочник",
       "Ruby Lessons / Ruby Довідник": "Ruby Lessons / Ruby Справочник",
       "Swift Lessons / Swift Довідник": "Swift Lessons / Swift Справочник",
+      "Dart Lessons / Dart Довідник": "Dart Lessons / Dart Справочник",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник",
       "C Lessons / C Довідник": "C Lessons / C Справочник",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Справочник",
@@ -1412,7 +1416,12 @@
     }
 
     const translated = map[trimmed];
-    if (!translated) return translateCurrent(translateKnownSubstrings(translateFragments(value)));
+    if (!translated) {
+      const fallback = translateCurrent(translateKnownSubstrings(translateFragments(value)));
+      const hadCyrillic = /[\u0400-\u04FF]/.test(value);
+      const stillHasCyrillic = /[\u0400-\u04FF]/.test(fallback);
+      return hadCyrillic && stillHasCyrillic && fallback !== value ? value : fallback;
+    }
     return value.replace(trimmed, translateCurrent(translated));
   }
 
@@ -1472,6 +1481,7 @@
       Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
       Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
       Swift: { text: "A modern language for Apple platforms: iOS, macOS, SwiftUI, optionals, arrays, dictionaries, structs, classes, protocols, and errors.", pills: ["iOS", "SwiftUI", "optionals"], button: "Open" },
+      Dart: { text: "A language for Flutter, mobile and web apps: syntax, null safety, collections, classes, async, Future, and Flutter widgets.", pills: ["Flutter", "null safety", "async"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1552,6 +1562,7 @@
       Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
       Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
       Swift: { text: "A modern language for Apple platforms: iOS, macOS, SwiftUI, optionals, arrays, dictionaries, structs, classes, protocols, and errors.", pills: ["iOS", "SwiftUI", "optionals"], button: "Open" },
+      Dart: { text: "A language for Flutter, mobile and web apps: syntax, null safety, collections, classes, async, Future, and Flutter widgets.", pills: ["Flutter", "null safety", "async"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1572,6 +1583,7 @@
       Go: { text: "Современный язык для backend, серверов, DevOps, CLI, concurrency, goroutines, channels и простого надежного кода.", pills: ["backend", "goroutines", "channels"], button: "Открыть" },
       Ruby: { text: "Удобный язык для веба, автоматизации и Ruby on Rails: синтаксис, array, hash, блоки, ООП, модули, файлы и обработка ошибок.", pills: ["Rails", "ООП", "hash"], button: "Открыть" },
       Swift: { text: "Современный язык для платформ Apple: iOS, macOS, SwiftUI, optional, массивы, словари, структуры, классы, protocols и ошибки.", pills: ["iOS", "SwiftUI", "optional"], button: "Открыть" },
+      Dart: { text: "Язык для Flutter, мобильных и веб-приложений: синтаксис, null safety, коллекции, классы, async, Future и Flutter widgets.", pills: ["Flutter", "null safety", "async"], button: "Открыть" },
       Assembly: { text: "Низкоуровневый язык для понимания CPU: регистры, память, стек, инструкции, syscall и NASM x86-64.", pills: ["x86-64", "регистры", "syscall"], button: "Открыть" },
       C: { text: "Классический системный язык: синтаксис, типы, массивы, строки, указатели, struct, malloc/free и файлы.", pills: ["указатели", "память", "stdio"], button: "Открыть" },
       SQL: { text: "Язык для работы с базами данных: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, индексы и запросы.", pills: ["SELECT", "JOIN", "database"], button: "Открыть" },
@@ -1592,6 +1604,7 @@
       Go: { text: "Bahasa modern untuk backend, server, DevOps, alat CLI, concurrency, goroutines, channels, dan kode sederhana yang andal.", pills: ["backend", "goroutines", "channels"], button: "Buka" },
       Ruby: { text: "Bahasa yang nyaman untuk web, otomatisasi, dan Ruby on Rails: sintaks, array, hash, blok, OOP, modul, file, dan penanganan error.", pills: ["Rails", "OOP", "hash"], button: "Buka" },
       Swift: { text: "Bahasa modern untuk platform Apple: iOS, macOS, SwiftUI, optional, array, dictionary, struct, class, protocol, dan error.", pills: ["iOS", "SwiftUI", "optional"], button: "Buka" },
+      Dart: { text: "Bahasa untuk Flutter, aplikasi mobile dan web: sintaks, null safety, collection, class, async, Future, dan Flutter widgets.", pills: ["Flutter", "null safety", "async"], button: "Buka" },
       Assembly: { text: "Bahasa tingkat rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
       C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
       SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
@@ -1612,6 +1625,7 @@
       Go: { text: "バックエンド、サーバー、DevOps、CLI、concurrency、goroutines、channels、シンプルで信頼できるコード向けの現代的な言語。", pills: ["backend", "goroutines", "channels"], button: "開く" },
       Ruby: { text: "Web、自動化、Ruby on Rails、配列、hash、ブロック、OOP、モジュール、ファイル、エラー処理向けの書きやすい言語。", pills: ["Rails", "OOP", "hash"], button: "開く" },
       Swift: { text: "Apple プラットフォーム向けの現代的な言語: iOS、macOS、SwiftUI、Optional、配列、Dictionary、struct、class、protocol、エラー処理。", pills: ["iOS", "SwiftUI", "Optional"], button: "開く" },
+      Dart: { text: "Flutter、モバイルアプリ、Webアプリ向けの言語: 構文、null safety、コレクション、class、async、Future、Flutter widgets。", pills: ["Flutter", "null safety", "async"], button: "開く" },
       Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
       C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
       SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },
@@ -1712,6 +1726,23 @@
 
   function addLanguagePicker() {
     const header = document.querySelector(".header-inner");
+    const existingPicker = document.querySelector(".lang-switch");
+    if (existingPicker) {
+      existingPicker.querySelectorAll("button").forEach((button) => {
+        const code = button.dataset.langSwitch || button.dataset.lang;
+        if (!supported.includes(code)) return;
+        button.textContent = labels[code];
+        button.className = code === lang ? "is-active" : "";
+        button.onclick = () => {
+          localStorage.setItem("siteLanguage", code);
+          localStorage.setItem("siteLanguageChoiceVersion", "2");
+          const nextParams = new URLSearchParams(window.location.search);
+          nextParams.set("lang", code);
+          window.location.search = nextParams.toString();
+        };
+      });
+      return;
+    }
     if (!header || document.querySelector(".language-picker")) return;
 
     const picker = document.createElement("div");
