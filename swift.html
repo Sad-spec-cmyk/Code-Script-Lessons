@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Swift Lessons - український офлайн-довідник по Swift з прикладами, синтаксисом, Optional, SwiftUI та розробкою для Apple платформ.">
+  <meta name="keywords" content="Swift, Swift Lessons, Swift довідник, iOS, macOS, SwiftUI, Optional, Apple, програмування">
+  <title>Swift Lessons / Swift Довідник</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --panel: #ffffff;
+      --text: #20242a;
+      --muted: #566170;
+      --line: #d7dde5;
+      --code: #f2f2f3;
+      --accent: #1f1f1f;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: Consolas, "Courier New", monospace; font-size: 0.95rem; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { font-weight: 700; white-space: nowrap; }
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .top-nav a:hover { color: var(--text); }
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+    }
+    .lang-switch { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+    .lang-switch button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 7px;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .lang-switch button.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .hero {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 64px 20px 34px;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.6rem, 7vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 820px;
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid #b8c1ce;
+      border-radius: 7px;
+      background: var(--panel);
+      color: #111;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .sidebar {
+      position: sticky;
+      top: 76px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .sidebar-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    .sidebar a:hover { background: #f1f3f5; color: var(--text); }
+    .content { min-width: 0; display: grid; gap: 18px; }
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      scroll-margin-top: 88px;
+    }
+    .section-header {
+      width: 100%;
+      border: 0;
+      background: var(--panel);
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+    .section-header h2 { margin: 0; font-size: clamp(1.35rem, 3vw, 1.75rem); }
+    .section-body { border-top: 1px solid var(--line); padding: 20px 22px; }
+    .section.is-collapsed .section-body { display: none; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .card, .doc-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      min-width: 0;
+    }
+    .card h3, .doc-card h3 { margin: 0 0 10px; font-size: 1.12rem; line-height: 1.25; }
+    .card p { margin: 0 0 10px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f4f6f8;
+      font-family: Consolas, "Courier New", monospace;
+      font-weight: 700;
+      color: #111;
+    }
+    .code-wrap {
+      position: relative;
+      margin: 12px 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--code);
+      overflow: auto;
+    }
+    pre { margin: 0; padding: 16px; white-space: pre; min-width: max-content; }
+    .copy-btn {
+      position: sticky;
+      left: calc(100% - 78px);
+      top: 8px;
+      float: right;
+      margin: 8px 8px 0 0;
+      border: 1px solid #bac2cc;
+      border-radius: 6px;
+      background: #fff;
+      padding: 7px 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.86rem;
+    }
+    ul { padding-left: 22px; }
+    dl { margin: 0; display: grid; gap: 10px; }
+    dt { font-weight: 700; }
+    dd { margin: 0; color: var(--muted); }
+    .search-panel { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .search-panel input {
+      flex: 1 1 260px;
+      min-width: 0;
+      min-height: 46px;
+      border: 1px solid #b8c1ce;
+      border-radius: 7px;
+      padding: 10px 12px;
+      font: inherit;
+      background: #fff;
+    }
+    .search-note, .empty { margin: 10px 0 0; color: var(--muted); font-size: 0.94rem; }
+    .footer { max-width: 1180px; margin: 0 auto; padding: 28px 20px 44px; color: var(--muted); }
+    @media (max-width: 860px) {
+      .header-inner { align-items: flex-start; flex-wrap: wrap; }
+      .menu-toggle { display: inline-flex; }
+      .top-nav { display: none; width: 100%; flex-direction: column; align-items: stretch; gap: 0; }
+      .top-nav.is-open { display: flex; }
+      .top-nav a { padding: 10px 0; }
+      .layout { grid-template-columns: 1fr; gap: 18px; }
+      .sidebar { position: static; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 42px; }
+    }
+    @media (max-width: 520px) {
+      .header-inner, .hero, .layout, .footer { padding-left: 14px; padding-right: 14px; }
+      .section-header, .section-body { padding-left: 14px; padding-right: 14px; }
+      .actions .button { width: 100%; justify-content: center; }
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5258299007350718"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home">Swift Lessons</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="topNav">Меню</button>
+      <nav class="top-nav" id="topNav" aria-label="Швидка навігація">
+        <a href="index.html">Вибір мови</a>
+        <a href="#intro">Почати</a>
+        <a href="#topics">Теми</a>
+        <a href="#examples">Приклади</a>
+        <a href="#reference">Довідник</a>
+        <a href="#search">Пошук</a>
+        <div class="lang-switch" aria-label="Вибір мови сайту">
+          <button type="button" data-lang-switch="uk">UKR</button>
+          <button type="button" data-lang-switch="en">ENG</button>
+          <button type="button" data-lang-switch="ru">RU</button>
+          <button type="button" data-lang-switch="id">ID</button>
+          <button type="button" data-lang-switch="ja">JA</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <h1>Swift Lessons</h1>
+    <p>Український довідник по Swift з прикладами, синтаксисом та розробкою для Apple платформ.</p>
+    <div class="actions">
+      <a class="button primary" href="#intro">Почати</a>
+      <a class="button" href="#topics">Теми</a>
+      <a class="button" href="#examples">Приклади</a>
+      <a class="button" href="#reference">Довідник</a>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <p class="sidebar-title">Розділи</p>
+      <a href="index.html">Вибір мови</a>
+      <a href="#intro">Що таке Swift</a>
+      <a href="#syntax">Синтаксис</a>
+      <a href="#types">Типи даних</a>
+      <a href="#topics">Теми Swift</a>
+      <a href="#examples">Практичні приклади</a>
+      <a href="#reference">Довідник</a>
+      <a href="#search">Пошук</a>
+    </aside>
+
+    <main class="content">
+      <section class="section" id="search">
+        <div class="section-body">
+          <div class="search-panel">
+            <input id="searchInput" type="search" placeholder="Наприклад: optional, array, SwiftUI, protocol">
+            <button class="button" id="clearSearch" type="button">Очистити</button>
+          </div>
+          <p class="search-note" id="searchCount">Показано всі теми довідника.</p>
+        </div>
+      </section>
+
+      <section class="section search-item" id="intro">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Що таке Swift?</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <p>Swift — це сучасна компільована мова програмування від Apple для створення швидких, безпечних і зручних застосунків.</p>
+          <div class="grid">
+            <article class="card">
+              <h3>Що це за мова?</h3>
+              <p>Swift має строгі типи, зрозумілий синтаксис, Optional для безпечної роботи з відсутніми значеннями та добре підходить для великих застосунків.</p>
+            </article>
+            <article class="card">
+              <h3>Для чого використовується?</h3>
+              <p>Swift використовують для iOS, macOS, watchOS, tvOS, серверних програм, інструментів і навчання сучасному програмуванню.</p>
+            </article>
+            <article class="card">
+              <h3>Переваги Swift</h3>
+              <p>Мова швидка, безпечна, читабельна, має type inference, зручну роботу з колекціями, протоколами та сучасний фреймворк SwiftUI.</p>
+            </article>
+            <article class="card">
+              <h3><span class="badge">print()</span></h3>
+              <p>Функція <code>print()</code> виводить текст або значення в консоль.</p>
+            </article>
+          </div>
+          <div class="code-wrap">
+            <button class="copy-btn" type="button">Копіювати</button>
+            <pre><code>import Foundation
+
+print("Привіт, світ!")</code></pre>
+          </div>
+          <ul>
+            <li><code>import Foundation</code> підключає базову бібліотеку Foundation.</li>
+            <li><code>print()</code> виводить повідомлення у консоль.</li>
+            <li><code>"Привіт, світ!"</code> — це рядок тексту.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section search-item" id="syntax">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Синтаксис</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card"><h3>Коментарі</h3><p>Однорядковий коментар починається з <code>//</code>, багаторядковий пишеться через <code>/* */</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>// Коментар
+/*
+ Багаторядковий коментар
+*/</code></pre></div></article>
+            <article class="card"><h3><span class="badge">let</span></h3><p>Оголошує константу. Значення не можна змінити після присвоєння.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let appName = "Notes"</code></pre></div></article>
+            <article class="card"><h3><span class="badge">var</span></h3><p>Оголошує змінну, значення якої можна змінювати.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var score = 0
+score = 10</code></pre></div></article>
+            <article class="card"><h3><span class="badge">import</span></h3><p>Підключає модуль або фреймворк, наприклад Foundation чи SwiftUI.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>import SwiftUI</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="types">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Типи даних</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="doc-card"><h3>Назва: <span class="badge">Int</span></h3><dl><div><dt>Опис</dt><dd>Ціле число.</dd></div><div><dt>Приклад</dt><dd><code>let age: Int = 25</code></dd></div><div><dt>Коли використовувати</dt><dd>Для кількості, індексів і лічильників.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Double</span></h3><dl><div><dt>Опис</dt><dd>Дробове число з високою точністю.</dd></div><div><dt>Приклад</dt><dd><code>let price: Double = 19.99</code></dd></div><div><dt>Коли використовувати</dt><dd>Для більшості дробових розрахунків.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Float</span></h3><dl><div><dt>Опис</dt><dd>Дробове число з меншою точністю, ніж Double.</dd></div><div><dt>Приклад</dt><dd><code>let speed: Float = 12.5</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли важлива економія пам’яті або тип вимагає API.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">String</span></h3><dl><div><dt>Опис</dt><dd>Текстовий рядок.</dd></div><div><dt>Приклад</dt><dd><code>let name = "Ivan"</code></dd></div><div><dt>Коли використовувати</dt><dd>Для тексту, назв, повідомлень і шляхів.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Bool</span></h3><dl><div><dt>Опис</dt><dd>Логічне значення <code>true</code> або <code>false</code>.</dd></div><div><dt>Приклад</dt><dd><code>let isReady = true</code></dd></div><div><dt>Коли використовувати</dt><dd>Для умов і прапорців стану.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Array</span></h3><dl><div><dt>Опис</dt><dd>Впорядкований список значень одного типу.</dd></div><div><dt>Приклад</dt><dd><code>let numbers = [1, 2, 3]</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли потрібен список елементів.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Dictionary</span></h3><dl><div><dt>Опис</dt><dd>Колекція пар ключ-значення.</dd></div><div><dt>Приклад</dt><dd><code>let user = ["name": "Ivan"]</code></dd></div><div><dt>Коли використовувати</dt><dd>Для доступу до значень за ключем.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Set</span></h3><dl><div><dt>Опис</dt><dd>Колекція унікальних значень без фіксованого порядку.</dd></div><div><dt>Приклад</dt><dd><code>let tags: Set = ["ios", "swift"]</code></dd></div><div><dt>Коли використовувати</dt><dd>Коли важлива унікальність елементів.</dd></div></dl></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="topics">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Теми Swift</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card"><h3>Змінні і константи</h3><p><code>let</code> створює константу, <code>var</code> створює змінну. Swift часто сам визначає тип через type inference.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let name = "Olena"
+var score = 0
+score = 5</code></pre></div></article>
+            <article class="card"><h3>Оператори</h3><p>Swift має арифметичні, логічні оператори, оператори порівняння та присвоєння.</p><ul><li>Арифметичні: <code>+ - * / %</code></li><li>Порівняння: <code>== != > < >= <=</code></li><li>Логічні: <code>&& || !</code></li></ul><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let canEnter = age >= 18 && score > 10</code></pre></div></article>
+            <article class="card"><h3>Умови</h3><p><code>if</code>, <code>else</code> і <code>switch</code> виконують різний код залежно від значення.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>if age >= 18 {
+    print("Доступ дозволено")
+} else {
+    print("Доступ заборонено")
+}</code></pre></div></article>
+            <article class="card"><h3>Цикли</h3><p><code>for-in</code> перебирає колекції, <code>while</code> працює поки умова істинна, <code>repeat-while</code> виконується хоча б один раз.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>for number in [1, 2, 3] {
+    print(number)
+}</code></pre></div></article>
+            <article class="card"><h3>Функції</h3><p><code>func</code> оголошує функцію. Функція може мати параметри й повертати результат через <code>return</code>.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>func add(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}</code></pre></div></article>
+            <article class="card"><h3>Optional</h3><p>Optional означає, що значення може бути відсутнім. <code>?</code> створює optional, <code>if let</code> безпечно дістає значення, <code>!</code> примусово розгортає.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var name: String? = "Ivan"
+
+if let userName = name {
+    print(userName)
+}</code></pre></div></article>
+            <article class="card"><h3>Масиви</h3><p><code>Array</code> зберігає список. <code>append</code> додає елемент, <code>remove</code> видаляє.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var items = ["Book", "Phone"]
+items.append("Watch")
+items.remove(at: 0)</code></pre></div></article>
+            <article class="card"><h3>Словники</h3><p><code>Dictionary</code> зберігає ключі та значення. Доступ до значення робиться через ключ.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var user = ["name": "Ivan", "city": "Kyiv"]
+print(user["name"] ?? "Немає імені")</code></pre></div></article>
+            <article class="card"><h3>Структури і класи</h3><p><code>struct</code> і <code>class</code> описують власні типи. <code>init</code> налаштовує об’єкт під час створення.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>struct Player {
+    var name: String
+
+    init(name: String) {
+        self.name = name
+    }
+}</code></pre></div></article>
+            <article class="card"><h3>ООП</h3><p>Інкапсуляція приховує деталі, наслідування дозволяє класу отримати поведінку іншого класу, поліморфізм дозволяє працювати через спільний тип.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Animal {
+    func speak() {
+        print("Sound")
+    }
+}
+
+class Dog: Animal {
+    override func speak() {
+        print("Woof")
+    }
+}</code></pre></div></article>
+            <article class="card"><h3>Protocol</h3><p><code>protocol</code> описує вимоги до типу. Структура або клас реалізує ці вимоги.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>protocol Drivable {
+    func drive()
+}
+
+struct Car: Drivable {
+    func drive() {
+        print("Їду")
+    }
+}</code></pre></div></article>
+            <article class="card"><h3>Обробка помилок</h3><p><code>do</code>, <code>try</code> і <code>catch</code> використовують для коду, який може кинути помилку.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>do {
+    try riskyAction()
+} catch {
+    print("Помилка")
+}</code></pre></div></article>
+            <article class="card"><h3>SwiftUI</h3><p>SwiftUI описує інтерфейс декларативно. <code>Text</code> показує текст, <code>VStack</code> складає елементи вертикально, <code>Button</code> створює кнопку.</p><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>struct ContentView: View {
+    var body: some View {
+        Text("Привіт")
+    }
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="examples">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Практичні приклади</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="card"><h3>Калькулятор</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>func calculate(_ a: Double, _ b: Double, _ op: String) -> Double? {
+    switch op {
+    case "+": return a + b
+    case "-": return a - b
+    case "*": return a * b
+    case "/": return b == 0 ? nil : a / b
+    default: return nil
+    }
+}
+
+print(calculate(10, 5, "+") ?? 0)</code></pre></div></article>
+            <article class="card"><h3>Робота з Array</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>var numbers = [1, 2, 3]
+numbers.append(4)
+
+for number in numbers {
+    print(number)
+}</code></pre></div></article>
+            <article class="card"><h3>Простий клас</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>class Car {
+    var brand: String
+
+    init(brand: String) {
+        self.brand = brand
+    }
+
+    func drive() {
+        print("\(brand) їде")
+    }
+}
+
+let car = Car(brand: "Tesla")
+car.drive()</code></pre></div></article>
+            <article class="card"><h3>Optional приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>let input = "42"
+let number = Int(input)
+
+if let value = number {
+    print(value * 2)
+}</code></pre></div></article>
+            <article class="card"><h3>SwiftUI приклад</h3><div class="code-wrap"><button class="copy-btn" type="button">Копіювати</button><pre><code>struct ContentView: View {
+    var body: some View {
+        VStack {
+            Text("Привіт")
+            Button("Натисни") {
+                print("Click")
+            }
+        }
+    }
+}</code></pre></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section search-item" id="reference">
+        <button class="section-header" type="button" aria-expanded="true">
+          <h2>Довідник</h2>
+          <span>∨</span>
+        </button>
+        <div class="section-body">
+          <div class="grid">
+            <article class="doc-card"><h3>Назва: <span class="badge">let</span></h3><dl><div><dt>Опис</dt><dd>Оголошує константу.</dd></div><div><dt>Синтаксис</dt><dd><code>let name = value</code></dd></div><div><dt>Приклад</dt><dd><code>let count = 5</code></dd></div><div><dt>Примітка</dt><dd>Краще використовувати <code>let</code>, якщо значення не змінюється.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">var</span></h3><dl><div><dt>Опис</dt><dd>Оголошує змінну.</dd></div><div><dt>Синтаксис</dt><dd><code>var name = value</code></dd></div><div><dt>Приклад</dt><dd><code>var score = 0</code></dd></div><div><dt>Примітка</dt><dd>Використовується, коли значення має змінюватися.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">func</span></h3><dl><div><dt>Опис</dt><dd>Оголошує функцію.</dd></div><div><dt>Синтаксис</dt><dd><code>func name() -> Type</code></dd></div><div><dt>Приклад</dt><dd><code>func greet() { print("Hi") }</code></dd></div><div><dt>Примітка</dt><dd>Параметри мають типи.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">if let</span></h3><dl><div><dt>Опис</dt><dd>Безпечно дістає значення з Optional.</dd></div><div><dt>Синтаксис</dt><dd><code>if let value = optional</code></dd></div><div><dt>Приклад</dt><dd><code>if let name = userName { print(name) }</code></dd></div><div><dt>Примітка</dt><dd>Допомагає уникати помилок з nil.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">switch</span></h3><dl><div><dt>Опис</dt><dd>Перевіряє кілька варіантів значення.</dd></div><div><dt>Синтаксис</dt><dd><code>switch value { case x: ... }</code></dd></div><div><dt>Приклад</dt><dd><code>switch role { case "admin": print("OK") default: break }</code></dd></div><div><dt>Примітка</dt><dd>У Swift switch має бути вичерпним.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">struct</span></h3><dl><div><dt>Опис</dt><dd>Описує тип-значення з полями і методами.</dd></div><div><dt>Синтаксис</dt><dd><code>struct Name { ... }</code></dd></div><div><dt>Приклад</dt><dd><code>struct User { var name: String }</code></dd></div><div><dt>Примітка</dt><dd>У Swift структури використовують дуже часто.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">class</span></h3><dl><div><dt>Опис</dt><dd>Описує reference type з можливістю наслідування.</dd></div><div><dt>Синтаксис</dt><dd><code>class Name { ... }</code></dd></div><div><dt>Приклад</dt><dd><code>class Player { }</code></dd></div><div><dt>Примітка</dt><dd>Класи потрібні, коли важлива спільна ссылка на об’єкт або наслідування.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">protocol</span></h3><dl><div><dt>Опис</dt><dd>Описує вимоги до типу.</dd></div><div><dt>Синтаксис</dt><dd><code>protocol Name { ... }</code></dd></div><div><dt>Приклад</dt><dd><code>protocol Drawable { func draw() }</code></dd></div><div><dt>Примітка</dt><dd>Протоколи є важливою частиною стилю Swift.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">do try catch</span></h3><dl><div><dt>Опис</dt><dd>Обробляє помилки.</dd></div><div><dt>Синтаксис</dt><dd><code>do { try action() } catch { }</code></dd></div><div><dt>Приклад</dt><dd><code>try loadFile()</code></dd></div><div><dt>Примітка</dt><dd>Функції, які кидають помилки, позначаються <code>throws</code>.</dd></div></dl></article>
+            <article class="doc-card"><h3>Назва: <span class="badge">Text</span></h3><dl><div><dt>Опис</dt><dd>SwiftUI елемент для показу тексту.</dd></div><div><dt>Синтаксис</dt><dd><code>Text("Hello")</code></dd></div><div><dt>Приклад</dt><dd><code>Text("Привіт")</code></dd></div><div><dt>Примітка</dt><dd>Може мати модифікатори стилю.</dd></div></dl></article>
+          </div>
+          <p class="empty" id="emptyMessage" style="display:none;">За цим запитом нічого не знайдено.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Swift Lessons / Swift Довідник.</p>
+  </footer>
+
+  <script src="i18n-auto.js"></script>
+  <script src="i18n.js"></script>
+  <script>
+    // Пошук, копіювання коду, згортання секцій і мобільне меню.
+    const searchInput = document.querySelector("#searchInput");
+    const clearSearch = document.querySelector("#clearSearch");
+    const searchCount = document.querySelector("#searchCount");
+    const emptyMessage = document.querySelector("#emptyMessage");
+    const supportedLangs = ["uk", "en", "ru", "id", "ja"];
+    const params = new URLSearchParams(location.search);
+    const savedLang = localStorage.getItem("siteLanguage");
+    const currentLang = supportedLangs.includes(params.get("lang"))
+      ? params.get("lang")
+      : supportedLangs.includes(savedLang)
+        ? savedLang
+        : "en";
+    const uiText = {
+      uk: { found: (count) => `Знайдено: ${count} тем`, all: "Показано всі теми довідника.", copied: "Скопійовано", copy: "Копіювати" },
+      en: { found: (count) => `Found: ${count} topics`, all: "All guide topics are shown.", copied: "Copied", copy: "Copy" },
+      ru: { found: (count) => `Найдено: ${count} тем`, all: "Показаны все темы справочника.", copied: "Скопировано", copy: "Копировать" },
+      id: { found: (count) => `Ditemukan: ${count} topik`, all: "Semua topik panduan ditampilkan.", copied: "Disalin", copy: "Salin" },
+      ja: { found: (count) => `${count} 件のトピックが見つかりました`, all: "すべてのガイドトピックを表示しています。", copied: "コピー済み", copy: "コピー" }
+    };
+    const labels = uiText[currentLang] || uiText.en;
+
+    function updateSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = document.querySelectorAll(".search-item");
+      let visible = 0;
+
+      items.forEach((item) => {
+        const isVisible = !query || item.innerText.toLowerCase().includes(query);
+        item.style.display = isVisible ? "" : "none";
+        if (isVisible && item.id !== "search") visible++;
+      });
+
+      searchCount.textContent = query ? labels.found(visible) : labels.all;
+      if (emptyMessage) emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    document.addEventListener("click", (event) => {
+      const copyButton = event.target.closest(".copy-btn");
+      if (!copyButton) return;
+      const code = copyButton.parentElement.querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        copyButton.textContent = labels.copied;
+        setTimeout(() => copyButton.textContent = labels.copy, 1200);
+      });
+    });
+
+    document.querySelectorAll(".section-header").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.closest(".section");
+        const isCollapsed = section.classList.toggle("is-collapsed");
+        button.setAttribute("aria-expanded", String(!isCollapsed));
+      });
+    });
+
+    document.querySelector(".menu-toggle").addEventListener("click", () => {
+      const nav = document.querySelector("#topNav");
+      const isOpen = nav.classList.toggle("is-open");
+      document.querySelector(".menu-toggle").setAttribute("aria-expanded", String(isOpen));
+    });
+
+    document.querySelectorAll(".top-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.querySelector("#topNav").classList.remove("is-open");
+        document.querySelector(".menu-toggle").setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", updateSearch);
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      updateSearch();
+      searchInput.focus();
+    });
+    updateSearch();
+  </script>
+  <script src="practice.js"></script>
+</body>
+</html>

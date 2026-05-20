@@ -384,7 +384,8 @@
     "Java Lessons / Java Guide": "Java Lessons / Panduan Java",
     "JSON Lessons / JSON Guide": "JSON Lessons / Panduan JSON",
     "Go Lessons / Go (Golang) Guide": "Go Lessons / Panduan Go (Golang)",
-    "Ruby Lessons / Ruby Guide": "Ruby Lessons / Panduan Ruby"
+    "Ruby Lessons / Ruby Guide": "Ruby Lessons / Panduan Ruby",
+    "Swift Lessons / Swift Guide": "Swift Lessons / Panduan Swift"
   };
 
   function toIndonesian(value) {
@@ -507,7 +508,9 @@
     "C++ Lessons / C++ Guide": "C++ Lessons / C++ ガイド",
     "Java Lessons / Java Guide": "Java Lessons / Java ガイド",
     "JSON Lessons / JSON Guide": "JSON Lessons / JSON ガイド",
-    "Go Lessons / Go (Golang) Guide": "Go Lessons / Go (Golang) ガイド"
+    "Go Lessons / Go (Golang) Guide": "Go Lessons / Go (Golang) ガイド",
+    "Ruby Lessons / Ruby Guide": "Ruby Lessons / Ruby ガイド",
+    "Swift Lessons / Swift Guide": "Swift Lessons / Swift ガイド"
   };
 
   function toJapanese(value) {
@@ -536,6 +539,8 @@
       "JSON Lessons / JSON Довідник": "JSON Lessons / JSON Guide",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Guide",
       "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Guide",
+      "Ruby Lessons / Ruby Довідник": "Ruby Lessons / Ruby Guide",
+      "Swift Lessons / Swift Довідник": "Swift Lessons / Swift Guide",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Guide",
       "C Lessons / C Довідник": "C Lessons / C Guide",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Guide",
@@ -556,6 +561,8 @@
       "JSON Lessons / JSON Довідник": "JSON Lessons / JSON Справочник",
       "Rust Lessons / Rust Довідник": "Rust Lessons / Rust Справочник",
       "Go Lessons / Go (Golang) Довідник": "Go Lessons / Go (Golang) Справочник",
+      "Ruby Lessons / Ruby Довідник": "Ruby Lessons / Ruby Справочник",
+      "Swift Lessons / Swift Довідник": "Swift Lessons / Swift Справочник",
       "Assembler Lessons / Assembly Довідник": "Assembler Lessons / Assembly Справочник",
       "C Lessons / C Довідник": "C Lessons / C Справочник",
       "SQL Lessons / SQL Довідник": "SQL Lessons / SQL Справочник",
@@ -1336,15 +1343,23 @@
   }
 
   const substringCache = {};
-  function translateKnownSubstrings(value) {
+  function translateKnownSubstrings(value, codeMode = false) {
     const map = dict[lang] || (lang === "id" || lang === "ja" ? dict.en : {}) || {};
-    if (!substringCache[lang]) {
-      substringCache[lang] = Object.keys(map)
-        .filter((key) => /[\u0400-\u04FF]/.test(key) && key.length > 3)
+    const cacheKey = `${lang}:${codeMode ? "code" : "text"}`;
+    if (!substringCache[cacheKey]) {
+      substringCache[cacheKey] = Object.keys(map)
+        .filter((key) => {
+          if (!/[\u0400-\u04FF]/.test(key) || key.length <= 3) return false;
+          if (!codeMode) return true;
+          if (/[<>{}=$#]|\\n/.test(key)) return false;
+          const cyrillicCount = (key.match(/[\u0400-\u04FF]/g) || []).length;
+          const letterCount = (key.match(/\p{L}/gu) || []).length || 1;
+          return cyrillicCount / letterCount > 0.45;
+        })
         .sort((a, b) => b.length - a.length);
     }
 
-    return substringCache[lang].reduce((text, source) => {
+    return substringCache[cacheKey].reduce((text, source) => {
       const translated = map[source];
       return translated ? text.replaceAll(source, translated) : text;
     }, value);
@@ -1401,9 +1416,47 @@
     return value.replace(trimmed, translateCurrent(translated));
   }
 
+  function translateCodeValue(value) {
+    if (lang === "uk" || !value) return value;
+    return translateCurrent(translateKnownSubstrings(translateFragments(value), true));
+  }
+
   function shouldSkip(node) {
     const parent = node.parentElement;
-    return !parent || parent.closest("script, style, textarea, pre, code");
+    return !parent || parent.closest("script, style, textarea");
+  }
+
+  function translateNodeTree(root) {
+    if (!root) return;
+    if (root.nodeType === Node.TEXT_NODE) {
+      if (!shouldSkip(root)) {
+        root.nodeValue = root.parentElement?.closest("pre, code")
+          ? translateCodeValue(root.nodeValue)
+          : translateValue(root.nodeValue);
+      }
+      return;
+    }
+    if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) return;
+
+    const textWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+    textNodes.forEach((node) => {
+      if (!shouldSkip(node)) {
+        node.nodeValue = node.parentElement?.closest("pre, code")
+          ? translateCodeValue(node.nodeValue)
+          : translateValue(node.nodeValue);
+      }
+    });
+
+    const elements = root.nodeType === Node.ELEMENT_NODE ? [root, ...root.querySelectorAll("*")] : [...root.querySelectorAll("*")];
+    elements.forEach((element) => {
+      ["placeholder", "aria-label", "title", "alt"].forEach((attr) => {
+        if (element.hasAttribute(attr)) {
+          element.setAttribute(attr, translateValue(element.getAttribute(attr)));
+        }
+      });
+    });
   }
 
   const indexCardText = {
@@ -1418,6 +1471,7 @@
       Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
       Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
       Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
+      Swift: { text: "A modern language for Apple platforms: iOS, macOS, SwiftUI, optionals, arrays, dictionaries, structs, classes, protocols, and errors.", pills: ["iOS", "SwiftUI", "optionals"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1497,6 +1551,7 @@
       Rust: { text: "A systems language for fast, reliable code: ownership, borrowing, lifetimes, Result, Vec, and memory safety.", pills: ["ownership", "safety", "performance"], button: "Open" },
       Go: { text: "A modern language for backend, servers, DevOps, CLI tools, concurrency, goroutines, channels, and simple reliable code.", pills: ["backend", "goroutines", "channels"], button: "Open" },
       Ruby: { text: "A friendly language for web, automation, Ruby on Rails, arrays, hashes, blocks, OOP, modules, files, and error handling.", pills: ["Rails", "OOP", "hash"], button: "Open" },
+      Swift: { text: "A modern language for Apple platforms: iOS, macOS, SwiftUI, optionals, arrays, dictionaries, structs, classes, protocols, and errors.", pills: ["iOS", "SwiftUI", "optionals"], button: "Open" },
       Assembly: { text: "A low-level language for understanding the CPU: registers, memory, stack, instructions, syscall, and NASM x86-64.", pills: ["x86-64", "registers", "syscall"], button: "Open" },
       C: { text: "A classic systems language: syntax, types, arrays, strings, pointers, struct, malloc/free, and files.", pills: ["pointers", "memory", "stdio"], button: "Open" },
       SQL: { text: "A language for working with databases: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indexes, and queries.", pills: ["SELECT", "JOIN", "database"], button: "Open" },
@@ -1516,6 +1571,7 @@
       Rust: { text: "Системный язык для быстрого и надежного кода: ownership, borrowing, lifetimes, Result, Vec и безопасность памяти.", pills: ["ownership", "безопасность", "performance"], button: "Открыть" },
       Go: { text: "Современный язык для backend, серверов, DevOps, CLI, concurrency, goroutines, channels и простого надежного кода.", pills: ["backend", "goroutines", "channels"], button: "Открыть" },
       Ruby: { text: "Удобный язык для веба, автоматизации и Ruby on Rails: синтаксис, array, hash, блоки, ООП, модули, файлы и обработка ошибок.", pills: ["Rails", "ООП", "hash"], button: "Открыть" },
+      Swift: { text: "Современный язык для платформ Apple: iOS, macOS, SwiftUI, optional, массивы, словари, структуры, классы, protocols и ошибки.", pills: ["iOS", "SwiftUI", "optional"], button: "Открыть" },
       Assembly: { text: "Низкоуровневый язык для понимания CPU: регистры, память, стек, инструкции, syscall и NASM x86-64.", pills: ["x86-64", "регистры", "syscall"], button: "Открыть" },
       C: { text: "Классический системный язык: синтаксис, типы, массивы, строки, указатели, struct, malloc/free и файлы.", pills: ["указатели", "память", "stdio"], button: "Открыть" },
       SQL: { text: "Язык для работы с базами данных: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, индексы и запросы.", pills: ["SELECT", "JOIN", "database"], button: "Открыть" },
@@ -1535,6 +1591,7 @@
       Rust: { text: "Bahasa sistem untuk kode cepat dan andal: ownership, borrowing, lifetimes, Result, Vec, dan keamanan memori.", pills: ["ownership", "keamanan", "performa"], button: "Buka" },
       Go: { text: "Bahasa modern untuk backend, server, DevOps, alat CLI, concurrency, goroutines, channels, dan kode sederhana yang andal.", pills: ["backend", "goroutines", "channels"], button: "Buka" },
       Ruby: { text: "Bahasa yang nyaman untuk web, otomatisasi, dan Ruby on Rails: sintaks, array, hash, blok, OOP, modul, file, dan penanganan error.", pills: ["Rails", "OOP", "hash"], button: "Buka" },
+      Swift: { text: "Bahasa modern untuk platform Apple: iOS, macOS, SwiftUI, optional, array, dictionary, struct, class, protocol, dan error.", pills: ["iOS", "SwiftUI", "optional"], button: "Buka" },
       Assembly: { text: "Bahasa tingkat rendah untuk memahami CPU: register, memori, stack, instruksi, syscall, dan NASM x86-64.", pills: ["x86-64", "register", "syscall"], button: "Buka" },
       C: { text: "Bahasa sistem klasik: sintaks, tipe, array, string, pointer, struct, malloc/free, dan file.", pills: ["pointer", "memori", "stdio"], button: "Buka" },
       SQL: { text: "Bahasa untuk bekerja dengan database: SELECT, INSERT, UPDATE, DELETE, JOIN, GROUP BY, indeks, dan query.", pills: ["SELECT", "JOIN", "database"], button: "Buka" },
@@ -1554,6 +1611,7 @@
       Rust: { text: "高速で信頼性の高いコードのためのシステム言語: ownership、borrowing、lifetimes、Result、Vec、メモリ安全性。", pills: ["ownership", "安全性", "performance"], button: "開く" },
       Go: { text: "バックエンド、サーバー、DevOps、CLI、concurrency、goroutines、channels、シンプルで信頼できるコード向けの現代的な言語。", pills: ["backend", "goroutines", "channels"], button: "開く" },
       Ruby: { text: "Web、自動化、Ruby on Rails、配列、hash、ブロック、OOP、モジュール、ファイル、エラー処理向けの書きやすい言語。", pills: ["Rails", "OOP", "hash"], button: "開く" },
+      Swift: { text: "Apple プラットフォーム向けの現代的な言語: iOS、macOS、SwiftUI、Optional、配列、Dictionary、struct、class、protocol、エラー処理。", pills: ["iOS", "SwiftUI", "Optional"], button: "開く" },
       Assembly: { text: "CPUを理解するための低レベル言語: レジスタ、メモリ、スタック、命令、syscall、NASM x86-64。", pills: ["x86-64", "レジスタ", "syscall"], button: "開く" },
       C: { text: "古典的なシステム言語: 構文、型、配列、文字列、ポインタ、struct、malloc/free、ファイル。", pills: ["ポインタ", "メモリ", "stdio"], button: "開く" },
       SQL: { text: "データベースを扱うための言語: SELECT、INSERT、UPDATE、DELETE、JOIN、GROUP BY、インデックス、クエリ。", pills: ["SELECT", "JOIN", "データベース"], button: "開く" },
@@ -1607,22 +1665,35 @@
     const titles = titleMap[lang] || (lang === "id" || lang === "ja" ? titleMap.en : {}) || {};
     if (titles[document.title]) document.title = translateCurrent(titles[document.title]);
 
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach((node) => {
-      if (!shouldSkip(node)) node.nodeValue = translateValue(node.nodeValue);
-    });
-
-    document.querySelectorAll("[placeholder], [aria-label], [title]").forEach((element) => {
-      ["placeholder", "aria-label", "title"].forEach((attr) => {
-        if (element.hasAttribute(attr)) {
-          element.setAttribute(attr, translateValue(element.getAttribute(attr)));
-        }
-      });
-    });
-
+    translateNodeTree(document.body);
     translateIndexCards();
+  }
+
+  function observeDynamicTranslations() {
+    if (lang === "uk" || !document.body || !window.MutationObserver) return;
+    let isTranslating = false;
+    let timer = 0;
+    const observer = new MutationObserver((mutations) => {
+      if (isTranslating) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        isTranslating = true;
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => translateNodeTree(node));
+          if (mutation.type === "characterData") translateNodeTree(mutation.target);
+          if (mutation.type === "attributes") translateNodeTree(mutation.target);
+        });
+        translateIndexCards();
+        isTranslating = false;
+      }, 0);
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["placeholder", "aria-label", "title", "alt"]
+    });
   }
 
   function updateLocalLinks() {
@@ -1707,6 +1778,7 @@
   addLanguagePicker();
   updateLocalLinks();
   translatePage();
+  observeDynamicTranslations();
 
   let scheduled = false;
   const observer = new MutationObserver(() => {
@@ -1715,8 +1787,7 @@
     requestAnimationFrame(() => {
       scheduled = false;
       updateLocalLinks();
-      translatePage();
     });
   });
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  observer.observe(document.body, { childList: true, subtree: true });
 })();

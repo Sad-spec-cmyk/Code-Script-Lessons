@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Programming Lessons / Вибір мови</title>
   <link rel="icon" href="icon/index.png" type="image/png">
+  <meta name="description" content="Programming Lessons is an offline learning hub with beginner-friendly guides for HTML, CSS, JavaScript, Python, C, C++, C#, Java, Go, Rust, Ruby, Swift, SQL, JSON, PHP, TypeScript, PowerShell and Assembly.">
+  <meta name="keywords" content="programming lessons, coding guide, offline programming guide, HTML lessons, CSS lessons, JavaScript lessons, Python lessons, C lessons, C++ lessons, C# lessons, Java lessons, Go lessons, Rust lessons, Ruby lessons, Swift lessons, SQL lessons, JSON guide, PHP lessons, TypeScript lessons, PowerShell lessons, Assembly lessons, learn programming">
   <style>
     :root {
       --bg: #f6f7f8;
@@ -642,6 +644,7 @@
         <a href="rust.html">Rust</a>
         <a href="go.html">Go</a>
         <a href="ruby.html">Ruby</a>
+        <a href="swift.html">Swift</a>
         <a href="assembler.html">Assembly</a>
         <a href="c.html">C</a>
         <a href="sql.html">SQL</a>
@@ -853,6 +856,22 @@
 
       <article class="language-card">
         <div class="language-visual" aria-hidden="true">
+          <img src="icon/Swift.svg" alt="Swift" width="252" height="252">
+        </div>
+        <div class="card-body">
+          <h2>Swift</h2>
+          <p>Сучасна мова для Apple платформ: iOS, macOS, SwiftUI, Optional, Array, Dictionary, struct, class, protocol і обробка помилок.</p>
+          <div class="meta">
+            <span class="pill">iOS</span>
+            <span class="pill">SwiftUI</span>
+            <span class="pill">Optional</span>
+          </div>
+          <a class="button" href="swift.html">Відкрити</a>
+        </div>
+      </article>
+
+      <article class="language-card">
+        <div class="language-visual" aria-hidden="true">
           <img src="icon/ASM.png" alt="Assembly" width="252" height="252">
         </div>
         <div class="card-body">
@@ -991,6 +1010,7 @@
               <option value="rust">Rust</option>
               <option value="go">Go</option>
               <option value="ruby">Ruby</option>
+              <option value="swift">Swift</option>
               <option value="assembly">Assembly</option>
               <option value="c">C</option>
               <option value="sql">SQL</option>
@@ -1160,6 +1180,11 @@
           { q: { uk: "Яким словом у Ruby оголошують метод?", en: "Which keyword declares a method in Ruby?", ru: "Каким словом в Ruby объявляют метод?" }, a: ["def"] },
           { q: { uk: "Яке слово закриває блок if, class або def у Ruby?", en: "Which keyword closes an if, class, or def block in Ruby?", ru: "Какое слово закрывает блок if, class или def в Ruby?" }, a: ["end"] },
           { q: { uk: "Який метод Ruby виводить текст у консоль з новим рядком?", en: "Which Ruby method prints text to the console with a new line?", ru: "Какой метод Ruby выводит текст в консоль с новой строкой?" }, a: ["puts"] }
+        ],
+        swift: [
+          { q: { uk: "Яким словом у Swift оголошують константу?", en: "Which keyword declares a constant in Swift?", ru: "Каким словом в Swift объявляют константу?" }, a: ["let"] },
+          { q: { uk: "Яка конструкція Swift безпечно розпаковує Optional?", en: "Which Swift construct safely unwraps an Optional?", ru: "Какая конструкция Swift безопасно распаковывает Optional?" }, a: ["if let"] },
+          { q: { uk: "Яке ключове слово описує набір вимог до поведінки у Swift?", en: "Which keyword describes a set of behavior requirements in Swift?", ru: "Какое ключевое слово описывает набор требований к поведению в Swift?" }, a: ["protocol"] }
         ],
         assembly: [
           { q: { uk: "Яка інструкція копіює значення між регістрами або пам’яттю?", en: "Which instruction copies values between registers or memory?", ru: "Какая инструкция копирует значения между регистрами или памятью?" }, a: ["mov"] },

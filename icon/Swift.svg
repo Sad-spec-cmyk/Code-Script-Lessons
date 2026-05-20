@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="252" height="252" viewBox="0 0 252 252" role="img" aria-label="Swift">
+  <rect width="252" height="252" rx="28" fill="#f6f7f8"/>
+  <defs>
+    <linearGradient id="swiftGradient" x1="48" y1="36" x2="208" y2="218" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff9f35"/>
+      <stop offset="0.55" stop-color="#ff5a35"/>
+      <stop offset="1" stop-color="#e52e24"/>
+    </linearGradient>
+  </defs>
+  <path d="M55 55c36 42 68 72 99 91-24 7-52 4-82-8 28 29 61 48 99 50 15 1 28-3 39-12 5 12 8 24 9 37-12-20-27-30-45-30-49 0-98-34-139-91 24 19 47 32 69 38C83 108 66 83 55 55Z" fill="url(#swiftGradient)"/>
+  <path d="M80 42c48 38 84 76 108 115 8-38-4-75-33-112 33 22 54 48 64 79 10 31 3 58-20 79-2-18-9-32-21-43C145 130 111 91 80 42Z" fill="#ffcf8a" opacity="0.95"/>
+  <text x="126" y="221" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#20242a">Swift</text>
+</svg>
