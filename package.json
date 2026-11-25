@@ -1,0 +1,13 @@
+{
+  "name": "programming-lessons",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node --test tests/site.test.mjs",
+    "preview": "node tools/serve.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

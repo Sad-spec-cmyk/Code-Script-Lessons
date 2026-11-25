@@ -15,6 +15,9 @@
     java: "Java",
     rust: "Rust",
     go: "Go",
+    ruby: "Ruby",
+    swift: "Swift",
+    dart: "Dart",
     assembler: "Assembly",
     c: "C",
     sql: "SQL",
@@ -29,13 +32,18 @@
   const supported = ["uk", "en", "ru", "id", "ja"];
   const params = new URLSearchParams(location.search);
   const requested = params.get("lang");
-  const saved = localStorage.getItem("siteLanguage");
-  const savedVersion = localStorage.getItem("siteLanguageChoiceVersion");
-  const lang = supported.includes(requested)
+  const storage = window.LessonStorage || {
+    available: true,
+    getItem(key) { try { return localStorage.getItem(key); } catch { this.available = false; return null; } },
+    setItem(key, value) { try { localStorage.setItem(key, value); return true; } catch { this.available = false; return false; } }
+  };
+  const saved = storage.getItem("siteLanguage");
+  const savedVersion = storage.getItem("siteLanguageChoiceVersion");
+  const lang = window.SiteConfig?.lang || (supported.includes(requested)
     ? requested
     : savedVersion === "2" && supported.includes(saved)
       ? saved
-      : "en";
+      : "en");
 
   const ui = {
     uk: {
@@ -451,6 +459,164 @@
         solution: 'package main\n\nimport "fmt"\n\nfunc main() {\n    messages := make(chan string)\n\n    go func() {\n        messages <- "Hello from goroutine"\n    }()\n\n    fmt.Println(<-messages)\n}'
       }
     ],
+    ruby: [
+      {
+        title: { uk: "Метод і умова", en: "Method and condition", ru: "Метод и условие", id: "Method dan kondisi", ja: "メソッドと条件" },
+        body: {
+          uk: "Напиши Ruby-код: створи метод adult?, який приймає age і повертає true, якщо вік 18 або більше.",
+          en: "Write Ruby code: create an adult? method that accepts age and returns true when age is 18 or more.",
+          ru: "Напиши Ruby-код: создай метод adult?, который принимает age и возвращает true, если возраст 18 или больше.",
+          id: "Tulis kode Ruby: buat method adult? yang menerima age dan mengembalikan true jika usia 18 atau lebih.",
+          ja: "Ruby のコードを書いてください: age を受け取り、18 以上なら true を返す adult? メソッドを作ります。"
+        },
+        hints: {
+          uk: ["Метод оголошується через def.", "Порівняй age з 18.", "Блок закривається словом end."],
+          en: ["A method is declared with def.", "Compare age with 18.", "The block is closed with end."],
+          ru: ["Метод объявляется через def.", "Сравни age с 18.", "Блок закрывается словом end."],
+          id: ["Method dideklarasikan dengan def.", "Bandingkan age dengan 18.", "Blok ditutup dengan end."],
+          ja: ["メソッドは def で宣言します。", "age を 18 と比較します。", "ブロックは end で閉じます。"]
+        },
+        checks: ["def adult?", "age", ">= 18", "end"],
+        solution: "def adult?(age)\n  age >= 18\nend\n\nputs adult?(20)"
+      },
+      {
+        title: { uk: "Array і each", en: "Array and each", ru: "Array и each", id: "Array dan each", ja: "Array と each" },
+        body: {
+          uk: "Створи масив імен, додай нове ім’я через push і виведи всі імена через each.",
+          en: "Create an array of names, add a new name with push, and print every name with each.",
+          ru: "Создай массив имен, добавь новое имя через push и выведи все имена через each.",
+          id: "Buat array nama, tambahkan nama baru dengan push, lalu cetak semua nama memakai each.",
+          ja: "名前の配列を作り、push で新しい名前を追加し、each ですべての名前を表示します。"
+        },
+        hints: {
+          uk: ["Масив створюється через [].", "push додає елемент.", "each перебирає елементи."],
+          en: ["An array is created with [].", "push adds an item.", "each iterates items."],
+          ru: ["Массив создается через [].", "push добавляет элемент.", "each перебирает элементы."],
+          id: ["Array dibuat dengan [].", "push menambahkan item.", "each melakukan iterasi item."],
+          ja: ["配列は [] で作ります。", "push は要素を追加します。", "each は要素を順番に処理します。"]
+        },
+        checks: ["[", "]", ".push", ".each", "puts"],
+        solution: "names = [\"Anna\", \"Ivan\"]\nnames.push(\"Olia\")\n\nnames.each do |name|\n  puts name\nend"
+      }
+    ],
+    swift: [
+      {
+        title: { uk: "Optional і if let", en: "Optional and if let", ru: "Optional и if let", id: "Optional dan if let", ja: "Optional と if let" },
+        body: {
+          uk: "Напиши Swift-код: створи Optional String, безпечно розпакуй його через if let і виведи значення через print.",
+          en: "Write Swift code: create an Optional String, safely unwrap it with if let, and print the value.",
+          ru: "Напиши Swift-код: создай Optional String, безопасно распакуй его через if let и выведи значение через print.",
+          id: "Tulis kode Swift: buat Optional String, buka nilainya dengan aman memakai if let, lalu cetak nilainya.",
+          ja: "Swift のコードを書いてください: Optional String を作り、if let で安全にアンラップし、値を print します。"
+        },
+        hints: {
+          uk: ["Optional має знак ? після типу.", "if let створює тимчасову безпечну константу.", "print виводить значення."],
+          en: ["An Optional has ? after the type.", "if let creates a temporary safe constant.", "print outputs the value."],
+          ru: ["Optional имеет знак ? после типа.", "if let создает временную безопасную константу.", "print выводит значение."],
+          id: ["Optional memiliki tanda ? setelah tipe.", "if let membuat konstanta sementara yang aman.", "print menampilkan nilai."],
+          ja: ["Optional は型の後ろに ? を付けます。", "if let は一時的で安全な定数を作ります。", "print は値を表示します。"]
+        },
+        checks: ["string?", "if let", "print"],
+        solution: "var name: String? = \"Ivan\"\n\nif let value = name {\n    print(value)\n}"
+      },
+      {
+        title: { uk: "Array і for-in", en: "Array and for-in", ru: "Array и for-in", id: "Array dan for-in", ja: "Array と for-in" },
+        body: {
+          uk: "Створи масив чисел, додай число через append і перебери всі значення циклом for-in.",
+          en: "Create an array of numbers, add a number with append, and iterate all values with for-in.",
+          ru: "Создай массив чисел, добавь число через append и перебери все значения циклом for-in.",
+          id: "Buat array angka, tambahkan angka dengan append, lalu iterasi semua nilai dengan for-in.",
+          ja: "数値の配列を作り、append で数値を追加し、for-in ですべての値を処理します。"
+        },
+        hints: {
+          uk: ["Масив можна створити через квадратні дужки.", "append додає елемент.", "for number in numbers перебирає значення."],
+          en: ["An array can be created with square brackets.", "append adds an item.", "for number in numbers iterates values."],
+          ru: ["Массив можно создать через квадратные скобки.", "append добавляет элемент.", "for number in numbers перебирает значения."],
+          id: ["Array bisa dibuat dengan tanda kurung siku.", "append menambahkan item.", "for number in numbers melakukan iterasi nilai."],
+          ja: ["配列は角括弧で作れます。", "append は要素を追加します。", "for number in numbers で値を順番に処理します。"]
+        },
+        checks: ["var", "[", "]", ".append", "for", " in ", "print"],
+        solution: "var numbers = [1, 2, 3]\nnumbers.append(4)\n\nfor number in numbers {\n    print(number)\n}"
+      },
+      {
+        title: { uk: "Struct і protocol", en: "Struct and protocol", ru: "Struct и protocol", id: "Struct dan protocol", ja: "struct と protocol" },
+        body: {
+          uk: "Створи protocol Printable з методом printInfo(), struct User, який реалізує protocol, і виклич метод.",
+          en: "Create a Printable protocol with printInfo(), a User struct that implements the protocol, and call the method.",
+          ru: "Создай protocol Printable с методом printInfo(), struct User, который реализует protocol, и вызови метод.",
+          id: "Buat protocol Printable dengan printInfo(), struct User yang mengimplementasikan protocol, lalu panggil method.",
+          ja: "printInfo() を持つ Printable protocol と、それを実装する User struct を作り、メソッドを呼び出します。"
+        },
+        hints: {
+          uk: ["protocol описує вимогу до методу.", "struct може реалізувати protocol після двокрапки.", "Метод потрібно викликати на об’єкті."],
+          en: ["protocol describes a method requirement.", "A struct can implement a protocol after a colon.", "Call the method on an object."],
+          ru: ["protocol описывает требование к методу.", "struct может реализовать protocol после двоеточия.", "Метод нужно вызвать у объекта."],
+          id: ["protocol menjelaskan kebutuhan method.", "struct bisa mengimplementasikan protocol setelah titik dua.", "Panggil method pada objek."],
+          ja: ["protocol はメソッド要件を表します。", "struct はコロンの後に protocol を実装できます。", "オブジェクトでメソッドを呼び出します。"]
+        },
+        checks: ["protocol printable", "func printinfo", "struct user", ":", "print"],
+        solution: "protocol Printable {\n    func printInfo()\n}\n\nstruct User: Printable {\n    let name: String\n\n    func printInfo() {\n        print(name)\n    }\n}\n\nlet user = User(name: \"Ivan\")\nuser.printInfo()"
+      }
+    ],
+    dart: [
+      {
+        title: { uk: "Null Safety", en: "Null Safety", ru: "Null Safety", id: "Null Safety", ja: "Null Safety" },
+        body: {
+          uk: "Напиши Dart-код: створи nullable String, перевір його на null через if і виведи значення через print.",
+          en: "Write Dart code: create a nullable String, check it for null with if, and print the value.",
+          ru: "Напиши Dart-код: создай nullable String, проверь его на null через if и выведи значение через print.",
+          id: "Tulis kode Dart: buat String nullable, periksa null dengan if, lalu cetak nilainya.",
+          ja: "Dart のコードを書いてください: nullable String を作り、if で null を確認し、値を print します。"
+        },
+        hints: {
+          uk: ["Nullable тип має знак ? після назви типу.", "Умова if може перевірити name != null.", "print виводить значення в консоль."],
+          en: ["A nullable type has ? after the type name.", "An if condition can check name != null.", "print outputs the value to the console."],
+          ru: ["Nullable тип имеет знак ? после имени типа.", "Условие if может проверить name != null.", "print выводит значение в консоль."],
+          id: ["Tipe nullable memiliki tanda ? setelah nama tipe.", "Kondisi if dapat memeriksa name != null.", "print menampilkan nilai ke konsol."],
+          ja: ["nullable 型は型名の後ろに ? を付けます。", "if 条件で name != null を確認できます。", "print は値をコンソールに出力します。"]
+        },
+        checks: ["string?", "if", "null", "print"],
+        solution: "String? name = \"Ivan\";\n\nif (name != null) {\n  print(name);\n}"
+      },
+      {
+        title: { uk: "List і for-in", en: "List and for-in", ru: "List и for-in", id: "List dan for-in", ja: "List と for-in" },
+        body: {
+          uk: "Створи List<int>, додай число через add і перебери список через for-in з print.",
+          en: "Create a List<int>, add a number with add, and iterate through the list with for-in and print.",
+          ru: "Создай List<int>, добавь число через add и перебери список через for-in с print.",
+          id: "Buat List<int>, tambahkan angka dengan add, lalu iterasi list memakai for-in dan print.",
+          ja: "List<int> を作り、add で数値を追加し、for-in と print でリストを処理してください。"
+        },
+        hints: {
+          uk: ["List<int> зберігає цілі числа.", "add додає новий елемент.", "for (final item in items) перебирає колекцію."],
+          en: ["List<int> stores integers.", "add appends a new item.", "for (final item in items) iterates a collection."],
+          ru: ["List<int> хранит целые числа.", "add добавляет новый элемент.", "for (final item in items) перебирает коллекцию."],
+          id: ["List<int> menyimpan bilangan bulat.", "add menambahkan item baru.", "for (final item in items) melakukan iterasi koleksi."],
+          ja: ["List<int> は整数を保存します。", "add は新しい要素を追加します。", "for (final item in items) はコレクションを順番に処理します。"]
+        },
+        checks: ["list<int>", "[", "]", ".add", "for", " in ", "print"],
+        solution: "List<int> numbers = [1, 2, 3];\nnumbers.add(4);\n\nfor (final number in numbers) {\n  print(number);\n}"
+      },
+      {
+        title: { uk: "Клас і метод", en: "Class and method", ru: "Класс и метод", id: "Class dan method", ja: "クラスとメソッド" },
+        body: {
+          uk: "Створи клас User з полем name, конструктором і методом printInfo(), який виводить ім'я.",
+          en: "Create a User class with a name field, a constructor, and a printInfo() method that prints the name.",
+          ru: "Создай класс User с полем name, конструктором и методом printInfo(), который выводит имя.",
+          id: "Buat class User dengan field name, constructor, dan method printInfo() yang mencetak nama.",
+          ja: "name フィールド、コンストラクタ、名前を出力する printInfo() メソッドを持つ User クラスを作ってください。"
+        },
+        hints: {
+          uk: ["class оголошує клас.", "Конструктор може бути User(this.name).", "Метод має бути всередині класу."],
+          en: ["class declares a class.", "The constructor can be User(this.name).", "The method must be inside the class."],
+          ru: ["class объявляет класс.", "Конструктор может быть User(this.name).", "Метод должен быть внутри класса."],
+          id: ["class mendeklarasikan kelas.", "Constructor dapat berupa User(this.name).", "Method harus berada di dalam class."],
+          ja: ["class はクラスを宣言します。", "コンストラクタは User(this.name) にできます。", "メソッドはクラスの中に置きます。"]
+        },
+        checks: ["class user", "string name", "user(", "void printinfo", "print"],
+        solution: "class User {\n  final String name;\n\n  User(this.name);\n\n  void printInfo() {\n    print(name);\n  }\n}\n\nvoid main() {\n  final user = User(\"Ivan\");\n  user.printInfo();\n}"
+      }
+    ],
     assembler: [
       {
         title: { uk: "Linux write syscall", en: "Linux write syscall", ru: "Linux write syscall" },
@@ -678,6 +844,7 @@
   };
 
   function t(value) {
+    if ((lang === "id" || lang === "ja") && window.LessonI18n) return window.LessonI18n.translate(value.uk || value.en || "");
     return value[lang] || (lang === "id" || lang === "ja" ? value.en : "") || value.uk || "";
   }
 
@@ -794,12 +961,19 @@
 
   injectStyles();
 
-  let taskIndex = Math.floor(Math.random() * pageTasks.length);
+  const draftKey = `lessons:practice:${page}:v1`;
+  let draft = { index: 0, values: {} };
+  try {
+    const stored = JSON.parse(storage.getItem(draftKey));
+    if (stored && Number.isInteger(stored.index) && stored.index >= 0 && stored.index < pageTasks.length && stored.values && typeof stored.values === "object" && !Array.isArray(stored.values)) draft = stored;
+  } catch { /* A damaged draft must never prevent practice. */ }
+  let taskIndex = draft.index;
   let hintCount = 0;
   const labels = ui[lang] || ui.en;
 
   const section = document.createElement("section");
   section.className = "practice-lab";
+  section.id = "practice";
   section.innerHTML = `
     <div class="practice-box">
       <h2>${labels.title}: ${supportedPages[page]}</h2>
@@ -812,7 +986,9 @@
           <ul id="practice-hints"></ul>
         </div>
       </div>
-      <textarea class="practice-textarea" id="practice-code" spellcheck="false" placeholder="${labels.placeholder}"></textarea>
+      <label for="practice-code">${labels.placeholder}</label>
+      <textarea class="practice-textarea notranslate" translate="no" id="practice-code" spellcheck="false" aria-describedby="practice-save-status" placeholder="${labels.placeholder}"></textarea>
+      <p class="learning-status" id="practice-save-status" role="status"></p>
       <div class="practice-actions">
         <button class="practice-button" type="button" id="practice-check">${labels.check}</button>
         <button class="practice-button secondary" type="button" id="practice-hint">${labels.showHint}</button>
@@ -845,6 +1021,18 @@
   const solution = section.querySelector("#practice-solution");
   const solutionCode = section.querySelector("#practice-solution-code");
   const solutionToggle = section.querySelector("#practice-toggle-solution");
+  const saveStatus = section.querySelector("#practice-save-status");
+  if (window.SiteConfig) section.querySelector(".practice-muted").textContent += " " + window.SiteConfig.ui.checks;
+  function saveDraft() {
+    draft.index = taskIndex;
+    draft.values[taskIndex] = textarea.value;
+    const saved = storage.setItem(draftKey, JSON.stringify(draft));
+    if (window.SiteConfig) saveStatus.textContent = saved ? window.SiteConfig.ui.saved : window.SiteConfig.ui.storageUnavailable;
+  }
+  textarea.addEventListener("input", saveDraft);
+  textarea.addEventListener("keydown", event => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); checkCode(); }
+  });
 
   function renderTask() {
     const task = pageTasks[taskIndex];
@@ -852,7 +1040,8 @@
     title.textContent = `${labels.task}: ${t(task.title)}`;
     body.textContent = t(task.body);
     hints.innerHTML = "";
-    textarea.value = "";
+    textarea.value = typeof draft.values[taskIndex] === "string" ? draft.values[taskIndex] : "";
+    saveStatus.textContent = textarea.value && window.SiteConfig ? window.SiteConfig.ui.saved : "";
     result.textContent = "";
     result.className = "practice-result";
     solution.classList.remove("is-open");
@@ -861,7 +1050,9 @@
   }
 
   function showHint() {
-    const taskHints = pageTasks[taskIndex].hints[lang] || (lang === "id" || lang === "ja" ? pageTasks[taskIndex].hints.en : null) || pageTasks[taskIndex].hints.uk;
+    const taskHints = (lang === "id" || lang === "ja") && window.LessonI18n
+      ? pageTasks[taskIndex].hints.uk.map(window.LessonI18n.translate)
+      : pageTasks[taskIndex].hints[lang] || pageTasks[taskIndex].hints.uk;
     if (hintCount >= taskHints.length) return;
     const item = document.createElement("li");
     item.textContent = taskHints[hintCount];
@@ -897,12 +1088,15 @@
   section.querySelector("#practice-hint").addEventListener("click", showHint);
   section.querySelector("#practice-reset").addEventListener("click", () => {
     textarea.value = "";
+    saveDraft();
     result.textContent = "";
     result.className = "practice-result";
   });
   section.querySelector("#practice-next").addEventListener("click", () => {
-    taskIndex = (taskIndex + 1 + Math.floor(Math.random() * (pageTasks.length - 1 || 1))) % pageTasks.length;
+    saveDraft();
+    taskIndex = (taskIndex + 1) % pageTasks.length;
     renderTask();
+    saveDraft();
   });
   solutionToggle.addEventListener("click", () => {
     const isOpen = solution.classList.toggle("is-open");
