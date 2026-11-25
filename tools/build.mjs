@@ -3,6 +3,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JSDOM, VirtualConsole } from 'jsdom';
 import { locales, names, guides, ui } from './ui.mjs';
+import {curriculum} from './curriculum.mjs';
+import {levelUi,localizedLessons} from './levels.mjs';
+import {renderLevels} from './render-levels.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'dist');
@@ -13,6 +16,9 @@ const read = name => fs.readFile(path.join(root, name), 'utf8');
 const write = (name, value) => fs.writeFile(path.join(out, name), value);
 const auto = JSON.parse(await read('i18n-auto-data.json'));
 const languageList = JSON.parse(await read('translation-languages.json'));
+const curriculumTranslations=JSON.parse(await read('curriculum-translations.json'));
+const curriculumOverrides=JSON.parse(await read('curriculum-overrides.json'));
+for(const [lang,values] of Object.entries(curriculumOverrides))Object.assign(curriculumTranslations[lang],values);
 const patches = await read('translation-overrides.json').then(JSON.parse).catch(() => ({}));
 const legacy = (await read('i18n.js')).replace(/  addStyles\(\);[\s\S]*$/, '  window.__legacy = {dict, translateValue, translateIndexCards};\n})();');
 const practiceSource = await read('practice.js');
@@ -34,7 +40,7 @@ const sources = {
 const allUrls = [];
 const searchIndexes = Object.fromEntries(locales.map(l => [l, []]));
 const missing = Object.fromEntries(locales.filter(l => l !== 'uk').map(l => [l, new Set()]));
-const metrics = {pages:0, languages:Object.keys(languageList).length, searchEntries:0, originalCssPreserved:true};
+const metrics = {pages:0, languages:Object.keys(languageList).length, searchEntries:0, addedModules:Object.values(curriculum).flat().length, learningLevels:3, originalCssPreserved:true};
 
 function append(parent, tag, attrs = {}, content) {
   const el = parent.ownerDocument.createElement(tag);
@@ -46,7 +52,8 @@ function append(parent, tag, attrs = {}, content) {
 for (const page of ['index', ...Object.keys(guides)]) {
   const source = await read(`${page}.html`);
   for (const lang of locales) {
-    const copy = ui[lang];
+    const copy = {...ui[lang],...levelUi[lang]};
+    const lessons=localizedLessons(page,lang,curriculum,curriculumTranslations);
     const prefix = lang === 'uk' ? '' : '../';
     const vc = new VirtualConsole();
     const dom = new JSDOM(source, {url:`${origin}/${page}.html?lang=uk`, runScripts:'outside-only', pretendToBeVisual:true, virtualConsole:vc});
@@ -142,6 +149,7 @@ for (const page of ['index', ...Object.keys(guides)]) {
     if(page==='index') {
       tools.innerHTML=`<div class="learning-panel"><h2>${escape(copy.search)}</h2><label for="global-search">${escape(copy.searchHelp)}</label><div class="learning-row"><input class="learning-input" type="search" id="global-search" placeholder="${escape(copy.searchHint)}" autocomplete="off" aria-controls="global-results"><button type="button" class="learning-button" id="global-clear">${escape(copy.clear)}</button></div><p id="global-status" role="status" aria-live="polite"></p><ol class="learning-results" id="global-results"></ol><p id="resume-learning" hidden></p></div>`;
       doc.querySelector('.hero').after(tools);
+      renderLevels(doc,page,copy,lessons);
       const info=doc.querySelector('.info-grid .info-card:last-child p'); if(info) info.textContent=copy.languageInfo;
       const paths=append(doc.querySelector('.info-panel'),'div',{'class':'learning-paths'});
       for(const [key,items] of Object.entries({web:['html','css','javascript'],automation:['python','powershell'],data:['json','sql','python'],systems:['c','cpp','rust']})) {
@@ -151,6 +159,7 @@ for (const page of ['index', ...Object.keys(guides)]) {
     } else {
       tools.innerHTML=`<div class="learning-panel"><h2>${escape(copy.progress)}</h2><p>${escape(copy.progressHelp)}</p><p id="lesson-progress" role="status"></p><a href="#practice">${escape(copy.practice)}</a> · <a href="${sources[page]}" target="_blank" rel="noopener noreferrer">${escape(copy.source)}</a></div>`;
       doc.querySelector('.hero').after(tools);
+      renderLevels(doc,page,copy,lessons);
       doc.querySelectorAll('main .section[id]').forEach(section=>{
         if(section.id==='search') return;
         const content=section.querySelector('.section-content') || section;
@@ -160,7 +169,7 @@ for (const page of ['index', ...Object.keys(guides)]) {
       for(const el of doc.querySelectorAll('main article')) {
         const title=normalize(el.querySelector('h3,h4')?.textContent || '');
         if(!title) continue;
-        searchIndexes[lang].push({page,guide:guides[page],title,hash:el.id,text:normalize(el.textContent.replace(copy.mark,'')).slice(0,1800)});
+        searchIndexes[lang].push({page,guide:guides[page],title,hash:el.id,level:el.closest('[data-level]')?.dataset.level||'beginner',text:normalize(el.textContent.replace(copy.mark,'')).slice(0,1800)});
       }
       const input=doc.querySelector('#searchInput'); if(input) input.setAttribute('aria-describedby','searchCount');
       doc.querySelector('#searchCount')?.setAttribute('role','status');
@@ -186,12 +195,12 @@ for (const page of ['index', ...Object.keys(guides)]) {
     for(const [name,content] of Object.entries({'twitter:card':'summary','twitter:title':title,'twitter:description':description,'twitter:image':`${origin}/icon/index.png`})) append(doc.head,'meta',{name,content});
     const schema={'@context':'https://schema.org','@graph':[
       {'@type':'WebSite','@id':`${origin}/#website`,url:origin+'/',name:'Programming Lessons',inLanguage:locales},
-      {'@type':page==='index'?'CollectionPage':'LearningResource','@id':url+'#page',url,name:title,description,inLanguage:lang,isAccessibleForFree:true,isPartOf:{'@id':`${origin}/#website`},...(page==='index'?{}:{learningResourceType:'Tutorial',educationalLevel:'Beginner',about:guides[page]})}
+      {'@type':page==='index'?'CollectionPage':'LearningResource','@id':url+'#page',url,name:title,description,inLanguage:lang,isAccessibleForFree:true,isPartOf:{'@id':`${origin}/#website`},...(page==='index'?{}:{learningResourceType:'Tutorial',educationalLevel:['Beginner','Intermediate','Advanced'],about:guides[page]})}
     ]};
     if(page!=='index') schema['@graph'].push({'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:copy.home,item:origin+route('index',lang)},{'@type':'ListItem',position:2,name:guides[page],item:url}]});
     append(doc.head,'script',{type:'application/ld+json'},json(schema));
     append(doc.head,'link',{rel:'stylesheet',href:`${prefix}assets/enhancements.css`});
-    const config={page,lang,prefix,origin,locales,ui:copy,dictionary:pageDictionary,languages:Object.keys(languageList)};
+    const config={page,lang,prefix,origin,locales,ui:copy,dictionary:pageDictionary,languages:Object.keys(languageList),curriculum:lessons};
     // Load guarded storage before the original inline event handlers.
     const configScript=doc.createElement('script'); configScript.textContent=`window.SiteConfig=${json(config)};`;
     const boot=doc.createElement('script');boot.src=`${prefix}assets/boot.js`;

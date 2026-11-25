@@ -7,9 +7,9 @@ export const guides = {
 };
 export const ui = {
   uk: {
-    home:'Уроки програмування', guide:'довідник для початківців', homeTitle:'Уроки програмування: 19 довідників і практика',
-    description:'Вивчай HTML, CSS, JavaScript, Python та інші мови: 19 безкоштовних довідників, приклади коду, пошук і практичні задачі для початківців.',
-    guideDescription:'Вивчай {name}: основи, синтаксис, приклади коду та практичні задачі. Безкоштовний довідник для початківців із пошуком і збереженням прогресу.',
+    home:'Уроки програмування', guide:'довідник і практика на трьох рівнях', homeTitle:'Уроки програмування: від початкового до професійного рівня',
+    description:'19 безкоштовних довідників із програмування для початківців, розробників середнього рівня та професіоналів: приклади, складні задачі, пошук і прогрес.',
+    guideDescription:'Вивчай {name} на початковому, середньому та професійному рівнях: пояснення, приклади коду, крайові випадки й практичні завдання з критеріями перевірки.',
     languages:'Мова сайту', native:'Вбудовані переклади', automatic:'Автопереклад через Google',
     translationNote:'Інші мови відкриваються в Google Translate. Потрібен інтернет; це автоматичний переклад, у якому можливі помилки.',
     languageInfo:'П’ять вбудованих перекладів і вибір інших мов світу через Google Translate.',
@@ -27,9 +27,9 @@ export const ui = {
     notFound:'Сторінку не знайдено', returnHome:'Повернутися до довідників'
   },
   en: {
-    home:'Programming lessons', guide:'beginner reference', homeTitle:'Programming Lessons: 19 Free Guides and Practice',
-    description:'Learn HTML, CSS, JavaScript, Python and more with 19 free programming guides, code examples, topic search and practice tasks for beginners.',
-    guideDescription:'Learn {name} with syntax explanations, code examples and practice tasks. A free beginner reference with topic search and saved learning progress.',
+    home:'Programming lessons', guide:'guide and practice at three levels', homeTitle:'Programming Lessons: Beginner to Professional',
+    description:'19 free programming guides for beginners, intermediate developers and professionals, with code examples, advanced tasks, topic search and saved progress.',
+    guideDescription:'Learn {name} at beginner, intermediate and professional levels with explanations, code examples, edge cases and practical tasks with acceptance criteria.',
     languages:'Site language', native:'Built-in translations', automatic:'Automatic translation via Google',
     translationNote:'Other languages open in Google Translate. Internet is required; automatic translations may contain errors.',
     languageInfo:'Five built-in translations and other world languages through Google Translate.',
@@ -47,9 +47,9 @@ export const ui = {
     notFound:'Page not found', returnHome:'Back to the guides'
   },
   ru: {
-    home:'Уроки программирования', guide:'справочник для начинающих', homeTitle:'Уроки программирования: 19 справочников и практика',
-    description:'Изучай HTML, CSS, JavaScript, Python и другие языки: 19 бесплатных справочников, примеры кода, поиск и практические задачи для начинающих.',
-    guideDescription:'Изучай {name}: основы, синтаксис, примеры кода и практические задачи. Бесплатный справочник с поиском и сохранением прогресса.',
+    home:'Уроки программирования', guide:'справочник и практика на трёх уровнях', homeTitle:'Уроки программирования: от начального до профессионального уровня',
+    description:'19 бесплатных справочников по программированию для новичков, разработчиков среднего уровня и профессионалов: примеры, сложные задачи, поиск и прогресс.',
+    guideDescription:'Изучай {name} на начальном, среднем и профессиональном уровнях: объяснения, примеры кода, граничные случаи и практические задания с критериями проверки.',
     languages:'Язык сайта', native:'Встроенные переводы', automatic:'Автоперевод через Google',
     translationNote:'Другие языки открываются в Google Translate. Нужен интернет; автоматический перевод может содержать ошибки.',
     languageInfo:'Пять встроенных переводов и другие языки мира через Google Translate.',
@@ -67,9 +67,9 @@ export const ui = {
     notFound:'Страница не найдена', returnHome:'Вернуться к справочникам'
   },
   id: {
-    home:'Pelajaran pemrograman', guide:'panduan pemula', homeTitle:'Pelajaran Pemrograman: 19 Panduan Gratis dan Latihan',
-    description:'Pelajari HTML, CSS, JavaScript, Python dan bahasa lainnya melalui 19 panduan gratis, contoh kode, pencarian topik dan latihan untuk pemula.',
-    guideDescription:'Pelajari {name} dengan penjelasan sintaks, contoh kode dan latihan. Panduan pemula gratis dengan pencarian topik dan penyimpanan kemajuan belajar.',
+    home:'Pelajaran pemrograman', guide:'panduan dan latihan tiga tingkat', homeTitle:'Pelajaran Pemrograman: dari Pemula hingga Profesional',
+    description:'19 panduan pemrograman gratis untuk pemula, tingkat menengah dan profesional, dengan contoh kode, tugas lanjutan, pencarian dan penyimpanan kemajuan.',
+    guideDescription:'Pelajari {name} pada tingkat pemula, menengah dan profesional melalui penjelasan, contoh kode, kasus batas dan tugas praktik dengan kriteria penerimaan.',
     languages:'Bahasa situs', native:'Terjemahan bawaan', automatic:'Terjemahan otomatis melalui Google',
     translationNote:'Bahasa lain dibuka di Google Translate. Memerlukan internet; terjemahan otomatis dapat mengandung kesalahan.',
     languageInfo:'Lima terjemahan bawaan dan bahasa dunia lainnya melalui Google Translate.',
@@ -87,9 +87,9 @@ export const ui = {
     notFound:'Halaman tidak ditemukan', returnHome:'Kembali ke panduan'
   },
   ja: {
-    home:'プログラミング学習', guide:'初心者向けリファレンス', homeTitle:'プログラミング学習：19の無料ガイドと練習問題',
-    description:'HTML、CSS、JavaScript、Pythonなどを学べる19の無料ガイド。初心者向けのコード例、トピック検索、練習問題を用意しています。',
-    guideDescription:'{name}の基本、構文、コード例、練習問題を学びましょう。トピック検索と学習の進捗保存に対応した無料の初心者向けガイドです。',
+    home:'プログラミング学習', guide:'3段階のガイドと練習問題', homeTitle:'プログラミング学習：初心者からプロまで',
+    description:'初級、中級、プロ向けの19の無料プログラミングガイド。コード例、高度な課題、トピック検索、進捗保存を利用できます。',
+    guideDescription:'初級、中級、プロ向けの3段階で{name}を学びましょう。解説、コード例、境界条件、受け入れ基準付きの実践課題を用意しています。',
     languages:'サイトの言語', native:'組み込みの翻訳', automatic:'Googleによる自動翻訳',
     translationNote:'その他の言語はGoogle翻訳で開きます。インターネット接続が必要です。自動翻訳には誤りが含まれる場合があります。',
     languageInfo:'5つの組み込み翻訳と、Google翻訳による世界のさまざまな言語に対応しています。',

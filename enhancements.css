@@ -28,4 +28,10 @@
 .skip-link { position: fixed; top: -100px; left: 12px; z-index: 100; padding: 12px; background: var(--surface); color: var(--text); }
 .skip-link:focus { top: 10px; }
 .learning-status { color: var(--muted); font-size: 14px; }
+.level-controls { margin-bottom: 20px; }
+.level-controls label { display: block; margin-bottom: 8px; font-weight: 600; }
+.curriculum-lesson { min-width: 0; overflow-wrap: anywhere; }
+.curriculum-lesson h4 { margin-bottom: 8px; }
+.curriculum-lesson li { margin: 8px 0; }
+.curriculum-lesson pre { overflow-x: auto; }
 @media (max-width: 720px) { .language-picker { width: 100%; } .world-languages .language-menu { left: 0; right: auto; } }

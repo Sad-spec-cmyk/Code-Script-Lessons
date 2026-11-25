@@ -844,6 +844,7 @@
   };
 
   function t(value) {
+    if (typeof value === "string") return value;
     if ((lang === "id" || lang === "ja") && window.LessonI18n) return window.LessonI18n.translate(value.uk || value.en || "");
     return value[lang] || (lang === "id" || lang === "ja" ? value.en : "") || value.uk || "";
   }
@@ -958,6 +959,12 @@
 
   const pageTasks = tasks[page];
   if (!pageTasks || !pageTasks.length) return;
+  const levelCopy = window.SiteConfig?.ui;
+  pageTasks.forEach(task => task.level = "beginner");
+  for (const lesson of window.SiteConfig?.curriculum || []) {
+    pageTasks.push({level:lesson.level,title:lesson.text.title,body:lesson.text.task,
+      hints:[lesson.text.hint],criteria:lesson.text.criteria,solution:lesson.code,reviewOnly:true});
+  }
 
   injectStyles();
 
@@ -968,6 +975,10 @@
     if (stored && Number.isInteger(stored.index) && stored.index >= 0 && stored.index < pageTasks.length && stored.values && typeof stored.values === "object" && !Array.isArray(stored.values)) draft = stored;
   } catch { /* A damaged draft must never prevent practice. */ }
   let taskIndex = draft.index;
+  let practiceLevel = window.LessonLevel?.get() || "all";
+  if (practiceLevel === "all") practiceLevel = pageTasks[taskIndex].level;
+  if (pageTasks[taskIndex].level !== practiceLevel) taskIndex = pageTasks.findIndex(task => task.level === practiceLevel);
+  const levelIndices = () => pageTasks.map((task,index) => task.level === practiceLevel ? index : -1).filter(index => index >= 0);
   let hintCount = 0;
   const labels = ui[lang] || ui.en;
 
@@ -1022,7 +1033,29 @@
   const solutionCode = section.querySelector("#practice-solution-code");
   const solutionToggle = section.querySelector("#practice-toggle-solution");
   const saveStatus = section.querySelector("#practice-save-status");
-  if (window.SiteConfig) section.querySelector(".practice-muted").textContent += " " + window.SiteConfig.ui.checks;
+  const intro = section.querySelector(".practice-muted");
+  const criteriaBox = document.createElement("div");
+  criteriaBox.id = "practice-criteria"; criteriaBox.tabIndex = -1;
+  const criteriaTitle = document.createElement("h4"); criteriaTitle.textContent = levelCopy?.criteria || "Acceptance criteria";
+  const criteriaList = document.createElement("ol");
+  criteriaBox.append(criteriaTitle,criteriaList);body.after(criteriaBox);
+  let practiceSelect;
+  if (levelCopy && pageTasks.some(task => task.reviewOnly)) {
+    const controls = document.createElement("div");controls.className = "level-controls";
+    const label = document.createElement("label"); label.htmlFor = "practice-level"; label.textContent = levelCopy.levelPractice;
+    practiceSelect = document.createElement("select");practiceSelect.id = "practice-level";practiceSelect.className = "learning-input";
+    for (const value of ["beginner","intermediate","professional"]) {
+      const option = document.createElement("option");option.value = value;option.textContent = levelCopy[value];practiceSelect.append(option);
+    }
+    controls.append(label,practiceSelect);intro.after(controls);
+    practiceSelect.addEventListener("change",() => changePracticeLevel(practiceSelect.value));
+    window.addEventListener("lessonlevelchange",event => {if(event.detail !== "all") changePracticeLevel(event.detail);});
+  }
+  function changePracticeLevel(value) {
+    if(value === practiceLevel)return;
+    saveDraft();practiceLevel=value;
+    taskIndex=levelIndices()[0];renderTask();saveDraft();
+  }
   function saveDraft() {
     draft.index = taskIndex;
     draft.values[taskIndex] = textarea.value;
@@ -1036,21 +1069,29 @@
 
   function renderTask() {
     const task = pageTasks[taskIndex];
+    if(practiceSelect)practiceSelect.value = practiceLevel;
     hintCount = 0;
     title.textContent = `${labels.task}: ${t(task.title)}`;
     body.textContent = t(task.body);
+    intro.textContent = task.reviewOnly ? levelCopy.reviewIntro : labels.intro + (levelCopy ? " " + levelCopy.checks : "");
+    criteriaBox.hidden = !task.reviewOnly;criteriaList.replaceChildren();
+    for (const criterion of task.criteria || []) {
+      const item = document.createElement("li");item.textContent = criterion;criteriaList.append(item);
+    }
+    section.querySelector("#practice-check").textContent = task.reviewOnly ? levelCopy.review : labels.check;
+    section.querySelector("#practice-next").hidden = levelIndices().length < 2;
     hints.innerHTML = "";
     textarea.value = typeof draft.values[taskIndex] === "string" ? draft.values[taskIndex] : "";
     saveStatus.textContent = textarea.value && window.SiteConfig ? window.SiteConfig.ui.saved : "";
     result.textContent = "";
     result.className = "practice-result";
     solution.classList.remove("is-open");
-    solutionToggle.textContent = labels.showSolution;
+    solutionToggle.textContent = task.reviewOnly ? levelCopy.workedExample : labels.showSolution;
     solutionCode.textContent = task.solution;
   }
 
   function showHint() {
-    const taskHints = (lang === "id" || lang === "ja") && window.LessonI18n
+    const taskHints = pageTasks[taskIndex].reviewOnly ? pageTasks[taskIndex].hints : (lang === "id" || lang === "ja") && window.LessonI18n
       ? pageTasks[taskIndex].hints.uk.map(window.LessonI18n.translate)
       : pageTasks[taskIndex].hints[lang] || pageTasks[taskIndex].hints.uk;
     if (hintCount >= taskHints.length) return;
@@ -1061,6 +1102,11 @@
   }
 
   function checkCode() {
+    if(pageTasks[taskIndex].reviewOnly) {
+      result.textContent = levelCopy.reviewResult;
+      result.className = "practice-result";
+      criteriaBox.focus();criteriaBox.scrollIntoView({block:"center"});return;
+    }
     const raw = textarea.value;
     if (!raw.trim()) {
       result.textContent = labels.empty;
@@ -1094,14 +1140,16 @@
   });
   section.querySelector("#practice-next").addEventListener("click", () => {
     saveDraft();
-    taskIndex = (taskIndex + 1) % pageTasks.length;
+    const indices = levelIndices();
+    taskIndex = indices[(indices.indexOf(taskIndex) + 1) % indices.length];
     renderTask();
     saveDraft();
   });
   solutionToggle.addEventListener("click", () => {
     const isOpen = solution.classList.toggle("is-open");
-    solutionToggle.textContent = isOpen ? labels.hideSolution : labels.showSolution;
+    solutionToggle.textContent = isOpen ? labels.hideSolution : pageTasks[taskIndex].reviewOnly ? levelCopy.workedExample : labels.showSolution;
   });
 
   renderTask();
+  if(location.hash === "#practice") requestAnimationFrame(() => section.scrollIntoView({block:"start"}));
 })();

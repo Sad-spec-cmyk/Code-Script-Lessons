@@ -11,7 +11,7 @@
   };
   window.LessonI18n={translate};
   const read=(key,fallback)=>{try{const value=JSON.parse(storage.getItem(key));return value && typeof value==='object' && !Array.isArray(value)?value:fallback;}catch{return fallback;}};
-  const localUrl=(slug,hash='')=>`${slug}.html${hash?'#'+encodeURIComponent(hash):''}`;
+  const localUrl=(slug,hash='',level=activeLevel)=>`${slug}.html${level==='all'?'':`?level=${level}`}${hash?'#'+encodeURIComponent(hash):''}`;
 
   function translateTree(root) {
     if(root.nodeType===Node.TEXT_NODE) {
@@ -43,16 +43,65 @@
     if(!/^(https?:|mailto:|#)/.test(href)) link.setAttribute('href',href.replace(/\?lang=[^#]*/,''));
   });
 
+  const validLevels=['all','beginner','intermediate','professional'];
+  const requestedLevel=new URLSearchParams(location.search).get('level');
+  const savedLevel=storage.getItem('lessons:level:v1');
+  let activeLevel=validLevels.includes(requestedLevel)?requestedLevel:validLevels.includes(savedLevel)?savedLevel:'all';
+  if(validLevels.includes(requestedLevel))storage.setItem('lessons:level:v1',activeLevel);
+  const levelSelect=document.querySelector('#learning-level');
+  function syncLevelLinks() {
+    for(const link of document.querySelectorAll('a[href]')) {
+      if(link.hasAttribute('data-start-level'))link.setAttribute('href',`#${activeLevel==='all'||activeLevel==='beginner'?'intro':activeLevel}`);
+      const raw=link.getAttribute('href');
+      if(raw.startsWith('#') || link.hasAttribute('data-select-level'))continue;
+      let url;try{url=new URL(raw,location.href);}catch{continue;}
+      if(url.origin!==location.origin || !url.pathname.endsWith('.html'))continue;
+      if(link.closest('#global-results'))continue;
+      if(activeLevel==='all')url.searchParams.delete('level');else url.searchParams.set('level',activeLevel);
+      if(link.closest('.language-picker')) {
+        url.hash=location.hash;
+        const query=new URLSearchParams(location.search).get('q');
+        if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');
+      }
+      // Keep relative file links usable when opening the built site from disk.
+      const base=raw.split(/[?#]/)[0];link.setAttribute('href',base+url.search+url.hash);
+    }
+  }
+  function setLevel(value,{preserveHash=false}={}) {
+    if(!validLevels.includes(value))return;
+    activeLevel=value;levelSelect.value=value;storage.setItem('lessons:level:v1',value);
+    const url=new URL(location.href);
+    if(value==='all')url.searchParams.delete('level');else url.searchParams.set('level',value);
+    if(!preserveHash && value!=='all') {
+      let target;try{target=document.getElementById(decodeURIComponent(url.hash.slice(1)));}catch{}
+      const targetLevel=target?.closest('[data-level]')?.dataset.level;
+      if(targetLevel && targetLevel!==value)url.hash='';
+    }
+    try{history.replaceState(null,'',url);}catch{}
+    syncLevelLinks();
+    window.dispatchEvent(new CustomEvent('lessonlevelchange',{detail:value}));
+  }
+  window.LessonLevel={get:()=>activeLevel,set:setLevel};
+  levelSelect.value=activeLevel;syncLevelLinks();
+  levelSelect.addEventListener('change',()=>setLevel(levelSelect.value));
+  document.querySelectorAll('[data-select-level]').forEach(link=>link.addEventListener('click',event=>{
+    event.preventDefault();setLevel(link.dataset.selectLevel);
+    const hash=new URL(link.href).hash;
+    if(location.hash!==hash)location.hash=hash;else revealHash();
+  }));
+
   document.querySelector('#world-language')?.addEventListener('change',event=>{
     const target=event.target.value;
     if(config.locales.includes(target)) {
       const next=new URL(`${prefix}${target==='uk'?'':target+'/'}${page}.html`,location.href);
       next.hash=location.hash;
       const q=new URLSearchParams(location.search).get('q');if(q)next.searchParams.set('q',q);
+      if(activeLevel!=='all')next.searchParams.set('level',activeLevel);
       location.assign(next.href);
     } else if(config.languages.includes(target)) {
       const source=new URL(document.querySelector('link[rel="canonical"]').href);
       source.hash=location.hash;
+      if(activeLevel!=='all')source.searchParams.set('level',activeLevel);
       const translation=new URL('https://translate.google.com/translate');
       translation.search=new URLSearchParams({sl:lang,tl:target,hl:lang,u:source.href});
       location.assign(translation.href);
@@ -100,7 +149,7 @@
     remember();window.addEventListener('hashchange',remember);
   } else {
     const last=read('lessons:last',{});
-    if(/^[a-z]+$/.test(last.page) && [...document.querySelectorAll('.language-card a')].some(link=>link.getAttribute('href')===`${last.page}.html`)) {
+    if(/^[a-z]+$/.test(last.page) && [...document.querySelectorAll('.language-card a')].some(link=>new URL(link.href).pathname.endsWith(`/${last.page}.html`))) {
       const resume=document.querySelector('#resume-learning');resume.hidden=false;
       const link=document.createElement('a');link.href=localUrl(last.page,typeof last.hash==='string'?last.hash:'');link.textContent=ui.resume;resume.append(link);
     }
@@ -117,22 +166,24 @@
       const query=normalize(localSearch.value).toLocaleLowerCase(lang);
       const words=query.split(' ').filter(Boolean);
       const matches=el=>words.every(word=>normalize(el.textContent).toLocaleLowerCase(lang).includes(word));
+      const matchesLevel=el=>activeLevel==='all' || el.closest('[data-level]')?.dataset.level===activeLevel;
       let count=0;
-      cards.forEach(card=>{card.hidden=Boolean(query)&&!matches(card);if(!card.hidden)count++;});
+      cards.forEach(card=>{card.hidden=!matchesLevel(card)||(Boolean(query)&&!matches(card));if(!card.hidden)count++;});
       contentSections.forEach(section=>{
         const children=cards.filter(card=>section.contains(card));
-        section.hidden=Boolean(query)&&(children.length?!children.some(card=>!card.hidden):!matches(section));
+        section.hidden=!matchesLevel(section)||(Boolean(query)&&(children.length?!children.some(card=>!card.hidden):!matches(section)));
         if(query && !section.hidden) section.classList.remove('is-collapsed');
         else if(!query) section.classList.toggle('is-collapsed',originalCollapsed.has(section));
         section.querySelector('.section-header')?.setAttribute('aria-expanded',String(!section.classList.contains('is-collapsed')));
       });
       empty.forEach(el=>{el.hidden=true;el.style.display='none';});
       const status=document.querySelector('#searchCount');
-      if(status) status.textContent=query?(count?`${ui.results}: ${count}`:ui.noResults):ui.all;
+      if(status) status.textContent=query?(count?`${ui.results}: ${count}`:ui.noResults):activeLevel==='all'?ui.all:`${ui.levelResults}: ${count}`;
     };
     localSearch.addEventListener('input',event=>{event.stopImmediatePropagation();applySearch();},true);
     document.querySelector('#clearSearch')?.addEventListener('click',event=>{event.stopImmediatePropagation();localSearch.value='';applySearch();localSearch.focus();},true);
-    const query=new URLSearchParams(location.search).get('q');if(query){localSearch.value=query;applySearch();}
+    const query=new URLSearchParams(location.search).get('q');if(query)localSearch.value=query;
+    window.addEventListener('lessonlevelchange',applySearch);applySearch();
   }
 
   const globalSearch=document.querySelector('#global-search');
@@ -156,11 +207,11 @@
       try {
         const index=await loadIndex();if(current!==generation)return;
         const terms=query.split(' ');
-        const matches=index.filter(item=>terms.every(term=>normalize(`${item.guide} ${item.title} ${item.text}`).toLocaleLowerCase(lang).includes(term)))
+        const matches=index.filter(item=>(activeLevel==='all'||item.level===activeLevel)&&terms.every(term=>normalize(`${item.guide} ${item.title} ${item.text}`).toLocaleLowerCase(lang).includes(term)))
           .sort((a,b)=>Number(b.title.toLocaleLowerCase(lang).includes(query))-Number(a.title.toLocaleLowerCase(lang).includes(query)));
         status.textContent=matches.length?`${ui.results}: ${matches.length}`:ui.noResults;
         for(const item of matches.slice(0,30)) {
-          const li=document.createElement('li');const link=document.createElement('a');link.href=localUrl(item.page,item.hash);link.textContent=`${item.guide}: ${item.title}`;
+          const li=document.createElement('li');const link=document.createElement('a');link.href=localUrl(item.page,item.hash,item.level);link.textContent=`${item.guide}: ${item.title} · ${ui[item.level]}`;
           const text=document.createElement('p');text.textContent=item.text.slice(0,180)+(item.text.length>180?'…':'');li.append(link,text);results.append(li);
         }
       } catch {if(current===generation)status.textContent=ui.searchHelp;}
@@ -168,6 +219,7 @@
     let timer;
     globalSearch.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(performSearch,120);});
     document.querySelector('#global-clear').addEventListener('click',()=>{globalSearch.value='';performSearch();globalSearch.focus();});
+    window.addEventListener('lessonlevelchange',performSearch);
     const q=new URLSearchParams(location.search).get('q');if(q){globalSearch.value=q;performSearch();}
   }
   document.addEventListener('keydown',event=>{
@@ -179,7 +231,11 @@
   function revealHash() {
     let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}
     const target=document.getElementById(id);if(!target)return;
+    const targetLevel=target.closest('[data-level]')?.dataset.level;
+    if(targetLevel && activeLevel!=='all' && targetLevel!==activeLevel)setLevel(targetLevel,{preserveHash:true});
+    if(target.hidden && localSearch){localSearch.value='';localSearch.dispatchEvent(new Event('input',{bubbles:true}));}
     const section=target.closest('.section');if(section){section.classList.remove('is-collapsed');section.querySelector('.section-header')?.setAttribute('aria-expanded','true');}
+    syncLevelLinks();
     requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
   }
   window.addEventListener('hashchange',revealHash);if(location.hash)revealHash();

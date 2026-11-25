@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "node tools/build.mjs",
-    "test": "node --test tests/site.test.mjs",
+    "test": "node --test tests/site.test.mjs tests/curriculum.test.mjs",
     "preview": "node tools/serve.mjs"
   },
   "devDependencies": {
